@@ -218,11 +218,19 @@ abstract final class EntryFile {
   static CivilDate? _date(String? text) {
     final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(text ?? '');
     if (match == null) return null;
-    return CivilDate(
-      int.parse(match[1]!),
-      int.parse(match[2]!),
-      int.parse(match[3]!),
-    );
+    final year = int.parse(match[1]!);
+    final month = int.parse(match[2]!);
+    final day = int.parse(match[3]!);
+    // A file edited by hand can name a day that does not exist, such as
+    // 2026-02-30. That makes it not an entry, rather than an error that
+    // would stop the rest of the journal being read.
+    if (month < 1 ||
+        month > 12 ||
+        day < 1 ||
+        day > CivilDate.daysInMonth(year, month)) {
+      return null;
+    }
+    return CivilDate(year, month, day);
   }
 
   static Duration? _duration(String? text) {
@@ -240,8 +248,12 @@ abstract final class EntryFile {
     final match = RegExp(r'^(\d{2}):(\d{2})(?::(\d{2}))?$')
         .firstMatch(text ?? '');
     if (match == null) return null;
-    return int.parse(match[1]!) * 3600 +
-        int.parse(match[2]!) * 60 +
-        int.parse(match[3] ?? '0');
+    final hour = int.parse(match[1]!);
+    final minute = int.parse(match[2]!);
+    final second = int.parse(match[3] ?? '0');
+    // Likewise a time that is not one, such as 25:00, would name a second
+    // outside the day.
+    if (hour > 23 || minute > 59 || second > 59) return null;
+    return hour * 3600 + minute * 60 + second;
   }
 }

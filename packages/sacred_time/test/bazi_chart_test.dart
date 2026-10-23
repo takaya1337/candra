@@ -292,6 +292,47 @@ void main() {
       final plain = chart.withConfig(clock);
       expect(chart.day, plain.day.step(1));
     });
+
+    test('by midnight by the sun, the hour before it takes the coming '
+        "day's stem", () {
+      // 12 October 2026 is a 己未 day. Read at the zone's own meridian,
+      // the sun is some thirteen minutes ahead of the clock.
+      const sun = BaziConfig(ziHourRule: ZiHourRule.trueSolarMidnight);
+      BaziChart on(int day, int hour, int minute) =>
+          at(2026, 10, day, hour, minute, longitude: 105, config: sun);
+      expect(on(12, 0, 23).day.hanzi, '己未');
+      expect(on(12, 0, 23).hour.hanzi, '甲子');
+      expect(on(12, 21, 43).hour.hanzi, '乙亥');
+      expect(on(12, 23, 23).day.hanzi, '己未');
+      expect(on(12, 23, 23).hour.hanzi, '丙子');
+      expect(on(13, 0, 23).day.hanzi, '庚申');
+      expect(on(13, 0, 23).hour.hanzi, '丙子');
+      // The split and unified rules agree on that hour.
+      for (final rule in [ZiHourRule.split, ZiHourRule.unified]) {
+        final chart = on(12, 23, 23).withConfig(sun.copyWith(ziHourRule: rule));
+        expect(chart.hour.hanzi, '丙子', reason: '$rule');
+      }
+    });
+
+    test('by midnight by the sun, the hour is read by the sun as well, '
+        'even when the clock is asked for', () {
+      // At 00:20 by the clock on 13 October at 95.3 degrees east, the sun
+      // has not yet reached midnight: still the 己未 day, in its late zi
+      // hour, 丙子, and not the 甲子 that opened it.
+      final chart = at(
+        2026,
+        10,
+        13,
+        0,
+        20,
+        longitude: 95.3,
+        config: clock.copyWith(ziHourRule: ZiHourRule.trueSolarMidnight),
+      );
+      expect(chart.day.hanzi, '己未');
+      expect(chart.hour.hanzi, '丙子');
+      expect(chart.inLateZiHour, isTrue);
+      expect(chart.chartTime.hour, 23);
+    });
   });
 
   group('the luck pillars', () {

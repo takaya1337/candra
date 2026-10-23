@@ -31,7 +31,11 @@ enum ZiHourRule {
   /// So 韋千里 in 《千里命稿》, who will have no early and late zi.
   unified,
 
-  /// The day turns at midnight by the sun, whatever the clock says.
+  /// The day turns at midnight by the sun, whatever the clock says. The
+  /// hour is then read by the sun as well, whatever the [TimeMode], so
+  /// that the day and the hour are never taken from two different
+  /// clocks; and in the hour before that midnight the hour pillar goes
+  /// on to the coming day's, as under [split].
   trueSolarMidnight,
 }
 
@@ -179,18 +183,20 @@ class BaziChart {
     final sundial = longitude == null
         ? Duration.zero
         : offMeridian + _minutes(Sun.equationOfTimeAt(julianDay));
-    final correction = switch (config.timeMode) {
-      TimeMode.clock => Duration.zero,
-      TimeMode.trueSolarLongitudeOnly => offMeridian,
-      TimeMode.trueSolar => sundial,
-    };
+    // When the day turns by the sun, the hour is read by the sun too:
+    // a sundial day with a clock hour can put the zi hour on the wrong
+    // side of midnight, a whole day out.
+    final correction = config.ziHourRule == ZiHourRule.trueSolarMidnight
+        ? sundial
+        : switch (config.timeMode) {
+            TimeMode.clock => Duration.zero,
+            TimeMode.trueSolarLongitudeOnly => offMeridian,
+            TimeMode.trueSolar => sundial,
+          };
     final chartTime = clock.add(correction);
     final hourPlace = (chartTime.hour + 1) ~/ 2 % 12;
 
-    final turnsBy = config.ziHourRule == ZiHourRule.trueSolarMidnight
-        ? clock.add(sundial)
-        : chartTime;
-    var date = CivilDate(turnsBy.year, turnsBy.month, turnsBy.day);
+    var date = CivilDate(chartTime.year, chartTime.month, chartTime.day);
     if (config.ziHourRule == ZiHourRule.unified && chartTime.hour == 23) {
       date = date.addDays(1);
     }
@@ -200,7 +206,8 @@ class BaziChart {
     // the coming day's, whichever day the day pillar is given to: under
     // the split rule "the day pillar does not go on, only the hour
     // pillar does".
-    final hourOf = chartTime.hour == 23 && config.ziHourRule == ZiHourRule.split
+    final hourOf =
+        chartTime.hour == 23 && config.ziHourRule != ZiHourRule.unified
         ? day.step(1)
         : day;
     final hour = Pillar(

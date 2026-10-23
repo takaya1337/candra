@@ -303,6 +303,48 @@ void main() {
     expect(read.categoryId, 'abc123');
   });
 
+  test('a category folder that is not an id is not taken', () {
+    String file(String folder) => 'entries/2026/10/11/$folder/090000.md';
+    const text =
+        '---\ndate: 2026-10-11\ntime: 09:00\nutc_offset: +07:00\n'
+        'category: x\ntitle: Climbing out\n---\nWords.\n';
+    final zip = Archive()
+      ..addFile(ArchiveFile.string(file('..'), text))
+      ..addFile(ArchiveFile.string(file('.'), text))
+      ..addFile(ArchiveFile.string(file('ABC123'), text))
+      ..addFile(ArchiveFile.string(file('abc123'), text));
+    final contents = JournalArchive.unpack(ZipEncoder().encodeBytes(zip));
+
+    expect(contents.entries.single.categoryId, 'abc123');
+  });
+
+  test('tags are not added when the categories are refused', () async {
+    final to = journal();
+    for (var i = 0; i < 19; i++) {
+      to.addCategory('To $i');
+    }
+    final before = to.categories.length;
+    final categories = [
+      for (var i = 0; i < JournalStore.maxCategories; i++)
+        JournalCategory(
+          id: i.toRadixString(16).padLeft(6, '0'),
+          name: 'From $i',
+          colorIndex: i,
+        ),
+    ];
+    await expectLater(
+      to.merge(
+        categories,
+        const [],
+        tags: const [JournalTag(id: 'aaaaaa', name: 'Incoming')],
+      ),
+      throwsA(isA<TooManyCategories>()),
+    );
+    expect(to.categories, hasLength(before));
+    expect(to.tags, isEmpty);
+    expect(File('${to.journalPath}/tags.json').existsSync(), isFalse);
+  });
+
   test('anything else is turned away', () {
     expect(
       () => JournalArchive.unpack(utf8.encode('not a zip at all')),

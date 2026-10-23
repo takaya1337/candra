@@ -224,6 +224,8 @@ class SalatTimes {
     var fajr = passing(-method.fajrAngle, true);
     DateTime? isha;
     if (method.ishaInterval > 0) {
+      // Ramadan by the tabular Hijri calendar, which may stand a day off
+      // the Umm al-Qura calendar at either end of the month.
       final ramadan =
           method == SalatMethod.ummAlQura &&
           HijriDate.supports(date) &&

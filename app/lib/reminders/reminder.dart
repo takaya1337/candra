@@ -335,6 +335,14 @@ class Reminder {
     if (moment.isNotEmpty) 'moment': moment,
   };
 
+  /// Reads back a list of reminders as kept in `reminders.json`, one by
+  /// one: whatever is not a reminder is left out and the rest are kept.
+  /// Throws only if [json] is not a list at all.
+  static List<Reminder> listFrom(Object? json) => [
+    for (final item in json as List)
+      if (item is Map<String, dynamic>) ?Reminder.fromJson(item),
+  ];
+
   /// Reads a reminder back, or returns null if [json] is not one.
   static Reminder? fromJson(Map<String, dynamic> json) {
     final date = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$')
@@ -347,6 +355,23 @@ class Reminder {
     if (date == null || time == null || repeat == null || id is! String) {
       return null;
     }
+    // A date of the right shape can still be no day at all (the 30th of
+    // February). That makes this one not a reminder, rather than an error
+    // for the whole list.
+    try {
+      return _fromJson(json, id, date, time, repeat);
+    } on Error {
+      return null;
+    }
+  }
+
+  static Reminder _fromJson(
+    Map<String, dynamic> json,
+    String id,
+    RegExpMatch date,
+    RegExpMatch time,
+    Repeat repeat,
+  ) {
     return Reminder(
       id: id,
       title: '${json['title'] ?? ''}',

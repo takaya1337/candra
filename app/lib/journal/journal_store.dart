@@ -231,18 +231,27 @@ class JournalStore extends ChangeNotifier {
   /// An entry with no id is new. It is named after its date and time; if
   /// another entry of that day already has that second, it takes the next
   /// one free.
-  Entry save(Entry entry) => _save(entry, stamped: true);
+  ///
+  /// [previous] is the entry as it was last saved, when the caller has it.
+  /// Two entries of different categories can share a second, and so an
+  /// id, when they were written on two devices; without it the one in the
+  /// same category is taken for the one being edited.
+  Entry save(Entry entry, {Entry? previous}) =>
+      _save(entry, stamped: true, previous: previous);
 
   // [stamped]: a new entry takes the moment it is first saved. Not when
   // an entry is only moving: one from before records were kept stays
   // without, rather than taking a moment it was not made at.
-  Entry _save(Entry entry, {required bool stamped}) {
+  Entry _save(Entry entry, {required bool stamped, Entry? previous}) {
     final name = category(entry.categoryId)?.name ?? entry.categoryId;
     if (entry.id.isNotEmpty) {
-      final previous = _day(
+      final same = _day(
         entry.date,
         entry.utcOffset,
-      ).where((e) => e.id == entry.id).firstOrNull;
+      ).where((e) => e.id == entry.id);
+      previous ??=
+          same.where((e) => e.categoryId == entry.categoryId).firstOrNull ??
+          same.firstOrNull;
       _storage.put(
         entry,
         categoryName: name,
@@ -271,8 +280,13 @@ class JournalStore extends ChangeNotifier {
   /// moment (the next second free if that one is taken), and everything
   /// else, its moment record and its unchanging id among it, goes with
   /// it.
-  Entry move(Entry entry, CivilDate date, int secondOfDay) {
-    _storage.remove(entry);
+  ///
+  /// [previous] is the entry as it was last saved, when [entry] carries
+  /// other edits too. Its file is the one removed: an edit that also
+  /// changes the category names a folder where no file is yet, and
+  /// removing that would leave the real one behind.
+  Entry move(Entry entry, CivilDate date, int secondOfDay, {Entry? previous}) {
+    _storage.remove(previous ?? entry);
     final moved = Entry(
       id: '',
       date: date,
@@ -412,19 +426,23 @@ class JournalStore extends ChangeNotifier {
   }) async {
     // Tags: one here by its id stays; one here by its name takes in the
     // one coming (its entries are pointed at it); any other is added.
+    // Only worked out here: they are kept after the check on the
+    // categories below, so that a merge turned away changes nothing.
     final tagIds = <String, String>{};
+    final newTags = <JournalTag>[];
     for (final incoming in tags) {
-      if (tag(incoming.id) != null) continue;
-      final twin = _tags
+      if (tag(incoming.id) != null || newTags.any((t) => t.id == incoming.id)) {
+        continue;
+      }
+      final twin = [..._tags, ...newTags]
           .where((t) => t.name.toLowerCase() == incoming.name.toLowerCase())
           .firstOrNull;
       if (twin != null) {
         tagIds[incoming.id] = twin.id;
       } else {
-        _tags.add(incoming);
+        newTags.add(incoming);
       }
     }
-    _storage.saveTags(_tags);
     entries = [
       for (final entry in entries)
         tagIds.isEmpty
@@ -464,6 +482,9 @@ class JournalStore extends ChangeNotifier {
     if (_categories.length + added > maxCategories) {
       throw TooManyCategories(_categories.length + added);
     }
+
+    _tags.addAll(newTags);
+    _storage.saveTags(_tags);
 
     var newCategories = 0;
     for (final category in incoming) {

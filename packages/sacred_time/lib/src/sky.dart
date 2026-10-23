@@ -103,8 +103,11 @@ abstract final class Sky {
         (Moon.elongationAt(at) - elongation + 540) % 360 - 180;
 
     var before = start;
-    // A phase in the first hours of the day is still that day's.
-    if (short(before) >= 0 && short(before) < 1) return before;
+    // Only a phase that falls on the very instant of midnight is
+    // returned as it stands. One the moon has already passed, even by
+    // a fraction of a degree, belonged to the day before; the search
+    // goes on to the next.
+    if (short(before) >= 0 && short(before) < 1e-6) return before;
     while (true) {
       final after = before.add(const Duration(hours: 6));
       if (short(before) < 0 && short(after) >= 0) {

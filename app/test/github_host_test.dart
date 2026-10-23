@@ -163,6 +163,65 @@ void main() {
     },
   );
 
+  test('GitHub\'s rate limit is told apart from a refused token', () async {
+    // The hour's requests used up: until the time GitHub gives.
+    github.refusal = (
+      status: 403,
+      headers: {
+        'x-ratelimit-remaining': '0',
+        'x-ratelimit-reset': '1800000000',
+      },
+      message: 'API rate limit exceeded',
+    );
+    await expectLater(
+      host().headCommit(),
+      throwsA(
+        isA<SyncRateLimited>().having(
+          (limited) => limited.until,
+          'until',
+          DateTime.fromMillisecondsSinceEpoch(1800000000 * 1000),
+        ),
+      ),
+    );
+
+    // Told to wait so many seconds.
+    github.refusal = (
+      status: 429,
+      headers: {'retry-after': '60'},
+      message: 'Too many requests',
+    );
+    final before = DateTime.now();
+    await expectLater(
+      host().headCommit(),
+      throwsA(
+        isA<SyncRateLimited>().having(
+          (limited) => limited.until!.difference(before).inSeconds,
+          'seconds to wait',
+          inInclusiveRange(59, 61),
+        ),
+      ),
+    );
+
+    // The secondary limit, said only in the message.
+    github.refusal = (
+      status: 403,
+      headers: {},
+      message: 'You have exceeded a secondary rate limit.',
+    );
+    await expectLater(
+      host().headCommit(),
+      throwsA(isA<SyncRateLimited>().having((l) => l.until, 'until', isNull)),
+    );
+
+    // A 403 that is none of these is still a refusal.
+    github.refusal = (
+      status: 403,
+      headers: {'x-ratelimit-remaining': '4999'},
+      message: 'Resource not accessible by personal access token',
+    );
+    await expectLater(host().headCommit(), throwsA(isA<SyncDenied>()));
+  });
+
   test('two journals sync through it, over real HTTP', () async {
     (JournalStore, SyncEngine) phone(String name) {
       final root = Directory.systemTemp.createTempSync('github-$name');

@@ -115,4 +115,18 @@ void main() {
     expect(months, greaterThan(2000));
     expect(misses, isEmpty);
   });
+
+  test('Delta T follows Espenak and Meeus before 1900 and after 2150', () {
+    // Their polynomials at the start of each span, and the long-term
+    // parabola beyond 2150.
+    for (final (year, seconds) in [
+      (1700.0, 8.8),
+      (1800.0, 13.7),
+      (1850.0, 7.1),
+      (1880.0, -5.0),
+      (2200.0, 442.1),
+    ]) {
+      expect(Moon.deltaTSeconds(year), closeTo(seconds, 1), reason: '$year');
+    }
+  });
 }

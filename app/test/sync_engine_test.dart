@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:candra/journal/entry.dart';
 import 'package:candra/journal/geo.dart';
@@ -547,5 +548,158 @@ void main() {
     expect(read.files, a.state.files);
     a.state = read;
     expect((await a.sync()).pushed, 0);
+  });
+
+  group('a sync that pulls and then does not go through', () {
+    test(
+      'still says it wrote here, so that the journal is read again',
+      () async {
+        final (a, b) = await pair();
+        a.write('From a');
+        await a.sync();
+        b.write('From b', minute: 700);
+        b.host.beforeCommit = () async => throw const SyncOffline();
+
+        await expectLater(b.engine.sync(b.state), throwsA(isA<SyncOffline>()));
+        expect(b.engine.wroteHere, isTrue);
+        final path = repository.files.keys.firstWhere(
+          (path) => path.endsWith('100000.md'),
+        );
+        expect(File('${b.store.journalPath}/$path').existsSync(), isTrue);
+      },
+    );
+
+    test('a retry with nothing left to pull still says it wrote', () async {
+      final (a, b) = await pair();
+      a.write('From a');
+      await a.sync();
+      b.write('From b', minute: 700);
+      // Someone else's commit that changes nothing, just as b commits.
+      b.host.beforeCommit = () async => repository.commits.add((
+        id: 'elsewhere',
+        message: 'Nothing',
+        files: Map.of(repository.files),
+      ));
+
+      final result = await b.sync();
+      expect(result.pulled, 0);
+      expect(result.changedHere, isTrue);
+      expect(b.titles(), ['From a', 'From b']);
+    });
+
+    test('a file pulled before the retry is no conflict when it has changed '
+        'again', () async {
+      final (a, b) = await pair();
+      final entry = a.write('Flying');
+      await a.sync();
+      await b.sync();
+      a.store.save(entry.copyWith(content: 'Once.'));
+      await a.sync();
+      b.write('From b', minute: 700);
+      // b pulls "Once.", and as it commits a changes the entry again.
+      b.host.beforeCommit = () async {
+        a.store.save(entry.copyWith(content: 'Twice.'));
+        await a.sync();
+      };
+
+      final result = await b.sync();
+      expect(result.conflicts, isEmpty);
+      final path = 'entries/2026/10/11/${entry.categoryId}/100000.md';
+      expect(
+        File('${b.store.journalPath}/$path').readAsStringSync(),
+        contains('Twice.'),
+      );
+      expect(repository.read(path), contains('Twice.'));
+      expect(repository.files.keys, hasLength(3));
+    });
+
+    test('keep both is carried out once, not again on the retry', () async {
+      final (a, b) = await pair();
+      final entry = a.write('Flying');
+      await a.sync();
+      await b.sync();
+      final path = 'entries/2026/10/11/${entry.categoryId}/100000.md';
+      a.store.save(entry.copyWith(content: 'As a wrote it.'));
+      await a.sync();
+      b.store.save(
+        b.store
+            .entriesFor(CivilDate(2026, 10, 11), utcOffset: Duration.zero)
+            .single
+            .copyWith(content: 'As b wrote it.'),
+      );
+      await b.sync();
+      b.host.beforeCommit = () async {
+        a.write('Meanwhile', minute: 900);
+        await a.sync();
+      };
+
+      final result = await b.sync({path: Keep.both});
+      expect(result.conflicts, isEmpty);
+      expect(b.titles(), ['Flying', 'Flying', 'Meanwhile']);
+      expect(repository.read(path), contains('As b wrote it.'));
+    });
+  });
+
+  test('an entry saved here while the sync waits is not overwritten', () async {
+    final (a, b) = await pair();
+    final entry = a.write('Flying');
+    await a.sync();
+    await b.sync();
+    final path = 'entries/2026/10/11/${entry.categoryId}/100000.md';
+    a.store.save(entry.copyWith(content: 'As a wrote it.'));
+    await a.sync();
+    // b saves its own words just as it fetches a's.
+    b.host.beforeBlob = () async => b.store.save(
+      b.store
+          .entriesFor(CivilDate(2026, 10, 11), utcOffset: Duration.zero)
+          .single
+          .copyWith(content: 'As b wrote it.'),
+    );
+
+    final result = await b.sync();
+    expect(result.conflicts.single.path, path);
+    expect(
+      utf8.decode(result.conflicts.single.mine!),
+      contains('As b wrote it.'),
+    );
+    expect(
+      File('${b.store.journalPath}/$path').readAsStringSync(),
+      contains('As b wrote it.'),
+    );
+    expect(repository.read(path), contains('As a wrote it.'));
+    // And still in conflict the next time, not sent up as a plain edit.
+    final again = await b.sync();
+    expect(again.conflicts.single.path, path);
+    expect(repository.read(path), contains('As a wrote it.'));
+  });
+
+  test('keep both is not offered, nor done, when the branch\'s copy is not an '
+      'entry', () async {
+    final (a, b) = await pair();
+    final entry = a.write('Flying');
+    await a.sync();
+    await b.sync();
+    final path = 'entries/2026/10/11/${entry.categoryId}/100000.md';
+    b.store.save(entry.copyWith(content: 'As b wrote it.'));
+    // Someone wrote over it on GitHub with something that is no entry.
+    final broken = utf8.encode('Not an entry at all.\n');
+    repository.blobs[blobSha(broken)] = Uint8List.fromList(broken);
+    repository.commits.add((
+      id: 'by-hand',
+      message: 'By hand',
+      files: {...repository.files, path: blobSha(broken)},
+    ));
+
+    final result = await b.sync();
+    expect(result.conflicts.single.canKeepBoth, isFalse);
+    final commits = repository.commits.length;
+    final asked = await b.sync({path: Keep.both});
+    expect(asked.conflicts.single.path, path);
+    expect(repository.commits, hasLength(commits));
+    expect(repository.read(path), 'Not an entry at all.\n');
+    expect(
+      File('${b.store.journalPath}/$path').readAsStringSync(),
+      contains('As b wrote it.'),
+    );
   });
 }

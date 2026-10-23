@@ -313,18 +313,41 @@ final class HeadingStream: NSObject, FlutterStreamHandler, CLLocationManagerDele
   // whether that screen is choosing a file to bring in.
   private var waiting: FlutterResult?
   private var picking = false
+  // The copy made for the file screen to save, while it is up.
+  private var saving: URL?
+
+  // Throws away the copy made for the file screen, once it has closed.
+  private func doneSaving() {
+    if let saving = saving { try? FileManager.default.removeItem(at: saving) }
+    saving = nil
+  }
+
+  // Answered when there is no screen to put a system sheet over, so that
+  // Dart is not left waiting for a sheet that never shows.
+  private static let nowhere = FlutterError(
+    code: "unavailable", message: "No screen to show the sheet over", details: nil)
 
   // Hands a file in the exports folder to whichever app the user picks.
+  // The file is thrown away once the sheet has closed: by then the other
+  // app has had its copy.
   private func share(path: String, result: @escaping FlutterResult) {
-    let sheet = UIActivityViewController(
-      activityItems: [URL(fileURLWithPath: path)], applicationActivities: nil)
+    let file = URL(fileURLWithPath: path)
+    guard let presenter = presenter else {
+      try? FileManager.default.removeItem(at: file)
+      result(AppDelegate.nowhere)
+      return
+    }
+    let sheet = UIActivityViewController(activityItems: [file], applicationActivities: nil)
     // An iPad wants to know where the sheet springs from.
-    if let view = presenter?.view {
+    if let view = presenter.view {
       sheet.popoverPresentationController?.sourceView = view
       sheet.popoverPresentationController?.sourceRect = CGRect(
         x: view.bounds.midX, y: view.bounds.maxY - 80, width: 1, height: 1)
     }
-    presenter?.present(sheet, animated: true)
+    sheet.completionWithItemsHandler = { _, _, _, _ in
+      try? FileManager.default.removeItem(at: file)
+    }
+    presenter.present(sheet, animated: true)
     result(nil)
   }
 
@@ -335,8 +358,12 @@ final class HeadingStream: NSObject, FlutterStreamHandler, CLLocationManagerDele
       result(FlutterError(code: "busy", message: "Another file screen is open", details: nil))
       return
     }
+    guard let presenter = presenter else {
+      result(AppDelegate.nowhere)
+      return
+    }
     // The file screen saves under the file's own name: give it the one
-    // wanted first.
+    // wanted first. That copy is thrown away once the screen has closed.
     let named = FileManager.default.temporaryDirectory.appendingPathComponent(name)
     do {
       try? FileManager.default.removeItem(at: named)
@@ -347,9 +374,10 @@ final class HeadingStream: NSObject, FlutterStreamHandler, CLLocationManagerDele
     }
     waiting = result
     picking = false
+    saving = named
     let screen = UIDocumentPickerViewController(forExporting: [named], asCopy: true)
     screen.delegate = self
-    presenter?.present(screen, animated: true)
+    presenter.present(screen, animated: true)
   }
 
   // Lets the user choose a file to import; it is copied into the app's
@@ -359,17 +387,22 @@ final class HeadingStream: NSObject, FlutterStreamHandler, CLLocationManagerDele
       result(FlutterError(code: "busy", message: "Another file screen is open", details: nil))
       return
     }
+    guard let presenter = presenter else {
+      result(AppDelegate.nowhere)
+      return
+    }
     waiting = result
     picking = true
     let screen = UIDocumentPickerViewController(
       forOpeningContentTypes: [.zip, .data], asCopy: true)
     screen.delegate = self
-    presenter?.present(screen, animated: true)
+    presenter.present(screen, animated: true)
   }
 
   func documentPicker(
     _ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]
   ) {
+    doneSaving()
     guard let result = waiting else { return }
     waiting = nil
     guard let url = urls.first else {
@@ -395,6 +428,7 @@ final class HeadingStream: NSObject, FlutterStreamHandler, CLLocationManagerDele
 
   // Backed out of: not an error.
   func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+    doneSaving()
     waiting?(nil)
     waiting = nil
   }
@@ -486,11 +520,13 @@ final class HeadingStream: NSObject, FlutterStreamHandler, CLLocationManagerDele
     }
   }
 
-  // Hands a place to Apple Maps.
+  // Hands a place to Apple Maps. Its own scheme, not the web address,
+  // so that with Maps deleted nothing opens in Safari instead: the answer
+  // is false and the app says there is no maps app.
   private func openInMaps(
     latitude: Double, longitude: Double, label: String, result: @escaping FlutterResult
   ) {
-    var link = URLComponents(string: "https://maps.apple.com/")!
+    var link = URLComponents(string: "maps://")!
     link.queryItems = [URLQueryItem(name: "ll", value: "\(latitude),\(longitude)")]
     if !label.isEmpty {
       link.queryItems?.append(URLQueryItem(name: "q", value: label))

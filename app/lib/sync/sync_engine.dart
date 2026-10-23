@@ -58,8 +58,14 @@ class Conflict {
 
   const Conflict({required this.path, this.mine, this.theirs});
 
-  /// Keeping both only makes sense when there are two to keep.
-  bool get canKeepBoth => mine != null && theirs != null;
+  /// Keeping both only makes sense when there are two to keep, and only
+  /// when the branch's copy reads as an entry that can be moved to a
+  /// second of its own. Anything else would be overwritten on the branch.
+  bool get canKeepBoth =>
+      mine != null &&
+      theirs != null &&
+      SyncEngine._entryPath.hasMatch(path) &&
+      SyncEngine._decode(theirs!) != null;
 }
 
 /// What a sync did.
@@ -78,10 +84,12 @@ class SyncResult {
     required this.pulled,
     required this.pushed,
     required this.conflicts,
+    this.changedHere = false,
   });
 
-  /// Whether files in the journal folder were changed.
-  bool get changedHere => pulled > 0;
+  /// Whether files in the journal folder were changed, by any attempt
+  /// this sync made.
+  final bool changedHere;
 }
 
 /// Brings a journal folder and a branch into line with each other.
@@ -117,6 +125,14 @@ class SyncEngine {
   // The names of files' contents, kept while they have not been touched.
   final _known = <String, (DateTime, int, String)>{};
 
+  /// Set whenever a sync writes or deletes a file in the journal folder,
+  /// whether or not that sync then goes through; the caller clears it once
+  /// it has read the journal afresh. A sync that fails after pulling some
+  /// files has still changed them, and the next one may have nothing left
+  /// to pull.
+  bool wroteHere = false;
+  bool _wroteNow = false;
+
   File _file(String path) =>
       File(p.joinAll([journal.path, ...path.split('/')]));
 
@@ -143,6 +159,7 @@ class SyncEngine {
   }
 
   void _write(String path, List<int> bytes) {
+    wroteHere = _wroteNow = true;
     final file = _file(path);
     file.parent.createSync(recursive: true);
     File('${file.path}.tmp')
@@ -151,6 +168,7 @@ class SyncEngine {
   }
 
   void _delete(String path) {
+    wroteHere = _wroteNow = true;
     final file = _file(path);
     if (file.existsSync()) file.deleteSync();
     var folder = file.parent;
@@ -168,13 +186,37 @@ class SyncEngine {
     SyncState state, {
     Map<String, Keep> resolutions = const {},
   }) async {
+    _wroteNow = false;
     for (var attempt = 0; ; attempt++) {
+      // What each file here was made from, for those an attempt wrote
+      // from the branch's copy (null for a deletion).
+      final written = <String, String?>{};
       try {
-        return await _sync(state, resolutions);
+        final result = await _sync(state, resolutions, written);
+        return SyncResult(
+          state: result.state,
+          pulled: result.pulled,
+          pushed: result.pushed,
+          conflicts: result.conflicts,
+          changedHere: _wroteNow,
+        );
       } on StaleHead {
         // Someone pushed while we were at it. What was pulled so far is
-        // sound; look again from where the branch now stands.
+        // sound; look again from where the branch now stands. A file
+        // pulled is now agreed as the copy it was pulled from, or the next
+        // attempt would take a further change on the branch for a
+        // conflict. A choice already carried out is not carried out again.
         if (attempt == 3) rethrow;
+        state = SyncState(
+          commit: state.commit,
+          tree: state.tree,
+          files: state.files,
+          agreed: {...state.agreed, ...written},
+        );
+        resolutions = {
+          for (final choice in resolutions.entries)
+            if (!written.containsKey(choice.key)) choice.key: choice.value,
+        };
       }
     }
   }
@@ -182,6 +224,7 @@ class SyncEngine {
   Future<SyncResult> _sync(
     SyncState state,
     Map<String, Keep> resolutions,
+    Map<String, String?> written,
   ) async {
     final local = _scan();
     final headCommit = await host.headCommit();
@@ -219,8 +262,36 @@ class SyncEngine {
     Uint8List? mine(String path) =>
         local.containsKey(path) ? _file(path).readAsBytesSync() : null;
 
+    // What is in the file now, and its name; nulls for not there.
+    (Uint8List?, String?) now(String path) {
+      final file = _file(path);
+      if (!file.existsSync()) return (null, null);
+      final bytes = file.readAsBytesSync();
+      return (bytes, blobSha(bytes));
+    }
+
+    void stillToSettle(String path, Uint8List? mine, Uint8List? theirs) {
+      conflicts.add(Conflict(path: path, mine: mine, theirs: theirs));
+      // Still to be settled: remember what was last agreed.
+      agreed[path] = state.base(path);
+    }
+
     Future<void> takeTheirs(String path) async {
       final bytes = await theirs(path);
+      // The file may have been saved here while this sync waited on the
+      // network. Then it is no longer what was looked at, and taking the
+      // branch's copy would lose what was just written.
+      final (current, sha) = now(path);
+      if (sha == remote.files[path]) {
+        // Made the same as the branch's meanwhile: nothing to take.
+        sha == null ? here.remove(path) : here.add(path);
+        written[path] = sha;
+        return;
+      }
+      if (sha != local[path]) {
+        stillToSettle(path, current, bytes);
+        return;
+      }
       if (bytes == null) {
         _delete(path);
         here.remove(path);
@@ -228,6 +299,7 @@ class SyncEngine {
         _write(path, bytes);
         here.add(path);
       }
+      written[path] = remote.files[path];
       pulled++;
     }
 
@@ -257,8 +329,15 @@ class SyncEngine {
           here: here,
           firstMeeting: state.commit == null,
         );
+        if (now(path).$2 != l) {
+          // Changed here meanwhile: merged next time, from what was
+          // last agreed.
+          agreed[path] = b;
+          continue;
+        }
         if (blobSha(merged) != l) {
           _write(path, merged);
+          written[path] = r;
           pulled++;
         }
         if (blobSha(merged) != r) toPush[path] = merged;
@@ -279,23 +358,21 @@ class SyncEngine {
             final moved = theirBytes == null
                 ? null
                 : _beside(path, theirBytes, {...here, ...remote.files.keys});
-            if (moved != null) {
-              _write(moved.$1, moved.$2);
-              here.add(moved.$1);
-              toPush[moved.$1] = moved.$2;
-              pulled++;
+            if (moved == null) {
+              // The branch's copy cannot be set beside as an entry of its
+              // own, so keeping both would overwrite it there. It stays a
+              // conflict, for mine or theirs.
+              stillToSettle(path, mine(path), theirBytes);
+              continue;
             }
+            _write(moved.$1, moved.$2);
+            here.add(moved.$1);
+            toPush[moved.$1] = moved.$2;
+            written[path] = r;
+            pulled++;
             sendMine(path);
           case null:
-            conflicts.add(
-              Conflict(
-                path: path,
-                mine: mine(path),
-                theirs: await theirs(path),
-              ),
-            );
-            // Still to be settled: remember what was last agreed.
-            agreed[path] = b;
+            stillToSettle(path, mine(path), await theirs(path));
         }
       }
     }
@@ -339,9 +416,22 @@ class SyncEngine {
   // never the same as anything.
   Future<bool> _sameEntry(String path, Uint8List? a, Uint8List? b) async {
     if (a == null || b == null || !path.startsWith('entries/')) return false;
-    final first = EntryFile.decode(utf8.decode(a, allowMalformed: true));
-    final second = EntryFile.decode(utf8.decode(b, allowMalformed: true));
+    final first = _decode(a, allowMalformed: true);
+    final second = _decode(b, allowMalformed: true);
     return first != null && second != null && first.sameAs(second);
+  }
+
+  // The entry [bytes] hold, or null if they do not read as one: not UTF-8
+  // (unless [allowMalformed]), or not an entry, or one with a date that
+  // cannot be.
+  static Entry? _decode(Uint8List bytes, {bool allowMalformed = false}) {
+    try {
+      return EntryFile.decode(
+        utf8.decode(bytes, allowMalformed: allowMalformed),
+      );
+    } catch (_) {
+      return null;
+    }
   }
 
   // An entry as it would be at the next second free on its day, so that
@@ -354,14 +444,9 @@ class SyncEngine {
   ) {
     final match = _entryPath.firstMatch(path);
     if (match == null) return null;
-    final String text;
-    try {
-      text = utf8.decode(bytes);
-    } on FormatException {
-      return null;
-    }
-    final entry = EntryFile.decode(text);
+    final entry = _decode(bytes);
     if (entry == null) return null;
+    final text = utf8.decode(bytes);
 
     final day = 'entries/${match[1]}/${match[2]}/${match[3]}/';
     final seconds = {

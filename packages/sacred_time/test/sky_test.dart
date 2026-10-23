@@ -153,6 +153,34 @@ void main() {
       expect(full.day, 24);
     });
 
+    test('never gives a phase that passed before the day began', () {
+      // At five hours behind Greenwich, 26 October begins at 05:00
+      // Universal Time, some fifty minutes after the full moon: that
+      // moon was the 25th's, and the next is November's.
+      final full = Sky.nextPhase(
+        CivilDate(2026, 10, 26),
+        utcOffset: const Duration(hours: -5),
+      );
+      expect(
+        full.difference(DateTime.utc(2026, 11, 24, 14, 54)).inMinutes.abs(),
+        lessThan(5),
+        reason: '$full',
+      );
+    });
+
+    test('still gives a phase late in the same day', () {
+      // At five hours behind, the full moon falls at 23:12 on the 25th.
+      const behind = Duration(hours: -5);
+      final full = Sky.nextPhase(CivilDate(2026, 10, 25), utcOffset: behind);
+      expect(
+        full.difference(DateTime.utc(2026, 10, 26, 4, 12)).inMinutes.abs(),
+        lessThan(5),
+        reason: '$full',
+      );
+      final local = full.add(behind);
+      expect([local.month, local.day, local.hour], [10, 25, 23]);
+    });
+
     test('finds the new moon too', () {
       final dark = Sky.nextPhase(
         CivilDate(2026, 10, 1),

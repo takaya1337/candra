@@ -1,6 +1,6 @@
 # Candra privacy policy: iPhone
 
-Last updated: 22 October 2026
+Last updated: 23 October 2026
 
 This is the policy for Candra on iPhone. The Android one is published
 beside it; the two apps do the same things, and this page says how the
@@ -62,9 +62,12 @@ otherwise. Candra says otherwise for everything you write:
   iPhone from a backup, or move to a new one, **the journal does not
   come with it.** Use "Save a copy" or sync to carry it over.
 - **Included in backups, because iOS gives an app no way to leave them
-  out:** the small settings listed above. Of these the only one that
-  says anything about you is the place you set, already rounded to a
-  tenth of a degree, about 11 kilometres.
+  out:** the small settings listed above, and what the widgets show for
+  the coming month: each day in the five calendars, the moon, and the
+  colours of the categories that have a reminder that day (their
+  colours only, never their names). Of these the only one that says
+  anything about you is the place you set, already rounded to a tenth
+  of a degree, about 11 kilometres.
 
 ## The Dynamic Island, the lock screen and widgets
 
@@ -82,19 +85,24 @@ otherwise. Candra says otherwise for everything you write:
 Only in these three cases, each of which you start yourself:
 
 1. **Export.** "Share a copy" and "Save a copy" make a zip file of your
-   journal as plain Markdown text. It goes wherever you send or save it.
-   The file is not encrypted.
+   journal as plain Markdown text. It holds your entries, categories,
+   tags and reminders, and for each entry and reminder the moment it was
+   first saved, with your time zone's offset from UTC. It goes wherever
+   you send or save it. The file is not encrypted.
 2. **Sync with GitHub (optional, off by default).** If you connect a
-   GitHub repository, Candra sends your journal, categories and
+   GitHub repository, Candra sends your journal, categories, tags and
    reminders to that repository over an encrypted connection (HTTPS),
-   and reads them back. They are stored there as plain text, not
+   and reads them back. Each sync is recorded in the repository with a
+   short note naming the kind of phone it came from (Android or iOS). They are stored there as plain text, not
    encrypted. Whoever can read that repository, and GitHub itself, can
    read them. GitHub's handling of your data is covered by
    [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 3. **Opening a place in Maps.** Tapping a geotag hands its rounded
    coordinates and its name to Apple Maps.
 
-Candra uses the network for nothing else.
+Candra uses the network for nothing else. A link you tap in the app,
+such as GitHub's privacy statement or the feedback address, opens in
+your browser or mail app.
 
 ## Permissions
 

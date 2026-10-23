@@ -59,6 +59,14 @@ class SyncDenied implements Exception {
   const SyncDenied();
 }
 
+/// The host has had too many requests for now. The token is fine; it is
+/// worth trying again from [until], when the host said when that is.
+class SyncRateLimited implements Exception {
+  final DateTime? until;
+
+  const SyncRateLimited([this.until]);
+}
+
 /// The repository or the branch is not there.
 class SyncNotFound implements Exception {
   const SyncNotFound();

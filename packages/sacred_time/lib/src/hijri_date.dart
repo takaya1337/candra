@@ -27,6 +27,9 @@ enum HijriMonth {
 /// 13, 16, 18, 21, 24, 26 and 29 of the cycle). It counts from Friday
 /// 16 July AD 622 (Julian). Dates announced from moon sighting, including
 /// Indonesia's official ones, can differ from it by a day either way.
+///
+/// Here the day turns at civil midnight, as every [CivilDate] does; by
+/// tradition the Islamic day begins at sunset, the evening before.
 class HijriDate {
   final int year;
   final HijriMonth month;

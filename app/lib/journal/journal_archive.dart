@@ -45,8 +45,11 @@ abstract final class JournalArchive {
   static const _tags = 'tags.json';
   static const _reminders = 'reminders.json';
 
+  // The category folder must be an id as the app makes them, six hex
+  // digits: a folder such as `..` would otherwise be taken as one, and
+  // the entry written outside its day's folder.
   static final _entryPath = RegExp(
-    r'(?:^|/)entries/\d{4}/\d{2}/\d{2}/([^/]+)/[^/]+\.md$',
+    r'(?:^|/)entries/\d{4}/\d{2}/\d{2}/([0-9a-f]{6})/[^/]+\.md$',
   );
 
   /// "candra-20261011-193005.zip".
@@ -72,8 +75,12 @@ abstract final class JournalArchive {
       final name = p.posix.joinAll(
         p.split(p.relative(file.path, from: root.path)),
       );
-      // Leftovers of a write that was cut short are not part of it.
-      if (name.endsWith('.tmp')) continue;
+      // Leftovers of a write that was cut short are not part of it, nor
+      // the copies of a damaged file set aside before it was written
+      // over (`categories.json.bad` and the like).
+      if (name.endsWith('.tmp') || RegExp(r'\.bad\d*$').hasMatch(name)) {
+        continue;
+      }
       archive.addFile(ArchiveFile.bytes(name, file.readAsBytesSync()));
     }
     return ZipEncoder().encodeBytes(archive);
@@ -141,14 +148,10 @@ abstract final class JournalArchive {
       if (name == _reminders || name.endsWith('/$_reminders')) {
         recognised = true;
         try {
-          reminders = [
-            for (final item in (jsonDecode(
-              utf8.decode(file.content),
-            ) as List).cast<Map<String, dynamic>>())
-              ?Reminder.fromJson(item),
-          ];
+          // One by one, so that one that cannot be read leaves the rest.
+          reminders = Reminder.listFrom(jsonDecode(utf8.decode(file.content)));
         } catch (_) {
-          // Reminders that cannot be read are left out; the journal
+          // A file that cannot be read at all is left out; the journal
           // itself is still taken.
         }
         continue;

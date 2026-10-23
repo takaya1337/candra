@@ -103,13 +103,46 @@ class GitHubHost implements GitHost {
     if (status >= 200 && status < 300) {
       return text.isEmpty ? null : jsonDecode(text);
     }
+    String? said;
+    try {
+      said = (jsonDecode(text) as Map)['message']?.toString();
+    } catch (_) {}
+    if (status == 403 || status == 429) {
+      final limited = rateLimit(status, response.headers, said);
+      if (limited != null) throw limited;
+    }
     if (status == 401 || status == 403) throw const SyncDenied();
     if (status == 404) throw const SyncNotFound();
-    String message = 'GitHub answered $status';
-    try {
-      message = '${(jsonDecode(text) as Map)['message'] ?? message}';
-    } catch (_) {}
-    throw SyncFailed(message);
+    throw SyncFailed(said ?? 'GitHub answered $status');
+  }
+
+  /// Whether an answer of 403 or 429 is GitHub's rate limit rather than a
+  /// refusal, and if so until when. GitHub says so in its headers: none
+  /// left of the hour's requests, or a number of seconds to wait; or, for
+  /// the secondary limit, only in its message. A 429 is always the limit.
+  /// A 403 with none of these is a refusal.
+  static SyncRateLimited? rateLimit(
+    int status,
+    HttpHeaders headers,
+    String? message, {
+    DateTime? now,
+  }) {
+    final at = now ?? DateTime.now();
+    final wait = int.tryParse(headers.value('retry-after') ?? '');
+    if (wait != null) return SyncRateLimited(at.add(Duration(seconds: wait)));
+    if (headers.value('x-ratelimit-remaining') == '0') {
+      final reset = int.tryParse(headers.value('x-ratelimit-reset') ?? '');
+      return SyncRateLimited(
+        reset == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(reset * 1000),
+      );
+    }
+    if (status == 429 ||
+        (message?.toLowerCase().contains('rate limit') ?? false)) {
+      return const SyncRateLimited();
+    }
+    return null;
   }
 
   @override

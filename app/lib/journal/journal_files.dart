@@ -39,18 +39,30 @@ class JournalFiles {
       ..writeAsBytesSync(bytes);
   }
 
-  /// Opens the share sheet for [file].
+  /// Opens the share sheet for [file]. On an iPhone the file is thrown
+  /// away once the sheet has closed; on Android the app it went to may
+  /// still be reading it, so it stays until the next export.
   Future<void> share(File file) =>
       _channel.invokeMethod<void>('share', {'path': file.path});
 
   /// Asks where on the device to keep a copy of [file]. Returns false if
-  /// the user backed out.
-  Future<bool> saveAs(File file) async =>
-      await _channel.invokeMethod<bool>('saveAs', {
-        'path': file.path,
-        'name': p.basename(file.path),
-      }) ??
-      false;
+  /// the user backed out. Either way [file] is thrown away afterwards: the
+  /// copy has been made by the time the file screen answers.
+  Future<bool> saveAs(File file) async {
+    try {
+      return await _channel.invokeMethod<bool>('saveAs', {
+            'path': file.path,
+            'name': p.basename(file.path),
+          }) ??
+          false;
+    } finally {
+      try {
+        if (file.existsSync()) file.deleteSync();
+      } on FileSystemException {
+        // Already gone, or not ours to remove: the next export clears it.
+      }
+    }
+  }
 
   /// Asks for a file to import and reads it. Returns null if the user
   /// backed out; throws a [FormatException] if it is not a journal file.

@@ -38,7 +38,10 @@ enum SalatMethod {
   karachi(fajrAngle: 18, ishaAngle: 18, adjustments: {_zuhur: 1}),
 
   /// Umm al-Qura University, Makkah: 18.5°, and Isya 90 minutes after
-  /// Magrib (120 in Ramadan).
+  /// Magrib (120 in Ramadan). Ramadan is taken by the tabular Hijri calendar,
+  /// which may stand a day off the Umm al-Qura calendar at either end of
+  /// the month, giving 90 minutes on a day that should have 120, or the
+  /// other way about.
   ummAlQura(fajrAngle: 18.5, ishaInterval: 90),
 
   /// Dubai: 18.2° and 18.2°.

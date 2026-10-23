@@ -27,4 +27,14 @@ void main() {
     final field = MagneticField.at(-7.8, 110.4, year: 2026.8);
     expect(field.declination.abs(), lessThan(1.5));
   });
+
+  test('outside 2025 to 2030 gives the field at the nearer end of the '
+      'model', () {
+    MagneticField at(double year) => MagneticField.at(-7.8, 110.4, year: year);
+    expect(at(1990).declination, at(2025).declination);
+    expect(at(2040).declination, at(2030).declination);
+    expect(at(2040).north, at(2030).north);
+    expect(MagneticField.covers(2026.8), isTrue);
+    expect(MagneticField.covers(2031), isFalse);
+  });
 }

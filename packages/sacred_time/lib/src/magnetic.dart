@@ -30,8 +30,18 @@ class MagneticField {
   static const _reference = 6371.2;
   static const _degree = 12;
 
+  /// The span the model holds for, in decimal years.
+  static const validFrom = 2025.0;
+  static const validUntil = 2030.0;
+
+  /// Whether [year] lies within the span the model holds for.
+  static bool covers(double year) => year >= validFrom && year <= validUntil;
+
   /// The field at geodetic [latitude], [longitude] (degrees), [height] km
-  /// above the ellipsoid, at decimal [year].
+  /// above the ellipsoid, at decimal [year]. The model holds only from
+  /// 2025.0 to 2030.0, and its secular variation is not to be carried
+  /// further; a year outside that span is taken as the nearer end of it,
+  /// so the field given is the model's at 2025.0 or at 2030.0.
   static MagneticField at(
     double latitude,
     double longitude, {
@@ -49,7 +59,7 @@ class MagneticField {
     final phiC = math.asin(z / r);
 
     // The coefficients at the year.
-    final dt = year - wmmEpoch;
+    final dt = year.clamp(validFrom, validUntil) - wmmEpoch;
     final g = List.generate(_degree + 1, (_) => List.filled(_degree + 1, 0.0));
     final h = List.generate(_degree + 1, (_) => List.filled(_degree + 1, 0.0));
     for (final (n, m, gnm, hnm, dg, dh) in wmmCoefficients) {

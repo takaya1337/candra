@@ -72,6 +72,11 @@ class Strings {
   String get contentPlaceholder => _en ? 'Write here' : 'Tulis di sini';
   String get deleteEntryQuestion =>
       _en ? 'Delete this entry?' : 'Hapus catatan berikut?';
+  String get entryChangedElsewhere => _en
+      ? 'This entry was changed by a sync while it was open, so yours is '
+            'kept beside it'
+      : 'Catatan ini diubah oleh sinkronisasi saat sedang dibuka, jadi '
+            'milik Anda disimpan di sampingnya';
   String get entryNeedsText => _en
       ? 'Write a title or some text first.'
       : 'Tulis judul atau isi terlebih dahulu.';
@@ -187,6 +192,16 @@ class Strings {
   String syncFailed(String? detail) => _en
       ? 'Sync failed${detail == null ? '.' : ': $detail'}'
       : 'Sinkronisasi gagal${detail == null ? '.' : ': $detail'}';
+  String syncRateLimited(String? time) => _en
+      ? 'GitHub has had too many requests for now. '
+            '${time == null ? 'It will try again later.' : 'It will try again after $time.'}'
+      : 'GitHub sedang menerima terlalu banyak permintaan. '
+            '${time == null ? 'Akan dicoba lagi nanti.' : 'Akan dicoba lagi setelah $time.'}';
+  String get syncDamaged => _en
+      ? 'The saved sync details could not be read. Turn sync off, then set '
+            'it up again.'
+      : 'Data sinkronisasi yang tersimpan tidak bisa dibaca. Matikan '
+            'sinkronisasi, lalu atur lagi.';
 
   String get syncSetupTitle => _en ? 'Sync with GitHub' : 'Sinkron GitHub';
   String get syncToken => _en ? 'Access token' : 'Token akses';

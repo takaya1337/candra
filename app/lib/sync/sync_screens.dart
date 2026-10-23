@@ -55,14 +55,23 @@ String syncStatus(Strings strings, SyncController sync) {
         SyncProblem.offline => strings.syncOffline,
         SyncProblem.denied => strings.syncDenied,
         SyncProblem.notFound => strings.syncNotFound,
+        SyncProblem.rateLimited => strings.syncRateLimited(
+          sync.retryAfter == null ? null : _clock(sync.retryAfter!),
+        ),
+        SyncProblem.damaged => strings.syncDamaged,
         _ => strings.syncFailed(sync.detail),
       };
     case SyncPhase.idle:
       final at = sync.lastSynced;
       if (at == null) return strings.syncNever;
-      String two(int value) => value.toString().padLeft(2, '0');
-      return strings.syncedAt('${two(at.hour)}:${two(at.minute)}');
+      return strings.syncedAt(_clock(at));
   }
+}
+
+String _clock(DateTime at) {
+  String two(int value) => value.toString().padLeft(2, '0');
+  final local = at.toLocal();
+  return '${two(local.hour)}:${two(local.minute)}';
 }
 
 /// Where a repository and a token are put in to start syncing.
@@ -126,6 +135,8 @@ class _SyncSetupScreenState extends State<SyncSetupScreen> {
       SyncProblem.offline => strings.syncOffline,
       SyncProblem.denied => strings.syncDenied,
       SyncProblem.notFound => strings.syncNotFound,
+      SyncProblem.rateLimited => strings.syncRateLimited(null),
+      SyncProblem.damaged => strings.syncDamaged,
       SyncProblem.other => strings.syncFailed(null),
     });
   }

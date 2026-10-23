@@ -198,6 +198,25 @@ Incense.
     expect(store.entryCount(idOf('Dream')), 1);
   });
 
+  test('moving to another day and category in one edit leaves nothing '
+      'behind', () {
+    final saved = store.save(draft());
+    final changed = saved.copyWith(categoryId: idOf('Dream'));
+    final moved = store.move(
+      changed,
+      CivilDate(2026, 10, 12),
+      8 * 3600,
+      previous: saved,
+    );
+
+    expect(files(), [
+      'categories.json',
+      'entries/2026/10/12/${idOf('Dream')}/080000.md',
+    ]);
+    expect(moved.categoryId, idOf('Dream'));
+    expect(store.entryCount(idOf('Occasion')), 0);
+  });
+
   test('deleting removes the file and the folders it leaves empty', () {
     final saved = store.save(draft());
     final other = store.save(draft(date: CivilDate(2026, 10, 12)));
@@ -432,6 +451,28 @@ Incense.
       expect(read.categoryId, idOf('Dream'));
     });
 
+    test('keeps two entries of one second in two categories', () {
+      // As two devices could leave them, each writing at the same second.
+      final one = draft(title: 'One').at(19 * 3600 + 30 * 60 + 5);
+      final two = draft(
+        category: 'Dream',
+        title: 'Two',
+      ).at(19 * 3600 + 30 * 60 + 5);
+      store.dispose();
+      for (final entry in [one, two]) {
+        fileAt(EntryFile.pathOf(entry))
+          ..parent.createSync(recursive: true)
+          ..writeAsStringSync(EntryFile.encode(entry, categoryName: 'x'));
+      }
+      File('${root.path}/index.dirty').writeAsStringSync('');
+      store = open();
+
+      expect(
+        store.entriesFor(day, utcOffset: offset).map((e) => e.title),
+        unorderedEquals(['One', 'Two']),
+      );
+    });
+
     test('handles a large journal', () {
       final storage = FileJournalStorage.open(
         Directory('${root.path}/big')..createSync(),
@@ -464,6 +505,118 @@ Incense.
       );
       expect(big.entryCount(big.categories.first.id), 500);
       big.dispose();
+    });
+  });
+  group('a damaged file', () {
+    File journalFile(String name) => File('${root.path}/journal/$name');
+
+    void writeBad() {
+      fileAt('2026/02/30/${idOf('Occasion')}/090000.md')
+        ..parent.createSync(recursive: true)
+        ..writeAsStringSync(
+          '---\ndate: 2026-02-30\ntime: 09:00\nutc_offset: +07:00\n'
+          'category: ${idOf('Occasion')}\n---\nNo such day.\n',
+        );
+      fileAt('2026/10/11/${idOf('Occasion')}/100000.md')
+        ..parent.createSync(recursive: true)
+        ..writeAsBytesSync([0x2d, 0x2d, 0x2d, 0x0a, 0xff, 0xfe, 0xc3]);
+    }
+
+    test('is skipped when the index is rebuilt at launch, and the rest '
+        'is read', () {
+      store.save(draft());
+      writeBad();
+      store.dispose();
+      File('${root.path}/index.dirty').writeAsStringSync('');
+      final storage = FileJournalStorage.open(root);
+      store = JournalStore(storage);
+
+      expect(storage.unreadable, 2);
+      expect(
+        store.entriesFor(day, utcOffset: offset).single.title,
+        'Evening offering',
+      );
+      expect(File('${root.path}/index.dirty').existsSync(), isFalse);
+    });
+
+    test('leaves no transaction open: what is written after is kept', () {
+      writeBad();
+      store.dispose();
+      File('${root.path}/index.dirty').writeAsStringSync('');
+      store = open()..save(draft(title: 'After'));
+      store.dispose();
+      // Opened again with no mark, so read from the index alone.
+      store = open();
+
+      expect(store.entriesFor(day, utcOffset: offset).single.title, 'After');
+    });
+
+    test('of categories does not stop launch and is never lost', () {
+      final saved = store.save(draft());
+      store.dispose();
+      const damaged = '[{"id": "abc123", "name": ';
+      journalFile('categories.json').writeAsStringSync(damaged);
+      File('${root.path}/index.db').deleteSync();
+      store = open();
+
+      // The entries' own folders stand in for the list.
+      expect(store.categories.single.id, saved.categoryId);
+      expect(store.entriesFor(day, utcOffset: offset), hasLength(1));
+      expect(journalFile('categories.json').readAsStringSync(), damaged);
+
+      // Saved over only once a copy is set aside.
+      store.addCategory('New');
+      expect(journalFile('categories.json.bad').readAsStringSync(), damaged);
+      expect(store.categories.map((c) => c.name), [saved.categoryId, 'New']);
+    });
+
+    test('of categories keeps what can be read of it', () {
+      store.dispose();
+      journalFile('categories.json').writeAsStringSync(
+        '[{"id": "aaaaaa", "name": "No colour"},'
+        ' {"id": "bbbbbb", "name": "Past the end", "color": 99},'
+        ' "not a category",'
+        ' {"id": "cccccc", "name": "Fine", "color": 23}]',
+      );
+      store = open();
+
+      expect(store.categories.map((c) => c.name), [
+        'No colour',
+        'Past the end',
+        'Fine',
+      ]);
+      for (final category in store.categories) {
+        expect(category.colorIndex, inInclusiveRange(0, 23));
+        expect(() => category.color, returnsNormally);
+      }
+      expect(store.categories.map((c) => c.colorIndex).toSet(), hasLength(3));
+    });
+
+    test('of tags is set aside before a tag is saved over it', () {
+      const damaged = '{"not": "a list"';
+      journalFile('tags.json').writeAsStringSync(damaged);
+      store.dispose();
+      store = open();
+      expect(store.tags, isEmpty);
+
+      store.addTag('Full moon');
+      expect(journalFile('tags.json.bad').readAsStringSync(), damaged);
+      store.dispose();
+      store = open();
+      expect(store.tags.single.name, 'Full moon');
+    });
+
+    test('of tags keeps the tags that can be read', () {
+      journalFile(
+        'tags.json',
+      ).writeAsStringSync('[{"id": "aaaaaa", "name": "Kept"}, 7, {"id": 1}]');
+      store.dispose();
+      store = open();
+
+      expect(store.tags.single.name, 'Kept');
+      store.addTag('New');
+      expect(journalFile('tags.json.bad').existsSync(), isTrue);
+      expect(store.tags.map((t) => t.name), ['Kept', 'New']);
     });
   });
 }

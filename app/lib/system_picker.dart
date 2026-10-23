@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/services.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sacred_time/sacred_time.dart';
 import 'package:sm_design/sm_design.dart';
@@ -61,6 +63,14 @@ class _SystemPickerState extends State<SystemPicker> {
   bool? _tall;
   double _slot = 0;
 
+  // Where and when a touch fell on the strip while it moved.
+  (Offset, Duration)? _down;
+
+  // Whether the strip is gliding. The touch that stops a glide ends it
+  // before the strip hears of the touch, so the end is taken only once
+  // that touch has been handled.
+  bool _moving = false;
+
   // The card nearest the centre, for the tick felt as one passes.
   late int _nearest = widget.active.index;
 
@@ -109,6 +119,10 @@ class _SystemPickerState extends State<SystemPicker> {
 
         return NotificationListener<ScrollNotification>(
           onNotification: (notification) {
+            if (notification is ScrollStartNotification) _moving = true;
+            if (notification is ScrollEndNotification) {
+              scheduleMicrotask(() => _moving = false);
+            }
             final offset = notification.metrics.pixels;
             final card = _cardAt(offset, slot);
             // Chosen once it is at the centre and all but still. Waiting
@@ -123,85 +137,128 @@ class _SystemPickerState extends State<SystemPicker> {
             if (arrived) widget.onPick(CalendarSystem.values[card]);
             return false;
           },
-          child: SingleChildScrollView(
-            key: ValueKey(tall),
-            controller: scroll,
-            scrollDirection: tall ? Axis.vertical : Axis.horizontal,
-            physics: InertialSnapPhysics((_) => slot),
-            // Enough room either side for the first and last cards to
-            // reach the centre.
-            padding: tall
-                ? EdgeInsets.symmetric(
-                    horizontal: spacing.md,
-                    vertical: math.max(0, (constraints.maxHeight - slot) / 2),
-                  )
-                : EdgeInsets.symmetric(
-                    horizontal: math.max(0, (constraints.maxWidth - slot) / 2),
-                    vertical: spacing.md,
-                  ),
-            child: Flex(
-              direction: tall ? Axis.vertical : Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final system in CalendarSystem.values)
-                  Padding(
-                    padding: tall
-                        ? EdgeInsets.symmetric(vertical: spacing.xs)
-                        : EdgeInsets.symmetric(horizontal: spacing.xs),
-                    child: GestureDetector(
-                      key: ValueKey('card-${system.name}'),
-                      onTap: () => scroll.animateTo(
-                        system.index * slot,
-                        duration: theme.motion.medium,
-                        curve: theme.motion.curve,
+          // While the strip glides, a scroll view lets nothing in it be
+          // touched, and its own drag takes the touch: a tap on a card
+          // would only stop the glide. So the strip watches the touch
+          // itself, beneath any gesture: one that falls while it moves
+          // and lifts where it fell picks the card under it. When it is
+          // still, the card's own tap does that.
+          child: Listener(
+            onPointerDown: (event) {
+              _down = _moving ? (event.localPosition, event.timeStamp) : null;
+            },
+            onPointerUp: (event) {
+              final down = _down;
+              _down = null;
+              if (down == null) return;
+              final (fell, began) = down;
+              if ((event.localPosition - fell).distance > kTouchSlop ||
+                  event.timeStamp - began > kLongPressTimeout) {
+                return;
+              }
+              final extent = tall
+                  ? constraints.maxHeight
+                  : constraints.maxWidth;
+              final along = tall
+                  ? event.localPosition.dy
+                  : event.localPosition.dx;
+              final before = math.max(0.0, (extent - slot) / 2);
+              final at = ((along + scroll.offset - before) / slot).floor();
+              if (at < 0 || at >= CalendarSystem.values.length) return;
+              // After the touch is done with: lifting the finger hands
+              // the strip back to its own settling, which would otherwise
+              // take over from this.
+              scheduleMicrotask(
+                () => scroll.animateTo(
+                  at * slot,
+                  duration: theme.motion.medium,
+                  curve: theme.motion.curve,
+                ),
+              );
+            },
+            child: SingleChildScrollView(
+              key: ValueKey(tall),
+              controller: scroll,
+              scrollDirection: tall ? Axis.vertical : Axis.horizontal,
+              physics: InertialSnapPhysics((_) => slot),
+              // Enough room either side for the first and last cards to
+              // reach the centre.
+              padding: tall
+                  ? EdgeInsets.symmetric(
+                      horizontal: spacing.md,
+                      vertical: math.max(0, (constraints.maxHeight - slot) / 2),
+                    )
+                  : EdgeInsets.symmetric(
+                      horizontal: math.max(
+                        0,
+                        (constraints.maxWidth - slot) / 2,
                       ),
-                      // How far a card is from the centre decides how it
-                      // looks, so the strip changes as it moves, not
-                      // after.
-                      child: AnimatedBuilder(
-                        animation: scroll,
-                        builder: (context, card) {
-                          final offset = scroll.hasClients
-                              ? scroll.offset
-                              : widget.active.index * slot;
-                          final away = math.min(
-                            1.0,
-                            (offset / slot - system.index).abs(),
-                          );
-                          return Transform.scale(
-                            scale: 1 - 0.08 * away,
-                            child: Opacity(
-                              opacity: 1 - 0.28 * away,
-                              child: DecoratedBox(
-                                position: DecorationPosition.foreground,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: system.shown.accent.withValues(
-                                      alpha: 1 - away,
+                      vertical: spacing.md,
+                    ),
+              child: Flex(
+                direction: tall ? Axis.vertical : Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final system in CalendarSystem.values)
+                    Padding(
+                      padding: tall
+                          ? EdgeInsets.symmetric(vertical: spacing.xs)
+                          : EdgeInsets.symmetric(horizontal: spacing.xs),
+                      child: GestureDetector(
+                        key: ValueKey('card-${system.name}'),
+                        onTap: () => scroll.animateTo(
+                          system.index * slot,
+                          duration: theme.motion.medium,
+                          curve: theme.motion.curve,
+                        ),
+                        // How far a card is from the centre decides how it
+                        // looks, so the strip changes as it moves, not
+                        // after.
+                        child: AnimatedBuilder(
+                          animation: scroll,
+                          builder: (context, card) {
+                            final offset = scroll.hasClients
+                                ? scroll.offset
+                                : widget.active.index * slot;
+                            final away = math.min(
+                              1.0,
+                              (offset / slot - system.index).abs(),
+                            );
+                            return Transform.scale(
+                              scale: 1 - 0.08 * away,
+                              child: Opacity(
+                                opacity: 1 - 0.28 * away,
+                                child: DecoratedBox(
+                                  position: DecorationPosition.foreground,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: system.shown.accent.withValues(
+                                        alpha: 1 - away,
+                                      ),
+                                      width: 1.5,
                                     ),
-                                    width: 1.5,
+                                    borderRadius: BorderRadius.circular(
+                                      theme.radii.md,
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(
-                                    theme.radii.md,
-                                  ),
+                                  child: card,
                                 ),
-                                child: card,
                               ),
-                            ),
-                          );
-                        },
-                        child: _SystemCard(
-                          system: system,
-                          strings: widget.strings,
-                          width: tall ? null : _cardWidth,
-                          height: tall ? _cardHeight : null,
-                          date: widget.date,
-                          isLocked: system == widget.locked,
+                            );
+                          },
+                          child: _SystemCard(
+                            system: system,
+                            strings: widget.strings,
+                            width: tall ? null : _cardWidth,
+                            height: tall ? _cardHeight : null,
+                            date: widget.date,
+                            isLocked: system == widget.locked,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         );

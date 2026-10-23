@@ -66,20 +66,41 @@ class ReminderStore extends ChangeNotifier {
 
   void _read() {
     _reminders.clear();
+    _unread.clear();
+    _unreadable = false;
     final file = this.file;
     if (file == null || !file.existsSync()) return;
+    final List<Object?> items;
     try {
-      _reminders.addAll([
-        for (final item in (jsonDecode(
-          file.readAsStringSync(),
-        ) as List).cast<Map<String, dynamic>>())
-          ?Reminder.fromJson(item),
-      ]);
+      items = jsonDecode(file.readAsStringSync()) as List;
     } catch (_) {
-      // A file that cannot be read is left where it is, untouched, until
-      // something is saved over it.
+      // A file that cannot be read at all is left where it is, untouched,
+      // and set aside before anything is saved in its place.
+      _unreadable = true;
+      return;
+    }
+    // Read one by one, so that one reminder spoilt (a day that does not
+    // exist, say) costs only itself. What cannot be read is kept as it
+    // was and written back with the rest, never lost by a save.
+    for (final item in items) {
+      final reminder = Reminder.listFrom([item]).firstOrNull;
+      if (reminder != null) {
+        _reminders.add(reminder);
+      } else {
+        _unread.add(item);
+      }
     }
   }
+
+  // What was in the file but could not be read as a reminder, kept to be
+  // written back as it was.
+  final _unread = <Object?>[];
+
+  // Whether the file could not be read at all.
+  var _unreadable = false;
+
+  /// How many of the file's items could not be read as reminders.
+  int get skipped => _unread.length;
 
   /// Reads the reminders afresh from their file: for after a sync has
   /// changed it underneath.
@@ -287,9 +308,15 @@ class ReminderStore extends ChangeNotifier {
     final file = this.file;
     if (file != null) {
       file.parent.createSync(recursive: true);
+      if (_unreadable && file.existsSync()) {
+        // Never saved over: what could not be read is kept beside it, for
+        // whoever can make sense of it.
+        file.copySync('${file.path}.bad');
+      }
+      _unreadable = false;
       final draft = File('${file.path}.tmp')
         ..writeAsStringSync(
-          '${const JsonEncoder.withIndent('  ').convert([for (final reminder in _reminders) reminder.toJson()])}\n',
+          '${const JsonEncoder.withIndent('  ').convert([for (final reminder in _reminders) reminder.toJson(), ..._unread])}\n',
           flush: true,
         );
       draft.renameSync(file.path);
@@ -345,8 +372,7 @@ class ReminderStore extends ChangeNotifier {
             '${(minute % 60).toString().padLeft(2, '0')}';
         mine.add(
           Announcement(
-            // The same reminder on the same day always has the same id.
-            id: Object.hash(reminder.id, date.dayNumber) & 0x7fffffff,
+            id: announcementId(reminder.id, date.dayNumber),
             when: when,
             title: reminder.title,
             body: '${Weton.of(date)} · $clock',
@@ -357,6 +383,24 @@ class ReminderStore extends ChangeNotifier {
     }
     all.sort((a, b) => a.when.compareTo(b.when));
     return all.take(announcedAtMost).toList();
+  }
+
+  /// The id the phone knows the announcement of reminder [id] on day
+  /// [dayNumber] by.
+  ///
+  /// It must come out the same in every run of the app and in the
+  /// background task, since each takes back whatever waiting id it does
+  /// not itself want. So it is FNV-1a over the two, which depends on
+  /// nothing but them, and not [Object.hash], which is seeded afresh in
+  /// every process. Ids below 16 are left for announcements of their own,
+  /// such as the end of a practice (id 1).
+  static int announcementId(String id, int dayNumber) {
+    var hash = 0x811c9dc5;
+    for (final byte in utf8.encode('$id:$dayNumber')) {
+      hash = ((hash ^ byte) * 0x01000193) & 0xffffffff;
+    }
+    hash &= 0x7fffffff;
+    return hash < 16 ? hash + 16 : hash;
   }
 
   /// Hands the phone what to announce. Done at every start and after every

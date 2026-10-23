@@ -11,14 +11,17 @@ import 'package:sm_design/sm_design.dart';
 /// videos move alike. Everything is in the logo maker's design units, a
 /// square 1000 across, y down.
 ///
-/// The tracing (the owner's order, 23 October 2026):
+/// The tracing (the owner's order, 23 October 2026, as `trace.go` has it):
 ///
-///  1. The five moons, one at a time, clockwise from the new moon: each
-///     traced round, then waxing to its phase.
-///  2. The bead ring through the moons, at one even pace.
-///  3. The inner ring, from the new moon's direction.
+///  1. The five moons' rings, all traced together.
+///  2. The moons fill all together (the new moon stays empty), each to its
+///     phase, fading in (owner, 23 October 2026: no longer one after
+///     another as `trace.go` has it).
+///  3. The bead ring through the moons and the inner ring together, at
+///     the inner ring's pace, from the new moon's direction.
 ///  4. The great crescent: a full moon swelling from its centre, then a
-///     shadow sliding in from two o'clock and eclipsing it to the crescent.
+///     shadow sliding in from two o'clock and eclipsing it to the crescent;
+///     the name rises as the eclipse begins.
 class SigilGeometry {
   SigilGeometry._();
 
@@ -131,15 +134,11 @@ class _TraceMoon {
 
 /// The tracing laid out in time, as `NewTrace` lays it out.
 class SigilTrace {
-  // The pace, in seconds: the app's own (owner, 23 October 2026), quicker
-  // than the logo maker's (0.5, 0.45, 0.45, 0.08, 2.6, 0.25, 1.6, 1.3,
-  // 0.35, 2.0) where it is only drawing lines, and as slow where the
-  // moons fill and the great moon swells and is eclipsed.
+  // The pace, in seconds, set by the owner's eye (23 October 2026), and
+  // shared with `trace.go` but for the fills, which here run together.
   static const _lead = 0.3;
   static const _moon = 0.32;
-  static const _wax = 0.36;
-  static const _pause = 0.06;
-  static const _ring = 1.2;
+  static const _wax = 1.2;
   static const _breath = 0.14;
   static const _inner = 0.85;
   static const _full = 1.5;
@@ -156,6 +155,9 @@ class SigilTrace {
 
   /// When the sigil is whole.
   late final double done;
+
+  /// When the shadow begins to slide in, and the name to rise.
+  double get eclipseStarts => _eclipseStep.start;
   late final Offset shadowFrom;
 
   SigilTrace() {
@@ -168,18 +170,16 @@ class SigilTrace {
     }
     // From a moon's centre to where the thread meets its ring.
     final half = 2 * math.asin((_G.dot - _G.thread / 2) / (2 * _G.rDots));
-    var t = _lead;
+    // The five rings together; then the moons fill together.
+    final ring = _Step(_lead, _moon);
+    final fills = _Step(ring.end, _wax);
     for (var i = 0; i < n; i++) {
       final k = (start - 1 - i + n * 4) % n + 1;
       final a = SigilGeometry.dotAngle(start) + i * 2 * math.pi / n;
       final d = SigilGeometry.polar(_G.centre, _G.rDots, a);
       final arrives = SigilGeometry.polar(_G.centre, _G.rDots, a - half);
       final lit = _G.phases[k - 1];
-      final ring = _Step(t, _moon);
-      t += _moon;
-      final wax = _Step(t, lit > 0 ? _wax : 0);
-      if (lit > 0) t += _wax;
-      t += _pause;
+      final wax = lit > 0 ? fills : _Step(fills.start, 0);
       _moons.add(
         _TraceMoon(
           centre: d,
@@ -192,16 +192,16 @@ class SigilTrace {
         ),
       );
     }
-    // The bead ring at one pace: the pen passes behind each moon in the
-    // time its gap would take.
-    t += _breath;
+    // The bead ring and the inner ring together, from the same point, one
+    // round each in the inner ring's time; the bead ring at one pace, the
+    // pen passing behind each moon in the time its gap would take.
+    var t = fills.end + _breath;
     for (final m in _moons) {
       m.thread = _Step(
-        t + (m.threadFrom - _moons.first.threadFrom) / (2 * math.pi) * _ring,
-        (m.threadTo - m.threadFrom) / (2 * math.pi) * _ring,
+        t + (m.threadFrom - _moons.first.threadFrom) / (2 * math.pi) * _inner,
+        (m.threadTo - m.threadFrom) / (2 * math.pi) * _inner,
       );
     }
-    t += _ring + _breath;
     innerFrom = SigilGeometry.dotAngle(start);
     _innerStep = _Step(t, _inner);
     t += _inner + _breath;
@@ -364,9 +364,10 @@ void paintSigil(
     if (m.lit > 0) {
       final w = m.wax.eased(t);
       if (w > 0) {
+        // Fading in as it grows, so it never reads as instant.
         canvas.drawPath(
           _phase(m.centre, _G.dot, math.max(0.004, m.lit * w), _G.light),
-          fill,
+          w < 1 ? (Paint()..color = ink.withValues(alpha: ink.a * w)) : fill,
         );
       }
     }
@@ -471,8 +472,12 @@ class SigilTracing extends StatefulWidget {
   static const _stagger = 0.15;
   static const _settle = 2.2;
 
-  /// How long from the start until the name has settled.
-  static double get length => SigilTrace.instance.done + _settle;
+  /// How long from the start until the sigil is whole and the name,
+  /// rising from the eclipse's start, has settled.
+  static double get length => math.max(
+    SigilTrace.instance.done,
+    SigilTrace.instance.eclipseStarts + _settle,
+  );
 
   @override
   State<SigilTracing> createState() => _SigilTracingState();
@@ -536,7 +541,6 @@ class _SigilPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final real = seconds.value;
     final t = real;
-    final done = SigilTrace.instance.done;
     // The sigil and the name, as one block, centred.
     final across = math.min(size.width * 0.74, size.height * 0.62);
     final cap = across * _cap;
@@ -550,9 +554,9 @@ class _SigilPainter extends CustomPainter {
     paintSigil(canvas, t, ink, lunation: lunation);
     canvas.restore();
 
-    // The name rises once the sigil is whole: the letters come up one by
+    // The name rises as the eclipse begins: the letters come up one by
     // one out of the dark while the word draws its spacing in.
-    final since = real - done;
+    final since = real - SigilTrace.instance.eclipseStarts;
     if (since <= 0) return;
     final settle =
         1 - math.pow(1 - math.min(1.0, since / SigilTracing._settle), 3);

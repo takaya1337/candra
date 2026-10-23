@@ -17,6 +17,9 @@ class FakeGitHubServer {
   /// Whether the token may push.
   var mayPush = true;
 
+  /// While set, every request is answered with it instead.
+  ({int status, Map<String, String> headers, String message})? refusal;
+
   Uri get url => Uri.parse('http://${_server.address.host}:${_server.port}');
 
   Map<String, String> get files =>
@@ -61,6 +64,11 @@ class FakeGitHubServer {
     }
 
     final text = await utf8.decodeStream(request);
+    final refused = refusal;
+    if (refused != null) {
+      refused.headers.forEach(request.response.headers.set);
+      return answer(refused.status, {'message': refused.message});
+    }
     final body = text.isEmpty ? null : jsonDecode(text) as Map<String, dynamic>;
     if (request.headers.value('authorization') != 'Bearer good') {
       return answer(401, {'message': 'Bad credentials'});

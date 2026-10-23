@@ -42,6 +42,10 @@ abstract class JournalStorage {
   /// other than the app has changed it there.
   void refresh() {}
 
+  /// How many entry files could not be read the last time the journal
+  /// was read afresh: they are left where they are, and left out.
+  int get unreadable => 0;
+
   /// For every day from [first] to [last] (day numbers) that has entries,
   /// its categories, the one with the earliest entry first.
   Map<int, List<String>> categoriesByDay(
@@ -197,7 +201,7 @@ class MemoryJournalStorage extends JournalStorage {
 /// opening them. It holds nothing the files do not, and is rebuilt from
 /// them whenever it is missing, out of date, or was left half-written.
 class FileJournalStorage extends JournalStorage {
-  static const _indexVersion = 6;
+  static const _indexVersion = 7;
 
   final Directory _journal;
   final File _dirty;
@@ -248,34 +252,64 @@ class FileJournalStorage extends JournalStorage {
         tags TEXT NOT NULL,
         bazi TEXT,
         moment TEXT,
-        PRIMARY KEY (day, second)
+        -- The category is part of the key: two devices can write an entry
+        -- at the same second in two categories, and both are files.
+        PRIMARY KEY (day, second, category)
       ) WITHOUT ROWID
     ''');
     _index.execute(
       'CREATE INDEX IF NOT EXISTS entries_by_category ON entries (category)',
     );
     if (_index.userVersion != _indexVersion || _dirty.existsSync()) {
-      rebuildIndex();
+      // This runs before the app has drawn anything, so nothing here may
+      // stop it starting. A rebuild that fails leaves the index as it was
+      // and the version unset, and is tried again at the next start.
+      try {
+        rebuildIndex();
+      } catch (_) {}
     }
   }
 
-  /// Throws the index away and reads every file again.
+  @override
+  int get unreadable => _unreadable;
+  var _unreadable = 0;
+
+  /// Throws the index away and reads every file again. A file that cannot
+  /// be read (not UTF-8, not an entry, a date that does not exist) is
+  /// left where it is and counted in [unreadable], so that one bad file
+  /// never hides the rest.
   void rebuildIndex() {
+    var unreadable = 0;
     _index.execute('BEGIN');
-    _index.execute('DELETE FROM entries');
-    if (_entries.existsSync()) {
-      for (final file in _entries.listSync(recursive: true)) {
-        if (file is! File || !file.path.endsWith('.md')) continue;
-        final entry = EntryFile.decode(file.readAsStringSync());
-        // The folder decides the category, should the two ever disagree.
-        if (entry != null) {
+    try {
+      _index.execute('DELETE FROM entries');
+      if (_entries.existsSync()) {
+        for (final file in _entries.listSync(recursive: true)) {
+          if (file is! File || !file.path.endsWith('.md')) continue;
+          Entry? entry;
+          try {
+            entry = EntryFile.decode(file.readAsStringSync());
+          } catch (_) {
+            entry = null;
+          }
+          if (entry == null) {
+            unreadable++;
+            continue;
+          }
+          // The folder decides the category, should the two ever disagree.
           _indexPut(
             entry.copyWith(categoryId: p.basename(p.dirname(file.path))),
           );
         }
       }
+      _index.execute('COMMIT');
+    } catch (_) {
+      // Never left inside the transaction: every later write would go
+      // into it and be lost.
+      _index.execute('ROLLBACK');
+      rethrow;
     }
-    _index.execute('COMMIT');
+    _unreadable = unreadable;
     _index.userVersion = _indexVersion;
     if (_dirty.existsSync()) _dirty.deleteSync();
   }
@@ -303,8 +337,8 @@ class FileJournalStorage extends JournalStorage {
   );
 
   void _indexRemove(Entry entry) => _index.execute(
-    'DELETE FROM entries WHERE day = ? AND second = ?',
-    [entry.date.dayNumber, entry.secondOfDay],
+    'DELETE FROM entries WHERE day = ? AND second = ? AND category = ?',
+    [entry.date.dayNumber, entry.secondOfDay, entry.categoryId],
   );
 
   List<Entry> _select(String where, List<Object?> parameters) => [
@@ -401,50 +435,153 @@ class FileJournalStorage extends JournalStorage {
     }
   }
 
-  // Categories.
+  // Categories and tags.
+  //
+  // Either list can be edited by hand, or arrive damaged by a sync. What
+  // can be read of it is used, and the app still starts. A file that was
+  // not read whole is copied aside before anything is saved over it, so
+  // that what was in it is never lost.
+  var _categoriesPartly = false;
+  var _tagsPartly = false;
 
-  @override
-  List<JournalCategory>? loadCategories() {
-    if (!_categories.existsSync()) return null;
-    final list = jsonDecode(_categories.readAsStringSync()) as List;
-    return [
-      for (final item in list.cast<Map<String, dynamic>>())
-        JournalCategory(
-          id: item['id'] as String,
-          name: item['name'] as String,
-          colorIndex: item['color'] as int,
-        ),
-    ];
-  }
-
-  @override
-  void saveCategories(List<JournalCategory> categories) => _write(
-    _categories,
-    '${const JsonEncoder.withIndent('  ').convert([
-      for (final category in categories) {'id': category.id, 'name': category.name, 'color': category.colorIndex},
-    ])}\n',
-  );
-
-  @override
-  List<JournalTag> loadTags() {
-    if (!_tags.existsSync()) return [];
+  // The items of the list in [file], or null if it holds no list.
+  static List<Object?>? _readList(File file) {
     try {
-      final list = jsonDecode(_tags.readAsStringSync()) as List;
-      return [
-        for (final item in list.cast<Map<String, dynamic>>())
-          ?JournalTag.fromJson(item),
-      ];
+      final list = jsonDecode(file.readAsStringSync());
+      return list is List ? list : null;
     } catch (_) {
-      // A file that cannot be read is left alone until a tag is saved.
-      return [];
+      return null;
     }
   }
 
+  // Copies [file] to the first free `<name>.bad`, `<name>.bad2`, ... beside
+  // it.
+  static void _setAside(File file) {
+    if (!file.existsSync()) return;
+    var n = 1;
+    File aside;
+    do {
+      aside = File('${file.path}.bad${n == 1 ? '' : n}');
+      n++;
+    } while (aside.existsSync());
+    file.copySync(aside.path);
+  }
+
   @override
-  void saveTags(List<JournalTag> tags) => _write(
-    _tags,
-    '${const JsonEncoder.withIndent('  ').convert([for (final tag in tags) tag.toJson()])}\n',
-  );
+  List<JournalCategory>? loadCategories() {
+    _categoriesPartly = false;
+    if (!_categories.existsSync()) return null;
+    final list = _readList(_categories);
+    if (list == null) {
+      _categoriesPartly = true;
+      return _categoriesOfEntries();
+    }
+    final categories = <JournalCategory>[];
+    for (final item in list) {
+      final id = item is Map ? item['id'] : null;
+      if (item is! Map ||
+          id is! String ||
+          id.isEmpty ||
+          categories.any((c) => c.id == id)) {
+        _categoriesPartly = true;
+        continue;
+      }
+      final name = item['name'];
+      final color = item['color'];
+      if (name is! String || color is! int) _categoriesPartly = true;
+      // A colour outside the palette would be drawn from past its end. It
+      // is brought inside, and one another category has, or none at all,
+      // is swapped for a free one: no two categories share a colour.
+      var colorIndex = color is int
+          ? color.clamp(0, categoryPalette.length - 1)
+          : -1;
+      if (colorIndex < 0 || categories.any((c) => c.colorIndex == colorIndex)) {
+        colorIndex = _freeColor(categories);
+      }
+      categories.add(
+        JournalCategory(
+          id: id,
+          name: name is String ? name : id,
+          colorIndex: colorIndex,
+        ),
+      );
+    }
+    return categories;
+  }
+
+  // The first palette colour none of [categories] has.
+  static int _freeColor(List<JournalCategory> categories) {
+    for (var i = 0; i < categoryPalette.length; i++) {
+      if (!categories.any((c) => c.colorIndex == i)) return i;
+    }
+    return 0;
+  }
+
+  // With the list of categories unreadable, the categories the entries
+  // are in, named after their folders, so the journal can still be seen.
+  // Null if there are none, and the journal starts as a new one would.
+  List<JournalCategory>? _categoriesOfEntries() {
+    final categories = <JournalCategory>[];
+    for (final row in _index.select(
+      'SELECT category, MIN(day * 86400 + second) AS first FROM entries '
+      'GROUP BY category ORDER BY first',
+    )) {
+      final id = row['category'] as String;
+      categories.add(
+        JournalCategory(id: id, name: id, colorIndex: _freeColor(categories)),
+      );
+    }
+    return categories.isEmpty ? null : categories;
+  }
+
+  @override
+  void saveCategories(List<JournalCategory> categories) {
+    if (_categoriesPartly) {
+      _setAside(_categories);
+      _categoriesPartly = false;
+    }
+    _write(
+      _categories,
+      '${const JsonEncoder.withIndent('  ').convert([
+        for (final category in categories) {'id': category.id, 'name': category.name, 'color': category.colorIndex},
+      ])}\n',
+    );
+  }
+
+  @override
+  List<JournalTag> loadTags() {
+    _tagsPartly = false;
+    if (!_tags.existsSync()) return [];
+    final list = _readList(_tags);
+    if (list == null) {
+      _tagsPartly = true;
+      return [];
+    }
+    final tags = <JournalTag>[];
+    for (final item in list) {
+      final tag = item is Map<String, dynamic>
+          ? JournalTag.fromJson(item)
+          : null;
+      if (tag == null || tags.any((t) => t.id == tag.id)) {
+        _tagsPartly = true;
+      } else {
+        tags.add(tag);
+      }
+    }
+    return tags;
+  }
+
+  @override
+  void saveTags(List<JournalTag> tags) {
+    if (_tagsPartly) {
+      _setAside(_tags);
+      _tagsPartly = false;
+    }
+    _write(
+      _tags,
+      '${const JsonEncoder.withIndent('  ').convert([for (final tag in tags) tag.toJson()])}\n',
+    );
+  }
 
   @override
   List<Entry> allEntries() => _select('1', const []);

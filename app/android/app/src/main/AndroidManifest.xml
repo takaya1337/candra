@@ -2,13 +2,16 @@
     <!-- For syncing with a repository, and only that: nothing reaches the
          network unless the user has set sync up. -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- For reminders: to show them, and to set them again after the
-         phone restarts. -->
-    <!-- For the geotag button on an entry, and nothing else: asked for the
-         first time it is pressed, never used in the background. The
-         position is rounded to about 100 m before it is kept. -->
+    <!-- For where the phone is: the geotag button on an entry, the place
+         the sky and the bazi chart are worked out for, and refreshing
+         that place on Today or when a tool opens. Read only when the user
+         asks for it, or when it is already allowed; asked for the first
+         time it is needed, never used in the background. The position is
+         always rounded to about 100 m. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- For reminders: to show them, and to set them again after the
+         phone restarts. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- To show a reminder at its minute and not up to an hour late.

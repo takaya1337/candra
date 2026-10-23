@@ -193,9 +193,67 @@ class Moon {
     return (_moonLongitude(t) - _sunLongitude(t)) % 360;
   }
 
-  /// Terrestrial Time minus Universal Time, in seconds (Espenak & Meeus
-  /// polynomials, 1900 onward).
+  /// Terrestrial Time minus Universal Time, in seconds: the polynomials
+  /// of Espenak and Meeus, "Polynomial Expressions for Delta T", in the
+  /// NASA Five Millennium Canon of Solar Eclipses (2006), from 500 BC to
+  /// AD 2150, and their long-term parabola outside that span.
   static double _deltaT(double year) {
+    if (year < -500 || year >= 2150) {
+      final u = (year - 1820) / 100;
+      return -20 + 32 * u * u;
+    }
+    if (year < 500) {
+      final u = year / 100;
+      return 10583.6 -
+          1014.41 * u +
+          33.78311 * u * u -
+          5.952053 * u * u * u -
+          0.1798452 * u * u * u * u +
+          0.022174192 * u * u * u * u * u +
+          0.0090316521 * u * u * u * u * u * u;
+    }
+    if (year < 1600) {
+      final u = (year - 1000) / 100;
+      return 1574.2 -
+          556.01 * u +
+          71.23472 * u * u +
+          0.319781 * u * u * u -
+          0.8503463 * u * u * u * u -
+          0.005050998 * u * u * u * u * u +
+          0.0083572073 * u * u * u * u * u * u;
+    }
+    if (year < 1700) {
+      final u = year - 1600;
+      return 120 - 0.9808 * u - 0.01532 * u * u + u * u * u / 7129;
+    }
+    if (year < 1800) {
+      final u = year - 1700;
+      return 8.83 +
+          0.1603 * u -
+          0.0059285 * u * u +
+          0.00013336 * u * u * u -
+          u * u * u * u / 1174000;
+    }
+    if (year < 1860) {
+      final u = year - 1800;
+      return 13.72 -
+          0.332447 * u +
+          0.0068612 * u * u +
+          0.0041116 * u * u * u -
+          0.00037436 * u * u * u * u +
+          0.0000121272 * u * u * u * u * u -
+          0.0000001699 * u * u * u * u * u * u +
+          0.000000000875 * u * u * u * u * u * u * u;
+    }
+    if (year < 1900) {
+      final u = year - 1860;
+      return 7.62 +
+          0.5737 * u -
+          0.251754 * u * u +
+          0.01680668 * u * u * u -
+          0.0004473624 * u * u * u * u +
+          u * u * u * u * u / 233174;
+    }
     if (year < 1920) {
       final u = year - 1900;
       return -2.79 +

@@ -47,6 +47,9 @@ enum Taun {
 /// 29 Besar 1986 (25 August 2052). Earlier kurup have irregular lengths and
 /// differ between Surakarta and Yogyakarta; the kurup after Asapon has not
 /// been defined by the courts.
+///
+/// Here the day turns at civil midnight, as every [CivilDate] does; by
+/// tradition the Javanese day begins at sunset, the evening before.
 class JavaneseDate {
   /// Year in Anno Javanico.
   final int year;

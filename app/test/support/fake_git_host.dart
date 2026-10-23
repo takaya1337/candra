@@ -31,8 +31,13 @@ class FakeGitHost implements GitHost {
   /// else's push in at the worst moment.
   Future<void> Function()? beforeCommit;
 
-  /// Thrown by every call while set.
-  Exception? failure;
+  /// Run just before the next blob is read: for changing a file here
+  /// while a sync waits on the network.
+  Future<void> Function()? beforeBlob;
+
+  /// Thrown by every call while set: an exception, or any other thing
+  /// thrown.
+  Object? failure;
 
   FakeGitHost(this.repository);
 
@@ -62,6 +67,9 @@ class FakeGitHost implements GitHost {
   @override
   Future<Uint8List> blob(String sha) async {
     _check();
+    final interrupt = beforeBlob;
+    beforeBlob = null;
+    await interrupt?.call();
     repository.blobReads++;
     return repository.blobs[sha]!;
   }

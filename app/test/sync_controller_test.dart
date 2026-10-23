@@ -292,6 +292,152 @@ void main() {
       expect(a.sync.needsAttention, isTrue);
     });
 
+    test('what a failed sync pulled is shown all the same', () async {
+      final a = phone();
+      await a.sync.connect('me/journal', 'token');
+      final b = phone(settle: const Duration(days: 1));
+      await b.sync.connect('me/journal', 'token');
+      a.write('From a');
+      await settled();
+
+      b.write('From b', minute: 700);
+      b.host.beforeCommit = () async => throw const SyncOffline();
+      await b.sync.syncNow();
+      expect(b.sync.phase, SyncPhase.failed);
+      expect(b.titles, ['From a', 'From b']);
+    });
+
+    test(
+      'anything at all thrown in a sync is a failed sync, not a crash',
+      () async {
+        final a = phone(settle: const Duration(days: 1));
+        await a.sync.connect('me/journal', 'token');
+        a.host.failure = StateError('Not an exception');
+        await a.sync.syncNow();
+        expect(a.sync.phase, SyncPhase.failed);
+        expect(a.sync.problem, SyncProblem.other);
+      },
+    );
+
+    test('a journal that cannot be read again after a sync is a failed sync, '
+        'and is tried again', () async {
+      final root = Directory.systemTemp.createTempSync('sync-broken');
+      final journal = JournalStore(FileJournalStorage.open(root));
+      final reminders = _BrokenReminders(
+        File('${journal.journalPath}/reminders.json'),
+      );
+      final host = FakeGitHost(repository);
+      final sync = SyncController(
+        root: root,
+        journal: journal,
+        reminders: reminders,
+        secrets: MemorySecretStore(),
+        settle: const Duration(days: 1),
+        hostFor: (_, _, _) => host,
+      );
+      addTearDown(() {
+        sync.dispose();
+        journal.dispose();
+        root.deleteSync(recursive: true);
+      });
+      final other = phone()..write('Elsewhere');
+      await other.sync.connect('me/journal', 'token');
+
+      await sync.connect('me/journal', 'token');
+      expect(sync.phase, SyncPhase.failed);
+      expect(sync.problem, SyncProblem.other);
+      // Read again at the next sync, though nothing more is pulled.
+      reminders.broken = false;
+      await sync.syncNow();
+      expect(sync.phase, SyncPhase.idle);
+      expect(reminders.reloads, 2);
+    });
+
+    test(
+      'choices made while a sync runs are carried out by the next',
+      () async {
+        final a = phone();
+        final entry = a.write('Flying');
+        await a.sync.connect('me/journal', 'token');
+        final b = phone(settle: const Duration(days: 1));
+        await b.sync.connect('me/journal', 'token');
+        a.journal.save(entry.copyWith(content: 'As a wrote it.'));
+        await settled();
+        b.journal.save(
+          b.journal
+              .entriesFor(CivilDate(2026, 10, 11), utcOffset: Duration.zero)
+              .single
+              .copyWith(content: 'As b wrote it.'),
+        );
+        await b.sync.syncNow();
+        final path = b.sync.conflicts.single.path;
+
+        final running = b.sync.syncNow();
+        await b.sync.resolve({path: Keep.mine});
+        await running;
+        expect(b.sync.phase, SyncPhase.idle);
+        expect(b.sync.conflicts, isEmpty);
+        expect(repository.read(path), contains('As b wrote it.'));
+      },
+    );
+
+    test('the rate limit is said as such, and is no alarm', () async {
+      final a = phone(settle: const Duration(days: 1));
+      await a.sync.connect('me/journal', 'token');
+      final until = DateTime(2026, 10, 23, 14, 5);
+      a.host.failure = SyncRateLimited(until);
+      await a.sync.syncNow();
+
+      expect(a.sync.problem, SyncProblem.rateLimited);
+      expect(a.sync.retryAfter, until);
+      expect(a.sync.needsAttention, isFalse);
+      expect(
+        syncStatus(const Strings(AppLanguage.en), a.sync),
+        'GitHub has had too many requests for now. '
+        'It will try again after 14:05.',
+      );
+      expect(
+        syncStatus(const Strings(AppLanguage.id), a.sync),
+        contains('setelah 14:05'),
+      );
+    });
+
+    test('what is saved is written whole', () async {
+      final a = phone()..write('Flying');
+      await a.sync.connect('me/journal', 'token');
+      expect(File('${a.root.path}/sync.json.tmp').existsSync(), isFalse);
+      expect(
+        File('${a.root.path}/sync.json').readAsStringSync(),
+        contains('me/journal'),
+      );
+    });
+
+    test(
+      'a saved state that cannot be read is said, not taken for off',
+      () async {
+        final a = phone();
+        await a.sync.connect('me/journal', 'token');
+        File('${a.root.path}/sync.json').writeAsStringSync('{"repos');
+        await a.restart();
+
+        expect(a.sync.phase, SyncPhase.failed);
+        expect(a.sync.problem, SyncProblem.damaged);
+        expect(a.sync.needsAttention, isTrue);
+        expect(
+          syncStatus(const Strings(AppLanguage.en), a.sync),
+          contains('could not be read'),
+        );
+        // Nothing is thrown away by itself.
+        expect(a.secrets.secret, 'token');
+        expect(File('${a.root.path}/sync.json').existsSync(), isTrue);
+        // Turned off, it can be set up again.
+        await a.sync.disconnect();
+        expect(a.sync.phase, SyncPhase.off);
+        expect(await a.sync.connect('me/journal', 'token'), isNull);
+        expect(a.sync.phase, SyncPhase.idle);
+      },
+    );
+
     test('turning it off forgets the token and stops syncing', () async {
       final a = phone();
       await a.sync.connect('me/journal', 'token');
@@ -594,4 +740,20 @@ void main() {
       expect(key('action-sync'), findsNothing);
     });
   });
+}
+
+/// Reminders that cannot be read again while [broken].
+class _BrokenReminders extends ReminderStore {
+  _BrokenReminders(File file)
+    : super(file: file, utcOffset: const Duration(hours: 7));
+
+  var broken = true;
+  var reloads = 0;
+
+  @override
+  void reload() {
+    reloads++;
+    if (broken) throw StateError('Cannot be read');
+    super.reload();
+  }
 }

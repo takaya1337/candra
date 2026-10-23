@@ -75,7 +75,21 @@ enum SyncPhase {
 }
 
 /// Why a sync did not go through.
-enum SyncProblem { offline, denied, notFound, other }
+enum SyncProblem {
+  offline,
+  denied,
+  notFound,
+
+  /// GitHub has had too many requests for now; see
+  /// [SyncController.retryAfter].
+  rateLimited,
+
+  /// What this device remembers of the repository could not be read. Sync
+  /// stays set up but stopped, the token kept, until it is turned off and
+  /// set up again.
+  damaged,
+  other,
+}
 
 /// Keeps the journal in step with a GitHub repository.
 ///
@@ -131,16 +145,27 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
   List<Conflict> get conflicts => List.unmodifiable(_conflicts);
   var _conflicts = <Conflict>[];
 
-  /// Whether something wants the user's attention.
+  /// While [problem] is rateLimited: when GitHub said to try again, if it
+  /// did.
+  DateTime? get retryAfter => _retryAfter;
+  DateTime? _retryAfter;
+
+  /// Whether something wants the user's attention. Being offline or held
+  /// back by the rate limit mends itself, and does not.
   bool get needsAttention =>
       _phase == SyncPhase.conflicts ||
-      (_phase == SyncPhase.failed && _problem != SyncProblem.offline);
+      (_phase == SyncPhase.failed &&
+          _problem != SyncProblem.offline &&
+          _problem != SyncProblem.rateLimited);
 
   var _state = const SyncState();
   SyncEngine? _engine;
   Timer? _timer;
   bool _running = false;
   bool _again = false;
+
+  // Choices asked for while a sync was running, for the one after it.
+  final _pending = <String, Keep>{};
 
   // True while the stores are being reloaded after a sync, so that their
   // announcing it does not set off another.
@@ -152,21 +177,41 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
   Future<void> start() async {
     WidgetsBinding.instance.addObserver(this);
     if (!_file.existsSync()) return;
+    final String repository;
+    final SyncState state;
+    final DateTime? lastSynced;
     try {
       final saved =
           jsonDecode(_file.readAsStringSync()) as Map<String, dynamic>;
-      final repository = saved['repository'] as String?;
-      final token = await secrets.read();
-      if (repository == null || token == null) return;
-      _state = SyncState.fromJson(saved['state'] as Map<String, dynamic>);
+      repository = saved['repository'] as String;
+      if (repositoryFrom(repository) != repository) {
+        throw FormatException('Not a repository', repository);
+      }
+      state = SyncState.fromJson(saved['state'] as Map<String, dynamic>);
       final at = saved['lastSynced'] as String?;
-      _lastSynced = at == null ? null : DateTime.tryParse(at);
+      lastSynced = at == null ? null : DateTime.tryParse(at);
+    } catch (_) {
+      // Sync was set up here, but what it remembers cannot be read. It is
+      // not taken for never set up: that would hide it, and a sync from
+      // nothing would raise every file as a conflict. It waits, and says
+      // so, until it is turned off and set up again.
+      _problem = SyncProblem.damaged;
+      _detail = null;
+      _phase = SyncPhase.failed;
+      notifyListeners();
+      return;
+    }
+    try {
+      final token = await secrets.read();
+      if (token == null) return;
+      _state = state;
+      _lastSynced = lastSynced;
       _open(repository, token);
       _phase = SyncPhase.idle;
       notifyListeners();
       unawaited(syncNow());
     } catch (_) {
-      // What cannot be read is as good as not set up.
+      // Without the token there is nothing to sync with.
     }
   }
 
@@ -189,13 +234,20 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
     );
   }
 
-  void _save() => _file.writeAsStringSync(
-    jsonEncode({
-      'repository': _repository,
-      'state': _state.toJson(),
-      'lastSynced': _lastSynced?.toIso8601String(),
-    }),
-  );
+  // Written whole beside it and then put in its place, so that the app
+  // stopped halfway never leaves half a file.
+  void _save() {
+    File('${_file.path}.tmp')
+      ..writeAsStringSync(
+        jsonEncode({
+          'repository': _repository,
+          'state': _state.toJson(),
+          'lastSynced': _lastSynced?.toIso8601String(),
+        }),
+        flush: true,
+      )
+      ..renameSync(_file.path);
+  }
 
   /// "owner/name" out of whatever was typed or pasted, or null if it is
   /// not one: a bare name, a web address and a git address all do.
@@ -243,7 +295,10 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
     _engine = null;
     _state = const SyncState();
     _conflicts = [];
+    _pending.clear();
     _problem = null;
+    _detail = null;
+    _retryAfter = null;
     _lastSynced = null;
     _phase = SyncPhase.off;
     notifyListeners();
@@ -272,27 +327,39 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
   Future<void> resolve(Map<String, Keep> choices) => syncNow(choices);
 
   /// Syncs now. Asked for while a sync is running, it runs once more when
-  /// that one is done.
+  /// that one is done, with any [resolutions] asked for meanwhile.
   Future<void> syncNow([Map<String, Keep> resolutions = const {}]) async {
     final engine = _engine;
     if (engine == null) return;
     if (_running) {
+      _pending.addAll(resolutions);
       _again = true;
       return;
     }
+    final choices = {..._pending, ...resolutions};
+    _pending.clear();
     _timer?.cancel();
     _running = true;
     _phase = SyncPhase.syncing;
     notifyListeners();
     try {
-      final result = await engine.sync(_state, resolutions: resolutions);
+      final result = await engine.sync(_state, resolutions: choices);
       _state = result.state;
       _conflicts = result.conflicts;
       _lastSynced = DateTime.now();
       _problem = null;
       _detail = null;
+      _retryAfter = null;
       _save();
-      if (result.changedHere) {
+      _phase = _conflicts.isEmpty ? SyncPhase.idle : SyncPhase.conflicts;
+    } catch (error) {
+      _fail(error);
+    }
+    try {
+      // Whatever was written here, by this sync or by one that failed
+      // partway, is read afresh, or it would not be seen. Until that has
+      // been done once, every sync tries it again.
+      if (engine.wroteHere) {
         _applying = true;
         try {
           journal.reload();
@@ -300,12 +367,10 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
         } finally {
           _applying = false;
         }
+        engine.wroteHere = false;
       }
-      _phase = _conflicts.isEmpty ? SyncPhase.idle : SyncPhase.conflicts;
-    } on Exception catch (error) {
-      _problem = _problemOf(error);
-      _detail = error is SyncFailed ? error.message : null;
-      _phase = SyncPhase.failed;
+    } catch (error) {
+      _fail(error);
     } finally {
       _running = false;
       notifyListeners();
@@ -316,10 +381,18 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
-  static SyncProblem _problemOf(Exception error) => switch (error) {
+  void _fail(Object error) {
+    _problem = _problemOf(error);
+    _detail = error is SyncFailed ? error.message : null;
+    _retryAfter = error is SyncRateLimited ? error.until : null;
+    _phase = SyncPhase.failed;
+  }
+
+  static SyncProblem _problemOf(Object error) => switch (error) {
     SyncOffline() => SyncProblem.offline,
     SyncDenied() => SyncProblem.denied,
     SyncNotFound() => SyncProblem.notFound,
+    SyncRateLimited() => SyncProblem.rateLimited,
     _ => SyncProblem.other,
   };
 }

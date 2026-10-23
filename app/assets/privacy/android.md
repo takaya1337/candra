@@ -1,6 +1,6 @@
 # Candra privacy policy
 
-Last updated: 22 October 2026
+Last updated: 23 October 2026
 
 Candra is a calendar and journal app. It is built so that what you write
 stays with you. This page says exactly what the app does with your data.
@@ -60,22 +60,31 @@ copied to your Google account.
 
 ## When data leaves your device
 
-Only in these three cases, each of which you start yourself:
+Only in these four cases, each of which you start yourself:
 
 1. **Export.** "Share a copy" and "Save a copy" make a zip file of your
-   journal as plain Markdown text. It goes wherever you send or save it.
-   The file is not encrypted.
+   journal as plain Markdown text. It holds your entries, categories,
+   tags and reminders, and for each entry and reminder the moment it was
+   first saved, with your time zone's offset from UTC. It goes wherever
+   you send or save it. The file is not encrypted.
 2. **Sync with GitHub (optional, off by default).** If you connect a
-   GitHub repository, Candra sends your journal, categories and reminders
-   to that repository over an encrypted connection (HTTPS), and reads
-   them back. They are stored there as plain text, not encrypted.
+   GitHub repository, Candra sends your journal, categories, tags and
+   reminders to that repository over an encrypted connection (HTTPS),
+   and reads them back. Each sync is recorded in the repository with a
+   short note naming the kind of phone it came from (Android or iOS). They are stored there as plain text, not encrypted.
    Whoever can read that repository, and GitHub itself, can read them.
    GitHub's handling of your data is covered by
    [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 3. **Opening a place in a maps app.** Tapping a geotag hands its rounded
    coordinates and its name to the maps app you choose.
+4. **Saving a picture of a day's reading.** It is saved to the
+   Pictures/Candra folder on your phone, where your gallery, other apps
+   with access to your pictures, and any photo backup you use (Google
+   Photos among them) can see it.
 
-Candra uses the network for nothing else.
+Candra uses the network for nothing else. A link you tap in the app,
+such as GitHub's privacy statement or the feedback address, opens in
+your browser or mail app.
 
 ## Permissions
 
@@ -86,6 +95,12 @@ Candra uses the network for nothing else.
 | Start after the phone restarts | To put your reminders back in place. |
 | Location (precise or approximate) | Only when you press for it: the geotag button, the place for rise and set times, or the place of a bazi chart; and, if you have already allowed it, when you press Today or open a tool, to bring the sky's place up to date. Never asked for by these. |
 | Internet | Only for GitHub sync, if you turn it on. |
+
+The parts Candra uses to schedule reminders and show notifications also
+ask Android for: vibration (for a reminder's alert), keeping the phone
+awake briefly and checking the network state (while a reminder is being
+put back in place), and a short foreground service (so that job can
+finish). None of them reads or sends your data.
 
 Every one of these is optional except Internet, which does nothing until
 sync is set up. Candra works fully without location and without

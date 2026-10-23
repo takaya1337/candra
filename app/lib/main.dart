@@ -11,6 +11,7 @@ import 'package:sm_design/sm_design.dart';
 import 'app_shell.dart';
 import 'appearance.dart';
 import 'house.dart';
+import 'first_run.dart';
 import 'calendar_system.dart';
 import 'colour_schemes.dart';
 import 'journal/journal_storage.dart';
@@ -163,6 +164,10 @@ Future<void> main() async {
   // The reminders' coming days are handed over again in the background
   // as well, so they keep coming however long the app stays closed.
   unawaited(scheduleRearm());
+
+  // A sync token left in the Keychain by an earlier install goes, before
+  // sync reads it.
+  await FirstRun.clearLeftovers(preferences: preferences, root: root);
 
   // Does nothing, and touches no network, until it is set up.
   final sync = SyncController(

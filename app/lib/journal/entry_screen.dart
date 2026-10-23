@@ -341,7 +341,7 @@ class _EntryScreenState extends State<EntryScreen> {
     // While reading there is no Save: the tags are the entry's at once.
     if (!_editing && entry != null) {
       _entry = JournalScope.of(context)
-          .save(entry.copyWith(tags: tags.toList()));
+          .save(entry.copyWith(tags: tags.toList()), previous: entry);
     }
   }
 
@@ -510,6 +510,17 @@ class _EntryScreenState extends State<EntryScreen> {
     });
   }
 
+  // Whether two versions of an entry say the same: what a sync can change.
+  static bool _sameWords(Entry a, Entry b) =>
+      a.title == b.title &&
+      a.content == b.content &&
+      a.place?.latitude == b.place?.latitude &&
+      a.place?.longitude == b.place?.longitude &&
+      a.place?.name == b.place?.name &&
+      a.bazi == b.bazi &&
+      a.tags.length == b.tags.length &&
+      a.tags.toSet().containsAll(b.tags);
+
   void _save() {
     final store = JournalScope.of(context);
     final title = _title.text.trim();
@@ -521,6 +532,47 @@ class _EntryScreenState extends State<EntryScreen> {
     }
     HapticFeedback.selectionClick();
     final categoryId = _categoryId ?? store.categories.first.id;
+    // A sync may have brought a change to this entry while it was open.
+    // Saving over it would throw that change away, so the words written
+    // here are kept as an entry of their own beside it instead.
+    final opened = _entry;
+    final there = opened == null
+        ? null
+        : store
+              .entriesFor(opened.date, utcOffset: opened.utcOffset)
+              .where(
+                (e) => e.id == opened.id && e.categoryId == opened.categoryId,
+              )
+              .firstOrNull;
+    if (opened != null && there != null && !_sameWords(there, opened)) {
+      final beside = store.save(
+        Entry(
+          id: '',
+          date: opened.date,
+          minuteOfDay: opened.minuteOfDay,
+          second: opened.second,
+          utcOffset: opened.utcOffset,
+          categoryId: categoryId,
+          title: title,
+          content: content,
+          place: _place,
+          duration: opened.duration,
+          bazi: opened.bazi,
+          tags: _tags.toList(),
+        ),
+      );
+      _say(Strings.of(context).entryChangedElsewhere);
+      FocusManager.instance.primaryFocus?.unfocus();
+      setState(() {
+        _entry = beside;
+        _editing = false;
+        _moving = false;
+        _whenDate = null;
+        _whenMinute = null;
+        _fill();
+      });
+      return;
+    }
     final wasDraft = _entry == null && widget.draft != null;
     final moved =
         _entry != null &&
@@ -536,7 +588,7 @@ class _EntryScreenState extends State<EntryScreen> {
     final saved = moved
         // A new date or time: the entry moves, its record and its id with
         // it.
-        ? store.move(changed!, _date, _minuteNow * 60)
+        ? store.move(changed!, _date, _minuteNow * 60, previous: _entry)
         : store.save(
             changed ??
                 Entry(
@@ -553,6 +605,7 @@ class _EntryScreenState extends State<EntryScreen> {
                   bazi: widget.draft?.bazi,
                   tags: _tags.toList(),
                 ),
+            previous: _entry,
           );
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() {

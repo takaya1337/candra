@@ -527,15 +527,37 @@ void main() {
     testWidgets('of cards tapped in quick succession, the last one wins', (
       tester,
     ) async {
-      final controller = SystemController()..value = CalendarSystem.weton;
+      // Both taps must land on their cards, not beside them.
+      WidgetController.hitTestWarningShouldBeFatal = true;
+      addTearDown(() => WidgetController.hitTestWarningShouldBeFatal = false);
+      // From the middle, so that a card is in sight on either side.
+      final controller = SystemController()..value = CalendarSystem.chinese;
       await pumpScreen(tester, controller: controller);
       await openSystems(tester);
 
-      await tester.tap(card(CalendarSystem.chinese));
+      await tester.tap(card(CalendarSystem.hijri));
       await tester.pump(const Duration(milliseconds: 30));
-      await tester.tap(card(CalendarSystem.javanese));
+      // On its way to the first, and nothing chosen yet.
+      expect(controller.value, CalendarSystem.chinese);
+      // The card on the left is partly past the screen's edge: tapped on
+      // the part in sight.
+      const inSight = Alignment(0.5, 0);
+      final javanese = card(CalendarSystem.javanese);
+      final box = tester.getRect(javanese);
+      final at = inSight.withinRect(box);
+      // On the screen; mid-glide the strip, not the card, hears it.
+      expect(at.dx, inInclusiveRange(0, 411));
+      await tester.tapAt(at);
       await tester.pumpAndSettle();
       expect(controller.value, CalendarSystem.javanese);
+      expect(
+        centreOf(tester, CalendarSystem.javanese),
+        moreOrLessEquals(411 / 2, epsilon: 1),
+      );
+      // Until this test tapped both cards it passed by tapping only the
+      // second: the first was off the screen. Tapped for real, the second
+      // tap fell while the strip glided, when a scroll view lets nothing
+      // in it be touched; the strip now hears such a tap itself.
     });
 
     testWidgets('the month button switches to the date picker', (tester) async {
@@ -5007,6 +5029,9 @@ void main() {
 
     testWidgets('shows an entry its own delete button, which asks, then '
         'deletes that entry and no other', (tester) async {
+      // Every tap must land on what it means to touch.
+      WidgetController.hitTestWarningShouldBeFatal = true;
+      addTearDown(() => WidgetController.hitTestWarningShouldBeFatal = false);
       await openJournal(tester);
       final journal = journalOf(tester);
       final day = CivilDate(2026, 10, 11);
@@ -5036,8 +5061,17 @@ void main() {
       expect(tester.getRect(tile), closed);
       await tester.drag(tile, const Offset(-120, 0));
       await tester.pumpAndSettle();
-      // Open, a tap on the entry closes it and opens nothing.
-      await tester.tap(find.text('Evening offering'));
+      // Open, a tap on the entry closes it and opens nothing. The entry
+      // itself hears no touch while open: the row over it takes the tap.
+      final row = find.ancestor(
+        of: tile,
+        matching: find.byWidgetPredicate(
+          (w) => w is GestureDetector && w.child is IgnorePointer,
+        ),
+      );
+      expect(row, findsOneWidget);
+      expect(tester.getRect(row).contains(tester.getCenter(tile)), isTrue);
+      await tester.tap(row);
       await tester.pumpAndSettle();
       expect(find.byType(EntryScreen), findsNothing);
       expect(key('swipe-delete-${entry.id}'), findsNothing);
