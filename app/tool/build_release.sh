@@ -22,6 +22,16 @@
 set -e
 cd "$(dirname "$0")/.."
 
+# A release is signed with the upload key named in android/key.properties.
+# Without it Gradle would quietly sign with the debug key, which Play
+# refuses and which no real install can be updated from: stop instead,
+# unless a debug-signed build is asked for.
+if [ ! -f android/key.properties ] && [ "${ALLOW_DEBUG_SIGNING:-}" != 1 ]; then
+  echo "No android/key.properties: a release would be signed with the debug key." >&2
+  echo "Add the key, or run with ALLOW_DEBUG_SIGNING=1 for a build that is never uploaded." >&2
+  exit 1
+fi
+
 version=$(grep '^version:' pubspec.yaml | sed 's/version: //')
 name=${version%%+*}
 symbols="../keys/symbols/$version"

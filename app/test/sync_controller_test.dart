@@ -406,16 +406,16 @@ void main() {
 
     test('a repository is taken as owner/name or as its address', () {
       for (final typed in [
-        'takaya1337/CANDRA_DATA',
-        'https://github.com/takaya1337/CANDRA_DATA',
-        'https://github.com/takaya1337/CANDRA_DATA/',
-        'https://github.com/takaya1337/CANDRA_DATA.git',
-        'git@github.com:takaya1337/CANDRA_DATA.git',
-        '  takaya1337/CANDRA_DATA  ',
+        'someone/journal',
+        'https://github.com/someone/journal',
+        'https://github.com/someone/journal/',
+        'https://github.com/someone/journal.git',
+        'git@github.com:someone/journal.git',
+        '  someone/journal  ',
       ]) {
-        expect(SyncController.repositoryFrom(typed), 'takaya1337/CANDRA_DATA');
+        expect(SyncController.repositoryFrom(typed), 'someone/journal');
       }
-      expect(SyncController.repositoryFrom('CANDRA_DATA'), isNull);
+      expect(SyncController.repositoryFrom('journal'), isNull);
       expect(SyncController.repositoryFrom('https://example.com/a/b'), isNull);
     });
 
