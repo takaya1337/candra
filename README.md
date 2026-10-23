@@ -44,7 +44,7 @@ Candra's code is under the PolyForm Noncommercial License 1.0.0
 noncommercial purpose, personal use and religious observance among them,
 and by charities, schools, research and public bodies. Selling it, putting
 ads in it, or any other commercial use needs the owner's permission.
-Copyright (C) 2026 <the owner's name>.
+Copyright (C) 2026 Napoleon Pedro.
 
 The name "Candra" and its sigil are not licensed with the code: a copy
 or a work built on it may not carry them.
