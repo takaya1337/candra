@@ -46,8 +46,10 @@ and by charities, schools, research and public bodies. Selling it, putting
 ads in it, or any other commercial use needs the owner's permission.
 Copyright (C) 2026 Napoleon Pedro.
 
-The name "Candra" and its sigil are not licensed with the code: a copy
-or a work built on it may not carry them.
+The name "Candra" and the Candra sigil belong to the owner and are not
+part of this licence. If you share a copy or build something from this
+code, give it your own name and icon. Saying it is based on Candra is
+fine.
 
 The data and fonts it carries keep their own licences: see
 [`NOTICE.md`](NOTICE.md).
