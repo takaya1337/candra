@@ -1,0 +1,9 @@
+IMO Meteor Shower Calendar 2027
+https://www.imo.net/resources/calendar/
+
+Used by Candra: the working list of meteor showers (Table 5), each
+shower's peak as a solar longitude, its radiant, speed and hourly
+rate, in Light.
+
+The calendar is the International Meteor Organization's. The facts
+are taken from it; its text is not reproduced.

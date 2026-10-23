@@ -1,0 +1,12 @@
+GeoNames
+https://www.geonames.org
+
+Used by Candra: the names and coordinates of the world's towns of 15,000
+people or more, with their first-level divisions and countries, and
+Indonesia's kecamatan (cities15000, ID, admin1CodesASCII, countryInfo),
+read 16 October 2026. Changed: kept to name, area, country and
+coordinates to a hundredth of a degree; each kecamatan placed in its
+kabupaten or kota by the boundaries below.
+
+Licensed under the Creative Commons Attribution 4.0 License,
+https://creativecommons.org/licenses/by/4.0/

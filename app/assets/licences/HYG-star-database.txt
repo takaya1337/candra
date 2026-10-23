@@ -1,0 +1,15 @@
+HYG star database, version 4.4
+Copyright (c) David Nash, astronexus.com
+https://codeberg.org/astronexus/hyg
+
+Licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License (CC BY-SA 4.0):
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Changes made for Candra: only the stars of magnitude 6.5 or brighter
+(the naked-eye sky) are kept, the Sun is left out, and of each star only
+its J2000 right ascension (in degrees) and declination, magnitude, colour
+index, constellation, Bayer and Flamsteed designations, Hipparcos and
+Bright Star numbers and proper name are kept. The resulting star table,
+assets/stars/hyg_v44_naked_eye.csv, is itself licensed under CC BY-SA
+4.0. This licence covers that star table only, not the rest of the app.

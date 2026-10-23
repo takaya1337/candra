@@ -1,0 +1,50 @@
+name: sm_design
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ^3.13.5
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  fonts:
+    # Only for the day view's great figure and the weekday under it.
+    - family: JetBrainsMono
+      fonts:
+        - asset: fonts/JetBrainsMono-Regular.ttf
+        - asset: fonts/JetBrainsMono-Bold.ttf
+          weight: 700
+    # The planets' signs alone, cut from Noto Sans Symbols and Symbols 2
+    # (OFL): so Venus's and Mars's never show as emoji.
+    - family: NotoSansSymbols
+      fonts:
+        - asset: fonts/NotoSansSymbols-Planets.ttf
+    - family: NotoSansSymbols2
+      fonts:
+        - asset: fonts/NotoSansSymbols2-Sun.ttf
+    - family: IBMPlexMono
+      fonts:
+        - asset: fonts/IBMPlexMono-Regular.ttf
+        - asset: fonts/IBMPlexMono-Medium.ttf
+          weight: 500
+        - asset: fonts/IBMPlexMono-Bold.ttf
+          weight: 700
+        - asset: fonts/IBMPlexMono-Italic.ttf
+          style: italic
+        - asset: fonts/IBMPlexMono-BoldItalic.ttf
+          weight: 700
+          style: italic

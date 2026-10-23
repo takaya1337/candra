@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "name": "hidden_stems",
+  "id": "ziping.v1",
+  "english": "Yuanhai Ziping verse",
+  "indonesian": "Syair Yuanhai Ziping",
+  "lineage": "子平 Ziping, 《淵海子平》「又地支藏遁歌」",
+  "source": "《淵海子平》卷一「又地支藏遁歌」 (子宮癸水在其中，丑癸辛金己土同 ...), read on 2026-10-13 in the transcription at donglishuzhai.net/chapter/12808.html, collated there against the 文明書局 and 大成堂 editions; the same text is on zh.wikisource.org/wiki/淵海子平.",
+  "verified": true,
+  "notes": "The stems of all twelve branches agree with the verse. Checked against a transcription, not a printed edition. The verse gives its stems in the order the metre wants: the order here, principal (本氣) first, is the customary one and is not from the verse. 《三命通會》「論三刑」 agrees in passing for 子 (子中獨用癸水) and 卯 (卯中獨用乙木). Other tables differ: see hidden_stems.siling.v1.",
+  "order": "principal (本氣), middle (中氣), residual (餘氣)",
+  "branches": {
+    "子": [
+      "癸"
+    ],
+    "丑": [
+      "己",
+      "癸",
+      "辛"
+    ],
+    "寅": [
+      "甲",
+      "丙",
+      "戊"
+    ],
+    "卯": [
+      "乙"
+    ],
+    "辰": [
+      "戊",
+      "乙",
+      "癸"
+    ],
+    "巳": [
+      "丙",
+      "戊",
+      "庚"
+    ],
+    "午": [
+      "丁",
+      "己"
+    ],
+    "未": [
+      "己",
+      "丁",
+      "乙"
+    ],
+    "申": [
+      "庚",
+      "壬",
+      "戊"
+    ],
+    "酉": [
+      "辛"
+    ],
+    "戌": [
+      "戊",
+      "辛",
+      "丁"
+    ],
+    "亥": [
+      "壬",
+      "甲"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+OpenNGC, a licence-friendly NGC/IC objects database
+Mattia Verga, https://github.com/mattiaverga/OpenNGC
+
+Used by Candra: the galaxies of the star map (database_files/NGC.csv and
+addendum.csv, read 16 October 2026). Changed: kept to galaxies of visual
+magnitude 10 or brighter and every Messier galaxy; name, designations,
+J2000 place, magnitude, size and constellation.
+
+Licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License, https://creativecommons.org/licenses/by-sa/4.0/
+The galaxy table Candra ships carries the same licence.

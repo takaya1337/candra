@@ -1,0 +1,9 @@
+VSOP87 planetary theory
+https://ftp.imcce.fr/pub/ephem/planets/vsop87/
+
+Used by Candra: the series of VSOP87D, truncated, for the places of the
+planets.
+
+P. Bretagnon and G. Francou, "Planetary theories in rectangular and
+spherical variables: VSOP87 solutions", Astronomy and Astrophysics 202
+(1988), 309-315. Distributed by IMCCE, Observatoire de Paris.

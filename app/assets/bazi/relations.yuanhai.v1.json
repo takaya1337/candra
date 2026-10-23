@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "name": "relations",
+  "id": "yuanhai.v1",
+  "english": "Yuanhai Ziping",
+  "indonesian": "Yuanhai Ziping",
+  "lineage": "子平 Ziping, 《淵海子平》",
+  "source": "《淵海子平》 (寅刑巳，巳刑申，申刑寅【爲恃勢之刑】；丑刑戌，戌刑未，未刑丑【爲無恩之刑】；子刑卯，卯刑子【爲無禮之刑】；辰午酉亥，自刑之刑), read on 2026-10-13 at donglishuzhai.net/chapter/5622.html; the harms, there called 相穿 (子未相穿 丑午相穿 寅巳相穿 卯辰相穿 申亥相穿 酉戌相穿), at chapter/5621.html.",
+  "verified": true,
+  "notes": "The same pairs as 《三命通會》, with the names of the first two punishments the other way round: here 寅巳申 is 恃勢 and 丑戌未 is 無恩. 《三命通會》 knows the variant and lets it stand (三車一覧以寅巳申為恃勢 ... 丑戌未為無恩 ... 其説亦通). Checked against a transcription, not a printed edition.",
+  "punishments": [
+    {
+      "branches": [
+        "寅",
+        "巳",
+        "申"
+      ],
+      "name": "恃勢之刑",
+      "english": "Bullying punishment",
+      "indonesian": "Hukuman sewenang-wenang"
+    },
+    {
+      "branches": [
+        "丑",
+        "戌",
+        "未"
+      ],
+      "name": "無恩之刑",
+      "english": "Ungrateful punishment",
+      "indonesian": "Hukuman tak tahu budi"
+    },
+    {
+      "branches": [
+        "子",
+        "卯"
+      ],
+      "name": "無禮之刑",
+      "english": "Uncivil punishment",
+      "indonesian": "Hukuman tak santun"
+    }
+  ],
+  "selfPunishing": [
+    "辰",
+    "午",
+    "酉",
+    "亥"
+  ],
+  "harms": [
+    [
+      "子",
+      "未"
+    ],
+    [
+      "丑",
+      "午"
+    ],
+    [
+      "寅",
+      "巳"
+    ],
+    [
+      "卯",
+      "辰"
+    ],
+    [
+      "申",
+      "亥"
+    ],
+    [
+      "酉",
+      "戌"
+    ]
+  ]
+}

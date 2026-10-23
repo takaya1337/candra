@@ -1,0 +1,16 @@
+# Built and fetched
+build/
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+**/Pods/
+**/.symlinks/
+.DS_Store
+
+# Signing and crash symbols are never committed
+keys/
+**/key.properties
+*.jks
+*.keystore
+*.p8

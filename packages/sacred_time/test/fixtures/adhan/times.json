@@ -1,0 +1,4721 @@
+{
+"from": "adhan-js Shared/Times (MIT, Batoul Apps), each the timetable its body publishes; UTC offsets from the IANA tz database",
+"sets": [
+{
+"name": "Ankara-Turkey",
+"latitude": 39.939382,
+"longitude": 32.819713,
+"method": "Turkey",
+"madhab": "Shafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 2,
+"source": "https://www.yenisafak.com/en/ankara-prayer-times-01.01.2019",
+"days": [
+{
+"date": "2019-01-01",
+"offset": 180,
+"fajr": 393,
+"sunrise": 483,
+"dhuhr": 777,
+"asr": 920,
+"maghrib": 1060,
+"isha": 1145
+},
+{
+"date": "2019-01-15",
+"offset": 180,
+"fajr": 393,
+"sunrise": 482,
+"dhuhr": 783,
+"asr": 932,
+"maghrib": 1074,
+"isha": 1157
+},
+{
+"date": "2019-02-01",
+"offset": 180,
+"fajr": 385,
+"sunrise": 471,
+"dhuhr": 787,
+"asr": 949,
+"maghrib": 1094,
+"isha": 1174
+},
+{
+"date": "2019-02-15",
+"offset": 180,
+"fajr": 371,
+"sunrise": 455,
+"dhuhr": 788,
+"asr": 962,
+"maghrib": 1110,
+"isha": 1189
+},
+{
+"date": "2019-03-01",
+"offset": 180,
+"fajr": 353,
+"sunrise": 436,
+"dhuhr": 786,
+"asr": 974,
+"maghrib": 1126,
+"isha": 1204
+},
+{
+"date": "2019-03-15",
+"offset": 180,
+"fajr": 331,
+"sunrise": 414,
+"dhuhr": 783,
+"asr": 983,
+"maghrib": 1141,
+"isha": 1219
+},
+{
+"date": "2019-04-01",
+"offset": 180,
+"fajr": 301,
+"sunrise": 387,
+"dhuhr": 778,
+"asr": 991,
+"maghrib": 1159,
+"isha": 1239
+},
+{
+"date": "2019-04-15",
+"offset": 180,
+"fajr": 275,
+"sunrise": 365,
+"dhuhr": 774,
+"asr": 995,
+"maghrib": 1173,
+"isha": 1256
+},
+{
+"date": "2019-05-01",
+"offset": 180,
+"fajr": 247,
+"sunrise": 343,
+"dhuhr": 771,
+"asr": 1000,
+"maghrib": 1189,
+"isha": 1278
+},
+{
+"date": "2019-05-15",
+"offset": 180,
+"fajr": 224,
+"sunrise": 327,
+"dhuhr": 770,
+"asr": 1003,
+"maghrib": 1203,
+"isha": 1299
+},
+{
+"date": "2019-06-01",
+"offset": 180,
+"fajr": 204,
+"sunrise": 315,
+"dhuhr": 771,
+"asr": 1008,
+"maghrib": 1217,
+"isha": 1320
+},
+{
+"date": "2019-06-15",
+"offset": 180,
+"fajr": 197,
+"sunrise": 312,
+"dhuhr": 774,
+"asr": 1011,
+"maghrib": 1226,
+"isha": 1332
+},
+{
+"date": "2019-07-01",
+"offset": 180,
+"fajr": 201,
+"sunrise": 316,
+"dhuhr": 777,
+"asr": 1015,
+"maghrib": 1228,
+"isha": 1335
+},
+{
+"date": "2019-07-15",
+"offset": 180,
+"fajr": 215,
+"sunrise": 325,
+"dhuhr": 780,
+"asr": 1016,
+"maghrib": 1224,
+"isha": 1326
+},
+{
+"date": "2019-08-01",
+"offset": 180,
+"fajr": 238,
+"sunrise": 340,
+"dhuhr": 780,
+"asr": 1013,
+"maghrib": 1210,
+"isha": 1305
+},
+{
+"date": "2019-08-15",
+"offset": 180,
+"fajr": 258,
+"sunrise": 353,
+"dhuhr": 778,
+"asr": 1006,
+"maghrib": 1194,
+"isha": 1282
+},
+{
+"date": "2019-09-01",
+"offset": 180,
+"fajr": 280,
+"sunrise": 369,
+"dhuhr": 774,
+"asr": 994,
+"maghrib": 1169,
+"isha": 1252
+},
+{
+"date": "2019-09-15",
+"offset": 180,
+"fajr": 297,
+"sunrise": 382,
+"dhuhr": 769,
+"asr": 980,
+"maghrib": 1146,
+"isha": 1226
+},
+{
+"date": "2019-10-01",
+"offset": 180,
+"fajr": 314,
+"sunrise": 397,
+"dhuhr": 764,
+"asr": 962,
+"maghrib": 1120,
+"isha": 1198
+},
+{
+"date": "2019-10-15",
+"offset": 180,
+"fajr": 328,
+"sunrise": 411,
+"dhuhr": 760,
+"asr": 946,
+"maghrib": 1098,
+"isha": 1176
+},
+{
+"date": "2019-11-01",
+"offset": 180,
+"fajr": 345,
+"sunrise": 430,
+"dhuhr": 757,
+"asr": 928,
+"maghrib": 1075,
+"isha": 1154
+},
+{
+"date": "2019-11-15",
+"offset": 180,
+"fajr": 359,
+"sunrise": 446,
+"dhuhr": 758,
+"asr": 916,
+"maghrib": 1060,
+"isha": 1142
+},
+{
+"date": "2019-12-01",
+"offset": 180,
+"fajr": 374,
+"sunrise": 463,
+"dhuhr": 762,
+"asr": 910,
+"maghrib": 1051,
+"isha": 1135
+},
+{
+"date": "2019-12-15",
+"offset": 180,
+"fajr": 385,
+"sunrise": 476,
+"dhuhr": 768,
+"asr": 910,
+"maghrib": 1051,
+"isha": 1136
+}
+]
+},
+{
+"name": "Doha-Qatar",
+"latitude": 25.283897,
+"longitude": 51.52877,
+"method": "Qatar",
+"madhab": "Shafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 0,
+"source": "http://www.islam.gov.qa/",
+"days": [
+{
+"date": "2016-01-01",
+"offset": 180,
+"fajr": 298,
+"sunrise": 379,
+"dhuhr": 697,
+"asr": 875,
+"maghrib": 1015,
+"isha": 1105
+},
+{
+"date": "2016-02-01",
+"offset": 180,
+"fajr": 299,
+"sunrise": 377,
+"dhuhr": 707,
+"asr": 896,
+"maghrib": 1038,
+"isha": 1128
+},
+{
+"date": "2016-03-01",
+"offset": 180,
+"fajr": 281,
+"sunrise": 357,
+"dhuhr": 706,
+"asr": 907,
+"maghrib": 1056,
+"isha": 1146
+},
+{
+"date": "2016-04-01",
+"offset": 180,
+"fajr": 248,
+"sunrise": 325,
+"dhuhr": 698,
+"asr": 907,
+"maghrib": 1071,
+"isha": 1161
+},
+{
+"date": "2016-05-01",
+"offset": 180,
+"fajr": 216,
+"sunrise": 298,
+"dhuhr": 691,
+"asr": 900,
+"maghrib": 1085,
+"isha": 1175
+},
+{
+"date": "2016-06-01",
+"offset": 180,
+"fajr": 195,
+"sunrise": 283,
+"dhuhr": 692,
+"asr": 896,
+"maghrib": 1100,
+"isha": 1190
+},
+{
+"date": "2016-07-01",
+"offset": 180,
+"fajr": 198,
+"sunrise": 287,
+"dhuhr": 698,
+"asr": 901,
+"maghrib": 1108,
+"isha": 1198
+},
+{
+"date": "2016-08-01",
+"offset": 180,
+"fajr": 217,
+"sunrise": 301,
+"dhuhr": 700,
+"asr": 907,
+"maghrib": 1099,
+"isha": 1189
+},
+{
+"date": "2016-09-01",
+"offset": 180,
+"fajr": 236,
+"sunrise": 315,
+"dhuhr": 694,
+"asr": 903,
+"maghrib": 1073,
+"isha": 1163
+},
+{
+"date": "2016-10-01",
+"offset": 180,
+"fajr": 250,
+"sunrise": 326,
+"dhuhr": 683,
+"asr": 887,
+"maghrib": 1040,
+"isha": 1130
+},
+{
+"date": "2016-11-01",
+"offset": 180,
+"fajr": 264,
+"sunrise": 342,
+"dhuhr": 677,
+"asr": 869,
+"maghrib": 1013,
+"isha": 1103
+},
+{
+"date": "2016-12-01",
+"offset": 180,
+"fajr": 282,
+"sunrise": 363,
+"dhuhr": 683,
+"asr": 863,
+"maghrib": 1003,
+"isha": 1093
+}
+]
+},
+{
+"name": "Dubai-Gulf",
+"latitude": 25.263056,
+"longitude": 55.297222,
+"method": "Dubai",
+"madhab": "Shafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 1,
+"source": "https://www.awqaf.gov.ae/en/Pages/PrayerTimes.aspx",
+"days": [
+{
+"date": "2018-01-01",
+"offset": 240,
+"fajr": 342,
+"sunrise": 421,
+"dhuhr": 745,
+"asr": 924,
+"maghrib": 1064,
+"isha": 1143
+},
+{
+"date": "2018-02-01",
+"offset": 240,
+"fajr": 342,
+"sunrise": 418,
+"dhuhr": 755,
+"asr": 944,
+"maghrib": 1087,
+"isha": 1162
+},
+{
+"date": "2018-03-01",
+"offset": 240,
+"fajr": 325,
+"sunrise": 399,
+"dhuhr": 754,
+"asr": 954,
+"maghrib": 1104,
+"isha": 1178
+},
+{
+"date": "2018-04-01",
+"offset": 240,
+"fajr": 293,
+"sunrise": 368,
+"dhuhr": 745,
+"asr": 954,
+"maghrib": 1118,
+"isha": 1193
+},
+{
+"date": "2018-05-01",
+"offset": 240,
+"fajr": 261,
+"sunrise": 340,
+"dhuhr": 739,
+"asr": 947,
+"maghrib": 1132,
+"isha": 1212
+},
+{
+"date": "2018-06-01",
+"offset": 240,
+"fajr": 240,
+"sunrise": 325,
+"dhuhr": 739,
+"asr": 943,
+"maghrib": 1148,
+"isha": 1233
+},
+{
+"date": "2018-07-01",
+"offset": 240,
+"fajr": 242,
+"sunrise": 329,
+"dhuhr": 745,
+"asr": 948,
+"maghrib": 1156,
+"isha": 1243
+},
+{
+"date": "2018-08-01",
+"offset": 240,
+"fajr": 261,
+"sunrise": 343,
+"dhuhr": 748,
+"asr": 955,
+"maghrib": 1147,
+"isha": 1229
+},
+{
+"date": "2018-09-01",
+"offset": 240,
+"fajr": 280,
+"sunrise": 356,
+"dhuhr": 742,
+"asr": 951,
+"maghrib": 1121,
+"isha": 1197
+},
+{
+"date": "2018-10-01",
+"offset": 240,
+"fajr": 294,
+"sunrise": 368,
+"dhuhr": 731,
+"asr": 935,
+"maghrib": 1089,
+"isha": 1163
+},
+{
+"date": "2018-11-01",
+"offset": 240,
+"fajr": 308,
+"sunrise": 383,
+"dhuhr": 725,
+"asr": 917,
+"maghrib": 1062,
+"isha": 1137
+},
+{
+"date": "2018-12-01",
+"offset": 240,
+"fajr": 325,
+"sunrise": 403,
+"dhuhr": 731,
+"asr": 911,
+"maghrib": 1052,
+"isha": 1130
+}
+]
+},
+{
+"name": "Kuwait City-Kuwait",
+"latitude": 29.370865,
+"longitude": 47.979139,
+"method": "Kuwait",
+"madhab": "Shafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 2,
+"source": "https://itunes.apple.com/us/app/kuwait-prayer-times/id723108544?mt=12",
+"days": [
+{
+"date": "2016-01-01",
+"offset": 180,
+"fajr": 318,
+"sunrise": 402,
+"dhuhr": 711,
+"asr": 882,
+"maghrib": 1021,
+"isha": 1103
+},
+{
+"date": "2016-02-01",
+"offset": 180,
+"fajr": 316,
+"sunrise": 398,
+"dhuhr": 722,
+"asr": 905,
+"maghrib": 1046,
+"isha": 1125
+},
+{
+"date": "2016-03-01",
+"offset": 180,
+"fajr": 296,
+"sunrise": 375,
+"dhuhr": 721,
+"asr": 919,
+"maghrib": 1067,
+"isha": 1144
+},
+{
+"date": "2016-04-01",
+"offset": 180,
+"fajr": 258,
+"sunrise": 338,
+"dhuhr": 712,
+"asr": 923,
+"maghrib": 1086,
+"isha": 1164
+},
+{
+"date": "2016-05-01",
+"offset": 180,
+"fajr": 221,
+"sunrise": 307,
+"dhuhr": 705,
+"asr": 921,
+"maghrib": 1104,
+"isha": 1187
+},
+{
+"date": "2016-06-01",
+"offset": 180,
+"fajr": 195,
+"sunrise": 289,
+"dhuhr": 706,
+"asr": 920,
+"maghrib": 1123,
+"isha": 1213
+},
+{
+"date": "2016-07-01",
+"offset": 180,
+"fajr": 196,
+"sunrise": 292,
+"dhuhr": 712,
+"asr": 926,
+"maghrib": 1132,
+"isha": 1223
+},
+{
+"date": "2016-08-01",
+"offset": 180,
+"fajr": 219,
+"sunrise": 308,
+"dhuhr": 714,
+"asr": 930,
+"maghrib": 1120,
+"isha": 1206
+},
+{
+"date": "2016-09-01",
+"offset": 180,
+"fajr": 243,
+"sunrise": 325,
+"dhuhr": 708,
+"asr": 922,
+"maghrib": 1091,
+"isha": 1170
+},
+{
+"date": "2016-10-01",
+"offset": 180,
+"fajr": 262,
+"sunrise": 341,
+"dhuhr": 698,
+"asr": 902,
+"maghrib": 1054,
+"isha": 1131
+},
+{
+"date": "2016-11-01",
+"offset": 180,
+"fajr": 280,
+"sunrise": 361,
+"dhuhr": 692,
+"asr": 879,
+"maghrib": 1022,
+"isha": 1100
+},
+{
+"date": "2016-12-01",
+"offset": 180,
+"fajr": 301,
+"sunrise": 384,
+"dhuhr": 697,
+"asr": 870,
+"maghrib": 1009,
+"isha": 1091
+}
+]
+},
+{
+"name": "London-MoonsightingCommittee",
+"latitude": 51.507194,
+"longitude": -0.116711,
+"method": "MoonsightingCommittee",
+"madhab": "Hanafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 0,
+"source": "http://www.moonsighting.com/pray.php",
+"days": [
+{
+"date": "2016-01-01",
+"offset": 0,
+"fajr": 385,
+"sunrise": 486,
+"dhuhr": 729,
+"asr": 855,
+"maghrib": 965,
+"isha": 1058
+},
+{
+"date": "2016-02-01",
+"offset": 0,
+"fajr": 362,
+"sunrise": 460,
+"dhuhr": 739,
+"asr": 901,
+"maghrib": 1012,
+"isha": 1098
+},
+{
+"date": "2016-03-01",
+"offset": 0,
+"fajr": 310,
+"sunrise": 405,
+"dhuhr": 738,
+"asr": 949,
+"maghrib": 1064,
+"isha": 1143
+},
+{
+"date": "2016-04-01",
+"offset": 60,
+"fajr": 299,
+"sunrise": 395,
+"dhuhr": 789,
+"asr": 1052,
+"maghrib": 1177,
+"isha": 1249
+},
+{
+"date": "2016-05-01",
+"offset": 60,
+"fajr": 227,
+"sunrise": 332,
+"dhuhr": 783,
+"asr": 1085,
+"maghrib": 1227,
+"isha": 1292
+},
+{
+"date": "2016-06-01",
+"offset": 60,
+"fajr": 175,
+"sunrise": 289,
+"dhuhr": 783,
+"asr": 1111,
+"maghrib": 1272,
+"isha": 1343
+},
+{
+"date": "2016-07-01",
+"offset": 60,
+"fajr": 171,
+"sunrise": 288,
+"dhuhr": 789,
+"asr": 1120,
+"maghrib": 1284,
+"isha": 1358
+},
+{
+"date": "2016-08-01",
+"offset": 60,
+"fajr": 217,
+"sunrise": 325,
+"dhuhr": 792,
+"asr": 1103,
+"maghrib": 1251,
+"isha": 1316
+},
+{
+"date": "2016-09-01",
+"offset": 60,
+"fajr": 275,
+"sunrise": 374,
+"dhuhr": 785,
+"asr": 1059,
+"maghrib": 1189,
+"isha": 1258
+},
+{
+"date": "2016-10-01",
+"offset": 60,
+"fajr": 328,
+"sunrise": 422,
+"dhuhr": 775,
+"asr": 1002,
+"maghrib": 1120,
+"isha": 1197
+},
+{
+"date": "2016-11-01",
+"offset": 0,
+"fajr": 318,
+"sunrise": 415,
+"dhuhr": 709,
+"asr": 883,
+"maghrib": 996,
+"isha": 1080
+},
+{
+"date": "2016-12-01",
+"offset": 0,
+"fajr": 364,
+"sunrise": 464,
+"dhuhr": 715,
+"asr": 847,
+"maghrib": 958,
+"isha": 1049
+}
+]
+},
+{
+"name": "Makkah-UmmAlQura",
+"latitude": 21.427009,
+"longitude": 39.828685,
+"method": "UmmAlQura",
+"madhab": "Shafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 0,
+"source": "http://www.ummulqura.org.sa/Index.aspx",
+"days": [
+{
+"date": "2016-01-05",
+"offset": 180,
+"fajr": 338,
+"sunrise": 420,
+"dhuhr": 746,
+"asr": 931,
+"maghrib": 1072,
+"isha": 1162
+},
+{
+"date": "2016-02-04",
+"offset": 180,
+"fajr": 339,
+"sunrise": 417,
+"dhuhr": 755,
+"asr": 948,
+"maghrib": 1092,
+"isha": 1182
+},
+{
+"date": "2016-03-05",
+"offset": 180,
+"fajr": 322,
+"sunrise": 398,
+"dhuhr": 752,
+"asr": 955,
+"maghrib": 1107,
+"isha": 1197
+},
+{
+"date": "2016-04-03",
+"offset": 180,
+"fajr": 295,
+"sunrise": 372,
+"dhuhr": 744,
+"asr": 950,
+"maghrib": 1116,
+"isha": 1206
+},
+{
+"date": "2016-05-02",
+"offset": 180,
+"fajr": 268,
+"sunrise": 349,
+"dhuhr": 738,
+"asr": 939,
+"maghrib": 1127,
+"isha": 1217
+},
+{
+"date": "2016-06-04",
+"offset": 180,
+"fajr": 251,
+"sunrise": 338,
+"dhuhr": 739,
+"asr": 936,
+"maghrib": 1141,
+"isha": 1231
+},
+{
+"date": "2016-07-08",
+"offset": 180,
+"fajr": 258,
+"sunrise": 345,
+"dhuhr": 746,
+"asr": 943,
+"maghrib": 1147,
+"isha": 1237
+},
+{
+"date": "2016-08-02",
+"offset": 180,
+"fajr": 271,
+"sunrise": 354,
+"dhuhr": 747,
+"asr": 946,
+"maghrib": 1139,
+"isha": 1229
+},
+{
+"date": "2016-09-04",
+"offset": 180,
+"fajr": 287,
+"sunrise": 365,
+"dhuhr": 740,
+"asr": 944,
+"maghrib": 1114,
+"isha": 1204
+},
+{
+"date": "2016-10-06",
+"offset": 180,
+"fajr": 297,
+"sunrise": 373,
+"dhuhr": 729,
+"asr": 931,
+"maghrib": 1084,
+"isha": 1174
+},
+{
+"date": "2016-11-05",
+"offset": 180,
+"fajr": 308,
+"sunrise": 386,
+"dhuhr": 724,
+"asr": 918,
+"maghrib": 1062,
+"isha": 1152
+},
+{
+"date": "2016-12-04",
+"offset": 180,
+"fajr": 323,
+"sunrise": 404,
+"dhuhr": 731,
+"asr": 917,
+"maghrib": 1058,
+"isha": 1148
+}
+]
+},
+{
+"name": "Singapore-Singapore",
+"latitude": 1.370844612058886,
+"longitude": 103.80145644060552,
+"method": "Singapore",
+"madhab": "Shafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 2,
+"source": "http://www.muis.gov.sg",
+"days": [
+{
+"date": "2020-01-01",
+"offset": 480,
+"fajr": 344,
+"sunrise": 427,
+"dhuhr": 790,
+"asr": 994,
+"maghrib": 1150,
+"isha": 1225
+},
+{
+"date": "2020-01-02",
+"offset": 480,
+"fajr": 344,
+"sunrise": 428,
+"dhuhr": 790,
+"asr": 994,
+"maghrib": 1151,
+"isha": 1226
+},
+{
+"date": "2020-01-03",
+"offset": 480,
+"fajr": 345,
+"sunrise": 428,
+"dhuhr": 791,
+"asr": 995,
+"maghrib": 1151,
+"isha": 1226
+},
+{
+"date": "2020-01-04",
+"offset": 480,
+"fajr": 346,
+"sunrise": 429,
+"dhuhr": 791,
+"asr": 995,
+"maghrib": 1152,
+"isha": 1226
+},
+{
+"date": "2020-01-05",
+"offset": 480,
+"fajr": 346,
+"sunrise": 429,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1152,
+"isha": 1227
+},
+{
+"date": "2020-01-06",
+"offset": 480,
+"fajr": 347,
+"sunrise": 430,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1153,
+"isha": 1227
+},
+{
+"date": "2020-01-07",
+"offset": 480,
+"fajr": 347,
+"sunrise": 430,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1153,
+"isha": 1227
+},
+{
+"date": "2020-01-08",
+"offset": 480,
+"fajr": 348,
+"sunrise": 430,
+"dhuhr": 793,
+"asr": 997,
+"maghrib": 1154,
+"isha": 1228
+},
+{
+"date": "2020-01-09",
+"offset": 480,
+"fajr": 348,
+"sunrise": 431,
+"dhuhr": 794,
+"asr": 997,
+"maghrib": 1154,
+"isha": 1228
+},
+{
+"date": "2020-01-10",
+"offset": 480,
+"fajr": 348,
+"sunrise": 431,
+"dhuhr": 794,
+"asr": 997,
+"maghrib": 1154,
+"isha": 1229
+},
+{
+"date": "2020-01-11",
+"offset": 480,
+"fajr": 349,
+"sunrise": 432,
+"dhuhr": 794,
+"asr": 998,
+"maghrib": 1155,
+"isha": 1229
+},
+{
+"date": "2020-01-12",
+"offset": 480,
+"fajr": 349,
+"sunrise": 432,
+"dhuhr": 795,
+"asr": 998,
+"maghrib": 1155,
+"isha": 1229
+},
+{
+"date": "2020-01-13",
+"offset": 480,
+"fajr": 350,
+"sunrise": 432,
+"dhuhr": 795,
+"asr": 998,
+"maghrib": 1156,
+"isha": 1229
+},
+{
+"date": "2020-01-14",
+"offset": 480,
+"fajr": 350,
+"sunrise": 433,
+"dhuhr": 795,
+"asr": 999,
+"maghrib": 1156,
+"isha": 1230
+},
+{
+"date": "2020-01-15",
+"offset": 480,
+"fajr": 351,
+"sunrise": 433,
+"dhuhr": 796,
+"asr": 999,
+"maghrib": 1156,
+"isha": 1230
+},
+{
+"date": "2020-01-16",
+"offset": 480,
+"fajr": 351,
+"sunrise": 433,
+"dhuhr": 796,
+"asr": 999,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-01-17",
+"offset": 480,
+"fajr": 352,
+"sunrise": 434,
+"dhuhr": 796,
+"asr": 999,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-01-18",
+"offset": 480,
+"fajr": 352,
+"sunrise": 434,
+"dhuhr": 797,
+"asr": 1000,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-01-19",
+"offset": 480,
+"fajr": 352,
+"sunrise": 434,
+"dhuhr": 797,
+"asr": 1000,
+"maghrib": 1158,
+"isha": 1231
+},
+{
+"date": "2020-01-20",
+"offset": 480,
+"fajr": 353,
+"sunrise": 435,
+"dhuhr": 797,
+"asr": 1000,
+"maghrib": 1158,
+"isha": 1231
+},
+{
+"date": "2020-01-21",
+"offset": 480,
+"fajr": 353,
+"sunrise": 435,
+"dhuhr": 798,
+"asr": 1000,
+"maghrib": 1158,
+"isha": 1231
+},
+{
+"date": "2020-01-22",
+"offset": 480,
+"fajr": 354,
+"sunrise": 435,
+"dhuhr": 798,
+"asr": 1000,
+"maghrib": 1159,
+"isha": 1232
+},
+{
+"date": "2020-01-23",
+"offset": 480,
+"fajr": 354,
+"sunrise": 435,
+"dhuhr": 798,
+"asr": 1001,
+"maghrib": 1159,
+"isha": 1232
+},
+{
+"date": "2020-01-24",
+"offset": 480,
+"fajr": 354,
+"sunrise": 436,
+"dhuhr": 798,
+"asr": 1001,
+"maghrib": 1159,
+"isha": 1232
+},
+{
+"date": "2020-01-25",
+"offset": 480,
+"fajr": 355,
+"sunrise": 436,
+"dhuhr": 799,
+"asr": 1001,
+"maghrib": 1159,
+"isha": 1232
+},
+{
+"date": "2020-01-26",
+"offset": 480,
+"fajr": 355,
+"sunrise": 436,
+"dhuhr": 799,
+"asr": 1001,
+"maghrib": 1160,
+"isha": 1232
+},
+{
+"date": "2020-01-27",
+"offset": 480,
+"fajr": 355,
+"sunrise": 436,
+"dhuhr": 799,
+"asr": 1001,
+"maghrib": 1160,
+"isha": 1232
+},
+{
+"date": "2020-01-28",
+"offset": 480,
+"fajr": 356,
+"sunrise": 436,
+"dhuhr": 799,
+"asr": 1001,
+"maghrib": 1160,
+"isha": 1232
+},
+{
+"date": "2020-01-29",
+"offset": 480,
+"fajr": 356,
+"sunrise": 437,
+"dhuhr": 799,
+"asr": 1001,
+"maghrib": 1160,
+"isha": 1232
+},
+{
+"date": "2020-01-30",
+"offset": 480,
+"fajr": 356,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1160,
+"isha": 1233
+},
+{
+"date": "2020-01-31",
+"offset": 480,
+"fajr": 356,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-01",
+"offset": 480,
+"fajr": 357,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-02",
+"offset": 480,
+"fajr": 357,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-03",
+"offset": 480,
+"fajr": 357,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-04",
+"offset": 480,
+"fajr": 357,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-05",
+"offset": 480,
+"fajr": 357,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-06",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1001,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-07",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1000,
+"maghrib": 1161,
+"isha": 1233
+},
+{
+"date": "2020-02-08",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1000,
+"maghrib": 1162,
+"isha": 1233
+},
+{
+"date": "2020-02-09",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 1000,
+"maghrib": 1162,
+"isha": 1233
+},
+{
+"date": "2020-02-10",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 801,
+"asr": 1000,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-11",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 801,
+"asr": 999,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-12",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 801,
+"asr": 999,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-13",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 999,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-14",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 999,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-15",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 998,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-16",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 998,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-17",
+"offset": 480,
+"fajr": 359,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 997,
+"maghrib": 1162,
+"isha": 1232
+},
+{
+"date": "2020-02-18",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 997,
+"maghrib": 1161,
+"isha": 1232
+},
+{
+"date": "2020-02-19",
+"offset": 480,
+"fajr": 358,
+"sunrise": 437,
+"dhuhr": 800,
+"asr": 997,
+"maghrib": 1161,
+"isha": 1231
+},
+{
+"date": "2020-02-20",
+"offset": 480,
+"fajr": 358,
+"sunrise": 436,
+"dhuhr": 800,
+"asr": 996,
+"maghrib": 1161,
+"isha": 1231
+},
+{
+"date": "2020-02-21",
+"offset": 480,
+"fajr": 358,
+"sunrise": 436,
+"dhuhr": 800,
+"asr": 996,
+"maghrib": 1161,
+"isha": 1231
+},
+{
+"date": "2020-02-22",
+"offset": 480,
+"fajr": 358,
+"sunrise": 436,
+"dhuhr": 800,
+"asr": 995,
+"maghrib": 1161,
+"isha": 1231
+},
+{
+"date": "2020-02-23",
+"offset": 480,
+"fajr": 358,
+"sunrise": 436,
+"dhuhr": 800,
+"asr": 995,
+"maghrib": 1161,
+"isha": 1231
+},
+{
+"date": "2020-02-24",
+"offset": 480,
+"fajr": 358,
+"sunrise": 436,
+"dhuhr": 799,
+"asr": 994,
+"maghrib": 1161,
+"isha": 1231
+},
+{
+"date": "2020-02-25",
+"offset": 480,
+"fajr": 358,
+"sunrise": 436,
+"dhuhr": 799,
+"asr": 994,
+"maghrib": 1161,
+"isha": 1230
+},
+{
+"date": "2020-02-26",
+"offset": 480,
+"fajr": 358,
+"sunrise": 435,
+"dhuhr": 799,
+"asr": 993,
+"maghrib": 1161,
+"isha": 1230
+},
+{
+"date": "2020-02-27",
+"offset": 480,
+"fajr": 358,
+"sunrise": 435,
+"dhuhr": 799,
+"asr": 992,
+"maghrib": 1161,
+"isha": 1230
+},
+{
+"date": "2020-02-28",
+"offset": 480,
+"fajr": 358,
+"sunrise": 435,
+"dhuhr": 799,
+"asr": 992,
+"maghrib": 1160,
+"isha": 1230
+},
+{
+"date": "2020-02-29",
+"offset": 480,
+"fajr": 358,
+"sunrise": 435,
+"dhuhr": 799,
+"asr": 991,
+"maghrib": 1160,
+"isha": 1229
+},
+{
+"date": "2020-03-01",
+"offset": 480,
+"fajr": 357,
+"sunrise": 435,
+"dhuhr": 798,
+"asr": 990,
+"maghrib": 1160,
+"isha": 1229
+},
+{
+"date": "2020-03-02",
+"offset": 480,
+"fajr": 357,
+"sunrise": 434,
+"dhuhr": 798,
+"asr": 990,
+"maghrib": 1160,
+"isha": 1229
+},
+{
+"date": "2020-03-03",
+"offset": 480,
+"fajr": 357,
+"sunrise": 434,
+"dhuhr": 798,
+"asr": 989,
+"maghrib": 1160,
+"isha": 1229
+},
+{
+"date": "2020-03-04",
+"offset": 480,
+"fajr": 357,
+"sunrise": 434,
+"dhuhr": 798,
+"asr": 988,
+"maghrib": 1160,
+"isha": 1229
+},
+{
+"date": "2020-03-05",
+"offset": 480,
+"fajr": 357,
+"sunrise": 434,
+"dhuhr": 798,
+"asr": 988,
+"maghrib": 1159,
+"isha": 1228
+},
+{
+"date": "2020-03-06",
+"offset": 480,
+"fajr": 356,
+"sunrise": 433,
+"dhuhr": 797,
+"asr": 987,
+"maghrib": 1159,
+"isha": 1228
+},
+{
+"date": "2020-03-07",
+"offset": 480,
+"fajr": 356,
+"sunrise": 433,
+"dhuhr": 797,
+"asr": 986,
+"maghrib": 1159,
+"isha": 1228
+},
+{
+"date": "2020-03-08",
+"offset": 480,
+"fajr": 356,
+"sunrise": 433,
+"dhuhr": 797,
+"asr": 985,
+"maghrib": 1159,
+"isha": 1228
+},
+{
+"date": "2020-03-09",
+"offset": 480,
+"fajr": 356,
+"sunrise": 432,
+"dhuhr": 797,
+"asr": 984,
+"maghrib": 1158,
+"isha": 1227
+},
+{
+"date": "2020-03-10",
+"offset": 480,
+"fajr": 355,
+"sunrise": 432,
+"dhuhr": 796,
+"asr": 984,
+"maghrib": 1158,
+"isha": 1227
+},
+{
+"date": "2020-03-11",
+"offset": 480,
+"fajr": 355,
+"sunrise": 432,
+"dhuhr": 796,
+"asr": 983,
+"maghrib": 1158,
+"isha": 1227
+},
+{
+"date": "2020-03-12",
+"offset": 480,
+"fajr": 355,
+"sunrise": 432,
+"dhuhr": 796,
+"asr": 982,
+"maghrib": 1158,
+"isha": 1227
+},
+{
+"date": "2020-03-13",
+"offset": 480,
+"fajr": 355,
+"sunrise": 431,
+"dhuhr": 795,
+"asr": 981,
+"maghrib": 1158,
+"isha": 1226
+},
+{
+"date": "2020-03-14",
+"offset": 480,
+"fajr": 354,
+"sunrise": 431,
+"dhuhr": 795,
+"asr": 980,
+"maghrib": 1157,
+"isha": 1226
+},
+{
+"date": "2020-03-15",
+"offset": 480,
+"fajr": 354,
+"sunrise": 431,
+"dhuhr": 795,
+"asr": 979,
+"maghrib": 1157,
+"isha": 1226
+},
+{
+"date": "2020-03-16",
+"offset": 480,
+"fajr": 354,
+"sunrise": 430,
+"dhuhr": 795,
+"asr": 978,
+"maghrib": 1157,
+"isha": 1225
+},
+{
+"date": "2020-03-17",
+"offset": 480,
+"fajr": 353,
+"sunrise": 430,
+"dhuhr": 794,
+"asr": 977,
+"maghrib": 1157,
+"isha": 1225
+},
+{
+"date": "2020-03-18",
+"offset": 480,
+"fajr": 353,
+"sunrise": 430,
+"dhuhr": 794,
+"asr": 976,
+"maghrib": 1156,
+"isha": 1225
+},
+{
+"date": "2020-03-19",
+"offset": 480,
+"fajr": 353,
+"sunrise": 429,
+"dhuhr": 794,
+"asr": 975,
+"maghrib": 1156,
+"isha": 1225
+},
+{
+"date": "2020-03-20",
+"offset": 480,
+"fajr": 352,
+"sunrise": 429,
+"dhuhr": 793,
+"asr": 974,
+"maghrib": 1156,
+"isha": 1224
+},
+{
+"date": "2020-03-21",
+"offset": 480,
+"fajr": 352,
+"sunrise": 429,
+"dhuhr": 793,
+"asr": 973,
+"maghrib": 1155,
+"isha": 1224
+},
+{
+"date": "2020-03-22",
+"offset": 480,
+"fajr": 352,
+"sunrise": 428,
+"dhuhr": 793,
+"asr": 972,
+"maghrib": 1155,
+"isha": 1224
+},
+{
+"date": "2020-03-23",
+"offset": 480,
+"fajr": 351,
+"sunrise": 428,
+"dhuhr": 793,
+"asr": 972,
+"maghrib": 1155,
+"isha": 1224
+},
+{
+"date": "2020-03-24",
+"offset": 480,
+"fajr": 351,
+"sunrise": 428,
+"dhuhr": 792,
+"asr": 973,
+"maghrib": 1155,
+"isha": 1223
+},
+{
+"date": "2020-03-25",
+"offset": 480,
+"fajr": 351,
+"sunrise": 427,
+"dhuhr": 792,
+"asr": 973,
+"maghrib": 1154,
+"isha": 1223
+},
+{
+"date": "2020-03-26",
+"offset": 480,
+"fajr": 350,
+"sunrise": 427,
+"dhuhr": 792,
+"asr": 974,
+"maghrib": 1154,
+"isha": 1223
+},
+{
+"date": "2020-03-27",
+"offset": 480,
+"fajr": 350,
+"sunrise": 427,
+"dhuhr": 791,
+"asr": 974,
+"maghrib": 1154,
+"isha": 1223
+},
+{
+"date": "2020-03-28",
+"offset": 480,
+"fajr": 349,
+"sunrise": 426,
+"dhuhr": 791,
+"asr": 974,
+"maghrib": 1154,
+"isha": 1222
+},
+{
+"date": "2020-03-29",
+"offset": 480,
+"fajr": 349,
+"sunrise": 426,
+"dhuhr": 791,
+"asr": 975,
+"maghrib": 1153,
+"isha": 1222
+},
+{
+"date": "2020-03-30",
+"offset": 480,
+"fajr": 349,
+"sunrise": 426,
+"dhuhr": 790,
+"asr": 975,
+"maghrib": 1153,
+"isha": 1222
+},
+{
+"date": "2020-03-31",
+"offset": 480,
+"fajr": 348,
+"sunrise": 425,
+"dhuhr": 790,
+"asr": 976,
+"maghrib": 1153,
+"isha": 1222
+},
+{
+"date": "2020-04-01",
+"offset": 480,
+"fajr": 348,
+"sunrise": 425,
+"dhuhr": 790,
+"asr": 976,
+"maghrib": 1153,
+"isha": 1222
+},
+{
+"date": "2020-04-02",
+"offset": 480,
+"fajr": 348,
+"sunrise": 425,
+"dhuhr": 790,
+"asr": 976,
+"maghrib": 1152,
+"isha": 1221
+},
+{
+"date": "2020-04-03",
+"offset": 480,
+"fajr": 347,
+"sunrise": 424,
+"dhuhr": 789,
+"asr": 977,
+"maghrib": 1152,
+"isha": 1221
+},
+{
+"date": "2020-04-04",
+"offset": 480,
+"fajr": 347,
+"sunrise": 424,
+"dhuhr": 789,
+"asr": 977,
+"maghrib": 1152,
+"isha": 1221
+},
+{
+"date": "2020-04-05",
+"offset": 480,
+"fajr": 346,
+"sunrise": 424,
+"dhuhr": 789,
+"asr": 977,
+"maghrib": 1152,
+"isha": 1221
+},
+{
+"date": "2020-04-06",
+"offset": 480,
+"fajr": 346,
+"sunrise": 423,
+"dhuhr": 788,
+"asr": 977,
+"maghrib": 1151,
+"isha": 1221
+},
+{
+"date": "2020-04-07",
+"offset": 480,
+"fajr": 346,
+"sunrise": 423,
+"dhuhr": 788,
+"asr": 978,
+"maghrib": 1151,
+"isha": 1220
+},
+{
+"date": "2020-04-08",
+"offset": 480,
+"fajr": 345,
+"sunrise": 423,
+"dhuhr": 788,
+"asr": 978,
+"maghrib": 1151,
+"isha": 1220
+},
+{
+"date": "2020-04-09",
+"offset": 480,
+"fajr": 345,
+"sunrise": 422,
+"dhuhr": 788,
+"asr": 978,
+"maghrib": 1151,
+"isha": 1220
+},
+{
+"date": "2020-04-10",
+"offset": 480,
+"fajr": 344,
+"sunrise": 422,
+"dhuhr": 787,
+"asr": 979,
+"maghrib": 1150,
+"isha": 1220
+},
+{
+"date": "2020-04-11",
+"offset": 480,
+"fajr": 344,
+"sunrise": 422,
+"dhuhr": 787,
+"asr": 979,
+"maghrib": 1150,
+"isha": 1220
+},
+{
+"date": "2020-04-12",
+"offset": 480,
+"fajr": 344,
+"sunrise": 422,
+"dhuhr": 787,
+"asr": 979,
+"maghrib": 1150,
+"isha": 1220
+},
+{
+"date": "2020-04-13",
+"offset": 480,
+"fajr": 343,
+"sunrise": 421,
+"dhuhr": 787,
+"asr": 979,
+"maghrib": 1150,
+"isha": 1219
+},
+{
+"date": "2020-04-14",
+"offset": 480,
+"fajr": 343,
+"sunrise": 421,
+"dhuhr": 786,
+"asr": 980,
+"maghrib": 1150,
+"isha": 1219
+},
+{
+"date": "2020-04-15",
+"offset": 480,
+"fajr": 343,
+"sunrise": 421,
+"dhuhr": 786,
+"asr": 980,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-04-16",
+"offset": 480,
+"fajr": 342,
+"sunrise": 420,
+"dhuhr": 786,
+"asr": 980,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-04-17",
+"offset": 480,
+"fajr": 342,
+"sunrise": 420,
+"dhuhr": 786,
+"asr": 980,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-04-18",
+"offset": 480,
+"fajr": 342,
+"sunrise": 420,
+"dhuhr": 785,
+"asr": 980,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-04-19",
+"offset": 480,
+"fajr": 341,
+"sunrise": 420,
+"dhuhr": 785,
+"asr": 981,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-04-20",
+"offset": 480,
+"fajr": 341,
+"sunrise": 419,
+"dhuhr": 785,
+"asr": 981,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-04-21",
+"offset": 480,
+"fajr": 341,
+"sunrise": 419,
+"dhuhr": 785,
+"asr": 981,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-04-22",
+"offset": 480,
+"fajr": 340,
+"sunrise": 419,
+"dhuhr": 785,
+"asr": 981,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-04-23",
+"offset": 480,
+"fajr": 340,
+"sunrise": 419,
+"dhuhr": 784,
+"asr": 981,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-04-24",
+"offset": 480,
+"fajr": 340,
+"sunrise": 419,
+"dhuhr": 784,
+"asr": 982,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-04-25",
+"offset": 480,
+"fajr": 339,
+"sunrise": 418,
+"dhuhr": 784,
+"asr": 982,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-04-26",
+"offset": 480,
+"fajr": 339,
+"sunrise": 418,
+"dhuhr": 784,
+"asr": 982,
+"maghrib": 1149,
+"isha": 1218
+},
+{
+"date": "2020-04-27",
+"offset": 480,
+"fajr": 339,
+"sunrise": 418,
+"dhuhr": 784,
+"asr": 982,
+"maghrib": 1148,
+"isha": 1218
+},
+{
+"date": "2020-04-28",
+"offset": 480,
+"fajr": 338,
+"sunrise": 418,
+"dhuhr": 784,
+"asr": 982,
+"maghrib": 1148,
+"isha": 1218
+},
+{
+"date": "2020-04-29",
+"offset": 480,
+"fajr": 338,
+"sunrise": 418,
+"dhuhr": 784,
+"asr": 982,
+"maghrib": 1148,
+"isha": 1218
+},
+{
+"date": "2020-04-30",
+"offset": 480,
+"fajr": 338,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 983,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-01",
+"offset": 480,
+"fajr": 338,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 983,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-02",
+"offset": 480,
+"fajr": 337,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 983,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-03",
+"offset": 480,
+"fajr": 337,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 983,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-04",
+"offset": 480,
+"fajr": 337,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 983,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-05",
+"offset": 480,
+"fajr": 337,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 983,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-06",
+"offset": 480,
+"fajr": 336,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 984,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-07",
+"offset": 480,
+"fajr": 336,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 984,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-08",
+"offset": 480,
+"fajr": 336,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 984,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-09",
+"offset": 480,
+"fajr": 336,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 984,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-10",
+"offset": 480,
+"fajr": 336,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 984,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-11",
+"offset": 480,
+"fajr": 335,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 984,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-12",
+"offset": 480,
+"fajr": 335,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 985,
+"maghrib": 1148,
+"isha": 1219
+},
+{
+"date": "2020-05-13",
+"offset": 480,
+"fajr": 335,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 985,
+"maghrib": 1148,
+"isha": 1220
+},
+{
+"date": "2020-05-14",
+"offset": 480,
+"fajr": 335,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 985,
+"maghrib": 1148,
+"isha": 1220
+},
+{
+"date": "2020-05-15",
+"offset": 480,
+"fajr": 335,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 985,
+"maghrib": 1148,
+"isha": 1220
+},
+{
+"date": "2020-05-16",
+"offset": 480,
+"fajr": 335,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 985,
+"maghrib": 1148,
+"isha": 1220
+},
+{
+"date": "2020-05-17",
+"offset": 480,
+"fajr": 335,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 986,
+"maghrib": 1148,
+"isha": 1220
+},
+{
+"date": "2020-05-18",
+"offset": 480,
+"fajr": 334,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 986,
+"maghrib": 1148,
+"isha": 1220
+},
+{
+"date": "2020-05-19",
+"offset": 480,
+"fajr": 334,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 986,
+"maghrib": 1148,
+"isha": 1221
+},
+{
+"date": "2020-05-20",
+"offset": 480,
+"fajr": 334,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 986,
+"maghrib": 1148,
+"isha": 1221
+},
+{
+"date": "2020-05-21",
+"offset": 480,
+"fajr": 334,
+"sunrise": 416,
+"dhuhr": 783,
+"asr": 986,
+"maghrib": 1148,
+"isha": 1221
+},
+{
+"date": "2020-05-22",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 987,
+"maghrib": 1148,
+"isha": 1221
+},
+{
+"date": "2020-05-23",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 987,
+"maghrib": 1149,
+"isha": 1221
+},
+{
+"date": "2020-05-24",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 987,
+"maghrib": 1148,
+"isha": 1222
+},
+{
+"date": "2020-05-25",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 987,
+"maghrib": 1148,
+"isha": 1222
+},
+{
+"date": "2020-05-26",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 783,
+"asr": 987,
+"maghrib": 1148,
+"isha": 1222
+},
+{
+"date": "2020-05-27",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 784,
+"asr": 988,
+"maghrib": 1148,
+"isha": 1222
+},
+{
+"date": "2020-05-28",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 784,
+"asr": 988,
+"maghrib": 1148,
+"isha": 1223
+},
+{
+"date": "2020-05-29",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 784,
+"asr": 988,
+"maghrib": 1148,
+"isha": 1223
+},
+{
+"date": "2020-05-30",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 784,
+"asr": 988,
+"maghrib": 1149,
+"isha": 1223
+},
+{
+"date": "2020-05-31",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 784,
+"asr": 989,
+"maghrib": 1149,
+"isha": 1223
+},
+{
+"date": "2020-06-01",
+"offset": 480,
+"fajr": 334,
+"sunrise": 418,
+"dhuhr": 784,
+"asr": 989,
+"maghrib": 1149,
+"isha": 1224
+},
+{
+"date": "2020-06-02",
+"offset": 480,
+"fajr": 334,
+"sunrise": 418,
+"dhuhr": 785,
+"asr": 989,
+"maghrib": 1149,
+"isha": 1224
+},
+{
+"date": "2020-06-03",
+"offset": 480,
+"fajr": 334,
+"sunrise": 418,
+"dhuhr": 785,
+"asr": 989,
+"maghrib": 1149,
+"isha": 1224
+},
+{
+"date": "2020-06-04",
+"offset": 480,
+"fajr": 335,
+"sunrise": 418,
+"dhuhr": 785,
+"asr": 990,
+"maghrib": 1150,
+"isha": 1224
+},
+{
+"date": "2020-06-05",
+"offset": 480,
+"fajr": 335,
+"sunrise": 418,
+"dhuhr": 785,
+"asr": 990,
+"maghrib": 1150,
+"isha": 1225
+},
+{
+"date": "2020-06-06",
+"offset": 480,
+"fajr": 335,
+"sunrise": 418,
+"dhuhr": 785,
+"asr": 990,
+"maghrib": 1150,
+"isha": 1225
+},
+{
+"date": "2020-06-07",
+"offset": 480,
+"fajr": 335,
+"sunrise": 419,
+"dhuhr": 785,
+"asr": 990,
+"maghrib": 1150,
+"isha": 1225
+},
+{
+"date": "2020-06-08",
+"offset": 480,
+"fajr": 335,
+"sunrise": 419,
+"dhuhr": 786,
+"asr": 990,
+"maghrib": 1150,
+"isha": 1225
+},
+{
+"date": "2020-06-09",
+"offset": 480,
+"fajr": 335,
+"sunrise": 419,
+"dhuhr": 786,
+"asr": 991,
+"maghrib": 1151,
+"isha": 1226
+},
+{
+"date": "2020-06-10",
+"offset": 480,
+"fajr": 335,
+"sunrise": 419,
+"dhuhr": 786,
+"asr": 991,
+"maghrib": 1151,
+"isha": 1226
+},
+{
+"date": "2020-06-11",
+"offset": 480,
+"fajr": 335,
+"sunrise": 419,
+"dhuhr": 786,
+"asr": 991,
+"maghrib": 1151,
+"isha": 1226
+},
+{
+"date": "2020-06-12",
+"offset": 480,
+"fajr": 336,
+"sunrise": 420,
+"dhuhr": 786,
+"asr": 991,
+"maghrib": 1151,
+"isha": 1226
+},
+{
+"date": "2020-06-13",
+"offset": 480,
+"fajr": 336,
+"sunrise": 420,
+"dhuhr": 787,
+"asr": 992,
+"maghrib": 1151,
+"isha": 1227
+},
+{
+"date": "2020-06-14",
+"offset": 480,
+"fajr": 336,
+"sunrise": 420,
+"dhuhr": 787,
+"asr": 992,
+"maghrib": 1152,
+"isha": 1227
+},
+{
+"date": "2020-06-15",
+"offset": 480,
+"fajr": 336,
+"sunrise": 420,
+"dhuhr": 787,
+"asr": 992,
+"maghrib": 1152,
+"isha": 1227
+},
+{
+"date": "2020-06-16",
+"offset": 480,
+"fajr": 336,
+"sunrise": 420,
+"dhuhr": 787,
+"asr": 992,
+"maghrib": 1152,
+"isha": 1227
+},
+{
+"date": "2020-06-17",
+"offset": 480,
+"fajr": 337,
+"sunrise": 421,
+"dhuhr": 787,
+"asr": 993,
+"maghrib": 1152,
+"isha": 1228
+},
+{
+"date": "2020-06-18",
+"offset": 480,
+"fajr": 337,
+"sunrise": 421,
+"dhuhr": 788,
+"asr": 993,
+"maghrib": 1152,
+"isha": 1228
+},
+{
+"date": "2020-06-19",
+"offset": 480,
+"fajr": 337,
+"sunrise": 421,
+"dhuhr": 788,
+"asr": 993,
+"maghrib": 1153,
+"isha": 1228
+},
+{
+"date": "2020-06-20",
+"offset": 480,
+"fajr": 337,
+"sunrise": 421,
+"dhuhr": 788,
+"asr": 993,
+"maghrib": 1153,
+"isha": 1228
+},
+{
+"date": "2020-06-21",
+"offset": 480,
+"fajr": 337,
+"sunrise": 421,
+"dhuhr": 788,
+"asr": 993,
+"maghrib": 1153,
+"isha": 1228
+},
+{
+"date": "2020-06-22",
+"offset": 480,
+"fajr": 338,
+"sunrise": 422,
+"dhuhr": 789,
+"asr": 994,
+"maghrib": 1153,
+"isha": 1229
+},
+{
+"date": "2020-06-23",
+"offset": 480,
+"fajr": 338,
+"sunrise": 422,
+"dhuhr": 789,
+"asr": 994,
+"maghrib": 1154,
+"isha": 1229
+},
+{
+"date": "2020-06-24",
+"offset": 480,
+"fajr": 338,
+"sunrise": 422,
+"dhuhr": 789,
+"asr": 994,
+"maghrib": 1154,
+"isha": 1229
+},
+{
+"date": "2020-06-25",
+"offset": 480,
+"fajr": 338,
+"sunrise": 422,
+"dhuhr": 789,
+"asr": 994,
+"maghrib": 1154,
+"isha": 1229
+},
+{
+"date": "2020-06-26",
+"offset": 480,
+"fajr": 339,
+"sunrise": 423,
+"dhuhr": 789,
+"asr": 994,
+"maghrib": 1154,
+"isha": 1229
+},
+{
+"date": "2020-06-27",
+"offset": 480,
+"fajr": 339,
+"sunrise": 423,
+"dhuhr": 790,
+"asr": 995,
+"maghrib": 1154,
+"isha": 1230
+},
+{
+"date": "2020-06-28",
+"offset": 480,
+"fajr": 339,
+"sunrise": 423,
+"dhuhr": 790,
+"asr": 995,
+"maghrib": 1155,
+"isha": 1230
+},
+{
+"date": "2020-06-29",
+"offset": 480,
+"fajr": 339,
+"sunrise": 423,
+"dhuhr": 790,
+"asr": 995,
+"maghrib": 1155,
+"isha": 1230
+},
+{
+"date": "2020-06-30",
+"offset": 480,
+"fajr": 340,
+"sunrise": 423,
+"dhuhr": 790,
+"asr": 995,
+"maghrib": 1155,
+"isha": 1230
+},
+{
+"date": "2020-07-01",
+"offset": 480,
+"fajr": 340,
+"sunrise": 424,
+"dhuhr": 790,
+"asr": 995,
+"maghrib": 1155,
+"isha": 1230
+},
+{
+"date": "2020-07-02",
+"offset": 480,
+"fajr": 340,
+"sunrise": 424,
+"dhuhr": 791,
+"asr": 995,
+"maghrib": 1155,
+"isha": 1230
+},
+{
+"date": "2020-07-03",
+"offset": 480,
+"fajr": 340,
+"sunrise": 424,
+"dhuhr": 791,
+"asr": 996,
+"maghrib": 1155,
+"isha": 1230
+},
+{
+"date": "2020-07-04",
+"offset": 480,
+"fajr": 341,
+"sunrise": 424,
+"dhuhr": 791,
+"asr": 996,
+"maghrib": 1156,
+"isha": 1230
+},
+{
+"date": "2020-07-05",
+"offset": 480,
+"fajr": 341,
+"sunrise": 424,
+"dhuhr": 791,
+"asr": 996,
+"maghrib": 1156,
+"isha": 1231
+},
+{
+"date": "2020-07-06",
+"offset": 480,
+"fajr": 341,
+"sunrise": 425,
+"dhuhr": 791,
+"asr": 996,
+"maghrib": 1156,
+"isha": 1231
+},
+{
+"date": "2020-07-07",
+"offset": 480,
+"fajr": 341,
+"sunrise": 425,
+"dhuhr": 791,
+"asr": 996,
+"maghrib": 1156,
+"isha": 1231
+},
+{
+"date": "2020-07-08",
+"offset": 480,
+"fajr": 341,
+"sunrise": 425,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1156,
+"isha": 1231
+},
+{
+"date": "2020-07-09",
+"offset": 480,
+"fajr": 342,
+"sunrise": 425,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1156,
+"isha": 1231
+},
+{
+"date": "2020-07-10",
+"offset": 480,
+"fajr": 342,
+"sunrise": 425,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1156,
+"isha": 1231
+},
+{
+"date": "2020-07-11",
+"offset": 480,
+"fajr": 342,
+"sunrise": 425,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-12",
+"offset": 480,
+"fajr": 342,
+"sunrise": 425,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-13",
+"offset": 480,
+"fajr": 343,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-14",
+"offset": 480,
+"fajr": 343,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-15",
+"offset": 480,
+"fajr": 343,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-16",
+"offset": 480,
+"fajr": 343,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-17",
+"offset": 480,
+"fajr": 343,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-18",
+"offset": 480,
+"fajr": 344,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-19",
+"offset": 480,
+"fajr": 344,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-20",
+"offset": 480,
+"fajr": 344,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-21",
+"offset": 480,
+"fajr": 344,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-22",
+"offset": 480,
+"fajr": 344,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1231
+},
+{
+"date": "2020-07-23",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-07-24",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 996,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-07-25",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 995,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-07-26",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 995,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-07-27",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 995,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-07-28",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 995,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-07-29",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 995,
+"maghrib": 1157,
+"isha": 1230
+},
+{
+"date": "2020-07-30",
+"offset": 480,
+"fajr": 345,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 994,
+"maghrib": 1157,
+"isha": 1229
+},
+{
+"date": "2020-07-31",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 994,
+"maghrib": 1157,
+"isha": 1229
+},
+{
+"date": "2020-08-01",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 793,
+"asr": 994,
+"maghrib": 1157,
+"isha": 1229
+},
+{
+"date": "2020-08-02",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 994,
+"maghrib": 1156,
+"isha": 1229
+},
+{
+"date": "2020-08-03",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 993,
+"maghrib": 1156,
+"isha": 1228
+},
+{
+"date": "2020-08-04",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 993,
+"maghrib": 1156,
+"isha": 1228
+},
+{
+"date": "2020-08-05",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 993,
+"maghrib": 1156,
+"isha": 1228
+},
+{
+"date": "2020-08-06",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 992,
+"maghrib": 1156,
+"isha": 1228
+},
+{
+"date": "2020-08-07",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 992,
+"maghrib": 1156,
+"isha": 1227
+},
+{
+"date": "2020-08-08",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 991,
+"maghrib": 1156,
+"isha": 1227
+},
+{
+"date": "2020-08-09",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 792,
+"asr": 991,
+"maghrib": 1155,
+"isha": 1227
+},
+{
+"date": "2020-08-10",
+"offset": 480,
+"fajr": 346,
+"sunrise": 426,
+"dhuhr": 791,
+"asr": 991,
+"maghrib": 1155,
+"isha": 1227
+},
+{
+"date": "2020-08-11",
+"offset": 480,
+"fajr": 346,
+"sunrise": 425,
+"dhuhr": 791,
+"asr": 990,
+"maghrib": 1155,
+"isha": 1226
+},
+{
+"date": "2020-08-12",
+"offset": 480,
+"fajr": 346,
+"sunrise": 425,
+"dhuhr": 791,
+"asr": 990,
+"maghrib": 1155,
+"isha": 1226
+},
+{
+"date": "2020-08-13",
+"offset": 480,
+"fajr": 346,
+"sunrise": 425,
+"dhuhr": 791,
+"asr": 989,
+"maghrib": 1155,
+"isha": 1226
+},
+{
+"date": "2020-08-14",
+"offset": 480,
+"fajr": 346,
+"sunrise": 425,
+"dhuhr": 791,
+"asr": 989,
+"maghrib": 1154,
+"isha": 1225
+},
+{
+"date": "2020-08-15",
+"offset": 480,
+"fajr": 346,
+"sunrise": 425,
+"dhuhr": 791,
+"asr": 988,
+"maghrib": 1154,
+"isha": 1225
+},
+{
+"date": "2020-08-16",
+"offset": 480,
+"fajr": 346,
+"sunrise": 425,
+"dhuhr": 790,
+"asr": 988,
+"maghrib": 1154,
+"isha": 1225
+},
+{
+"date": "2020-08-17",
+"offset": 480,
+"fajr": 346,
+"sunrise": 424,
+"dhuhr": 790,
+"asr": 987,
+"maghrib": 1154,
+"isha": 1224
+},
+{
+"date": "2020-08-18",
+"offset": 480,
+"fajr": 346,
+"sunrise": 424,
+"dhuhr": 790,
+"asr": 986,
+"maghrib": 1153,
+"isha": 1224
+},
+{
+"date": "2020-08-19",
+"offset": 480,
+"fajr": 345,
+"sunrise": 424,
+"dhuhr": 790,
+"asr": 986,
+"maghrib": 1153,
+"isha": 1224
+},
+{
+"date": "2020-08-20",
+"offset": 480,
+"fajr": 345,
+"sunrise": 424,
+"dhuhr": 789,
+"asr": 985,
+"maghrib": 1153,
+"isha": 1223
+},
+{
+"date": "2020-08-21",
+"offset": 480,
+"fajr": 345,
+"sunrise": 424,
+"dhuhr": 789,
+"asr": 984,
+"maghrib": 1153,
+"isha": 1223
+},
+{
+"date": "2020-08-22",
+"offset": 480,
+"fajr": 345,
+"sunrise": 423,
+"dhuhr": 789,
+"asr": 984,
+"maghrib": 1152,
+"isha": 1222
+},
+{
+"date": "2020-08-23",
+"offset": 480,
+"fajr": 345,
+"sunrise": 423,
+"dhuhr": 789,
+"asr": 983,
+"maghrib": 1152,
+"isha": 1222
+},
+{
+"date": "2020-08-24",
+"offset": 480,
+"fajr": 345,
+"sunrise": 423,
+"dhuhr": 788,
+"asr": 982,
+"maghrib": 1152,
+"isha": 1222
+},
+{
+"date": "2020-08-25",
+"offset": 480,
+"fajr": 345,
+"sunrise": 423,
+"dhuhr": 788,
+"asr": 982,
+"maghrib": 1151,
+"isha": 1221
+},
+{
+"date": "2020-08-26",
+"offset": 480,
+"fajr": 344,
+"sunrise": 422,
+"dhuhr": 788,
+"asr": 981,
+"maghrib": 1151,
+"isha": 1221
+},
+{
+"date": "2020-08-27",
+"offset": 480,
+"fajr": 344,
+"sunrise": 422,
+"dhuhr": 787,
+"asr": 980,
+"maghrib": 1151,
+"isha": 1220
+},
+{
+"date": "2020-08-28",
+"offset": 480,
+"fajr": 344,
+"sunrise": 422,
+"dhuhr": 787,
+"asr": 979,
+"maghrib": 1150,
+"isha": 1220
+},
+{
+"date": "2020-08-29",
+"offset": 480,
+"fajr": 344,
+"sunrise": 422,
+"dhuhr": 787,
+"asr": 979,
+"maghrib": 1150,
+"isha": 1220
+},
+{
+"date": "2020-08-30",
+"offset": 480,
+"fajr": 344,
+"sunrise": 421,
+"dhuhr": 787,
+"asr": 978,
+"maghrib": 1150,
+"isha": 1219
+},
+{
+"date": "2020-08-31",
+"offset": 480,
+"fajr": 344,
+"sunrise": 421,
+"dhuhr": 786,
+"asr": 977,
+"maghrib": 1149,
+"isha": 1219
+},
+{
+"date": "2020-09-01",
+"offset": 480,
+"fajr": 343,
+"sunrise": 421,
+"dhuhr": 786,
+"asr": 976,
+"maghrib": 1149,
+"isha": 1218
+},
+{
+"date": "2020-09-02",
+"offset": 480,
+"fajr": 343,
+"sunrise": 421,
+"dhuhr": 786,
+"asr": 975,
+"maghrib": 1149,
+"isha": 1218
+},
+{
+"date": "2020-09-03",
+"offset": 480,
+"fajr": 343,
+"sunrise": 420,
+"dhuhr": 785,
+"asr": 974,
+"maghrib": 1148,
+"isha": 1217
+},
+{
+"date": "2020-09-04",
+"offset": 480,
+"fajr": 343,
+"sunrise": 420,
+"dhuhr": 785,
+"asr": 973,
+"maghrib": 1148,
+"isha": 1217
+},
+{
+"date": "2020-09-05",
+"offset": 480,
+"fajr": 342,
+"sunrise": 420,
+"dhuhr": 785,
+"asr": 973,
+"maghrib": 1147,
+"isha": 1217
+},
+{
+"date": "2020-09-06",
+"offset": 480,
+"fajr": 342,
+"sunrise": 419,
+"dhuhr": 784,
+"asr": 972,
+"maghrib": 1147,
+"isha": 1216
+},
+{
+"date": "2020-09-07",
+"offset": 480,
+"fajr": 342,
+"sunrise": 419,
+"dhuhr": 784,
+"asr": 971,
+"maghrib": 1147,
+"isha": 1216
+},
+{
+"date": "2020-09-08",
+"offset": 480,
+"fajr": 342,
+"sunrise": 419,
+"dhuhr": 784,
+"asr": 970,
+"maghrib": 1146,
+"isha": 1215
+},
+{
+"date": "2020-09-09",
+"offset": 480,
+"fajr": 341,
+"sunrise": 418,
+"dhuhr": 783,
+"asr": 969,
+"maghrib": 1146,
+"isha": 1215
+},
+{
+"date": "2020-09-10",
+"offset": 480,
+"fajr": 341,
+"sunrise": 418,
+"dhuhr": 783,
+"asr": 968,
+"maghrib": 1146,
+"isha": 1214
+},
+{
+"date": "2020-09-11",
+"offset": 480,
+"fajr": 341,
+"sunrise": 418,
+"dhuhr": 782,
+"asr": 967,
+"maghrib": 1145,
+"isha": 1214
+},
+{
+"date": "2020-09-12",
+"offset": 480,
+"fajr": 341,
+"sunrise": 417,
+"dhuhr": 782,
+"asr": 966,
+"maghrib": 1145,
+"isha": 1214
+},
+{
+"date": "2020-09-13",
+"offset": 480,
+"fajr": 340,
+"sunrise": 417,
+"dhuhr": 782,
+"asr": 965,
+"maghrib": 1144,
+"isha": 1213
+},
+{
+"date": "2020-09-14",
+"offset": 480,
+"fajr": 340,
+"sunrise": 417,
+"dhuhr": 781,
+"asr": 964,
+"maghrib": 1144,
+"isha": 1213
+},
+{
+"date": "2020-09-15",
+"offset": 480,
+"fajr": 340,
+"sunrise": 416,
+"dhuhr": 781,
+"asr": 962,
+"maghrib": 1144,
+"isha": 1212
+},
+{
+"date": "2020-09-16",
+"offset": 480,
+"fajr": 339,
+"sunrise": 416,
+"dhuhr": 781,
+"asr": 961,
+"maghrib": 1143,
+"isha": 1212
+},
+{
+"date": "2020-09-17",
+"offset": 480,
+"fajr": 339,
+"sunrise": 416,
+"dhuhr": 780,
+"asr": 960,
+"maghrib": 1143,
+"isha": 1212
+},
+{
+"date": "2020-09-18",
+"offset": 480,
+"fajr": 339,
+"sunrise": 415,
+"dhuhr": 780,
+"asr": 959,
+"maghrib": 1142,
+"isha": 1211
+},
+{
+"date": "2020-09-19",
+"offset": 480,
+"fajr": 338,
+"sunrise": 415,
+"dhuhr": 780,
+"asr": 959,
+"maghrib": 1142,
+"isha": 1211
+},
+{
+"date": "2020-09-20",
+"offset": 480,
+"fajr": 338,
+"sunrise": 415,
+"dhuhr": 779,
+"asr": 960,
+"maghrib": 1142,
+"isha": 1210
+},
+{
+"date": "2020-09-21",
+"offset": 480,
+"fajr": 338,
+"sunrise": 415,
+"dhuhr": 779,
+"asr": 960,
+"maghrib": 1141,
+"isha": 1210
+},
+{
+"date": "2020-09-22",
+"offset": 480,
+"fajr": 338,
+"sunrise": 414,
+"dhuhr": 779,
+"asr": 960,
+"maghrib": 1141,
+"isha": 1210
+},
+{
+"date": "2020-09-23",
+"offset": 480,
+"fajr": 337,
+"sunrise": 414,
+"dhuhr": 778,
+"asr": 961,
+"maghrib": 1140,
+"isha": 1209
+},
+{
+"date": "2020-09-24",
+"offset": 480,
+"fajr": 337,
+"sunrise": 414,
+"dhuhr": 778,
+"asr": 961,
+"maghrib": 1140,
+"isha": 1209
+},
+{
+"date": "2020-09-25",
+"offset": 480,
+"fajr": 337,
+"sunrise": 413,
+"dhuhr": 778,
+"asr": 961,
+"maghrib": 1140,
+"isha": 1208
+},
+{
+"date": "2020-09-26",
+"offset": 480,
+"fajr": 336,
+"sunrise": 413,
+"dhuhr": 777,
+"asr": 962,
+"maghrib": 1139,
+"isha": 1208
+},
+{
+"date": "2020-09-27",
+"offset": 480,
+"fajr": 336,
+"sunrise": 413,
+"dhuhr": 777,
+"asr": 962,
+"maghrib": 1139,
+"isha": 1208
+},
+{
+"date": "2020-09-28",
+"offset": 480,
+"fajr": 336,
+"sunrise": 412,
+"dhuhr": 777,
+"asr": 962,
+"maghrib": 1139,
+"isha": 1207
+},
+{
+"date": "2020-09-29",
+"offset": 480,
+"fajr": 335,
+"sunrise": 412,
+"dhuhr": 776,
+"asr": 963,
+"maghrib": 1138,
+"isha": 1207
+},
+{
+"date": "2020-09-30",
+"offset": 480,
+"fajr": 335,
+"sunrise": 412,
+"dhuhr": 776,
+"asr": 963,
+"maghrib": 1138,
+"isha": 1207
+},
+{
+"date": "2020-10-01",
+"offset": 480,
+"fajr": 335,
+"sunrise": 411,
+"dhuhr": 776,
+"asr": 963,
+"maghrib": 1138,
+"isha": 1206
+},
+{
+"date": "2020-10-02",
+"offset": 480,
+"fajr": 334,
+"sunrise": 411,
+"dhuhr": 775,
+"asr": 963,
+"maghrib": 1137,
+"isha": 1206
+},
+{
+"date": "2020-10-03",
+"offset": 480,
+"fajr": 334,
+"sunrise": 411,
+"dhuhr": 775,
+"asr": 964,
+"maghrib": 1137,
+"isha": 1206
+},
+{
+"date": "2020-10-04",
+"offset": 480,
+"fajr": 334,
+"sunrise": 411,
+"dhuhr": 775,
+"asr": 964,
+"maghrib": 1136,
+"isha": 1205
+},
+{
+"date": "2020-10-05",
+"offset": 480,
+"fajr": 333,
+"sunrise": 410,
+"dhuhr": 774,
+"asr": 964,
+"maghrib": 1136,
+"isha": 1205
+},
+{
+"date": "2020-10-06",
+"offset": 480,
+"fajr": 333,
+"sunrise": 410,
+"dhuhr": 774,
+"asr": 964,
+"maghrib": 1136,
+"isha": 1205
+},
+{
+"date": "2020-10-07",
+"offset": 480,
+"fajr": 333,
+"sunrise": 410,
+"dhuhr": 774,
+"asr": 965,
+"maghrib": 1136,
+"isha": 1205
+},
+{
+"date": "2020-10-08",
+"offset": 480,
+"fajr": 332,
+"sunrise": 410,
+"dhuhr": 774,
+"asr": 965,
+"maghrib": 1135,
+"isha": 1204
+},
+{
+"date": "2020-10-09",
+"offset": 480,
+"fajr": 332,
+"sunrise": 409,
+"dhuhr": 773,
+"asr": 965,
+"maghrib": 1135,
+"isha": 1204
+},
+{
+"date": "2020-10-10",
+"offset": 480,
+"fajr": 332,
+"sunrise": 409,
+"dhuhr": 773,
+"asr": 965,
+"maghrib": 1135,
+"isha": 1204
+},
+{
+"date": "2020-10-11",
+"offset": 480,
+"fajr": 332,
+"sunrise": 409,
+"dhuhr": 773,
+"asr": 965,
+"maghrib": 1134,
+"isha": 1204
+},
+{
+"date": "2020-10-12",
+"offset": 480,
+"fajr": 331,
+"sunrise": 409,
+"dhuhr": 772,
+"asr": 966,
+"maghrib": 1134,
+"isha": 1203
+},
+{
+"date": "2020-10-13",
+"offset": 480,
+"fajr": 331,
+"sunrise": 409,
+"dhuhr": 772,
+"asr": 966,
+"maghrib": 1134,
+"isha": 1203
+},
+{
+"date": "2020-10-14",
+"offset": 480,
+"fajr": 331,
+"sunrise": 408,
+"dhuhr": 772,
+"asr": 966,
+"maghrib": 1134,
+"isha": 1203
+},
+{
+"date": "2020-10-15",
+"offset": 480,
+"fajr": 331,
+"sunrise": 408,
+"dhuhr": 772,
+"asr": 966,
+"maghrib": 1133,
+"isha": 1203
+},
+{
+"date": "2020-10-16",
+"offset": 480,
+"fajr": 330,
+"sunrise": 408,
+"dhuhr": 772,
+"asr": 966,
+"maghrib": 1133,
+"isha": 1203
+},
+{
+"date": "2020-10-17",
+"offset": 480,
+"fajr": 330,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 967,
+"maghrib": 1133,
+"isha": 1203
+},
+{
+"date": "2020-10-18",
+"offset": 480,
+"fajr": 330,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 967,
+"maghrib": 1133,
+"isha": 1202
+},
+{
+"date": "2020-10-19",
+"offset": 480,
+"fajr": 330,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 967,
+"maghrib": 1132,
+"isha": 1202
+},
+{
+"date": "2020-10-20",
+"offset": 480,
+"fajr": 329,
+"sunrise": 407,
+"dhuhr": 771,
+"asr": 967,
+"maghrib": 1132,
+"isha": 1202
+},
+{
+"date": "2020-10-21",
+"offset": 480,
+"fajr": 329,
+"sunrise": 407,
+"dhuhr": 771,
+"asr": 967,
+"maghrib": 1132,
+"isha": 1202
+},
+{
+"date": "2020-10-22",
+"offset": 480,
+"fajr": 329,
+"sunrise": 407,
+"dhuhr": 771,
+"asr": 968,
+"maghrib": 1132,
+"isha": 1202
+},
+{
+"date": "2020-10-23",
+"offset": 480,
+"fajr": 329,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 968,
+"maghrib": 1132,
+"isha": 1202
+},
+{
+"date": "2020-10-24",
+"offset": 480,
+"fajr": 328,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 968,
+"maghrib": 1132,
+"isha": 1202
+},
+{
+"date": "2020-10-25",
+"offset": 480,
+"fajr": 328,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 968,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-10-26",
+"offset": 480,
+"fajr": 328,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 968,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-10-27",
+"offset": 480,
+"fajr": 328,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 969,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-10-28",
+"offset": 480,
+"fajr": 328,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 969,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-10-29",
+"offset": 480,
+"fajr": 328,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 969,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-10-30",
+"offset": 480,
+"fajr": 328,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 969,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-10-31",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 969,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-11-01",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 970,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-11-02",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 970,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-11-03",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 970,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-11-04",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 970,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-11-05",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 971,
+"maghrib": 1131,
+"isha": 1202
+},
+{
+"date": "2020-11-06",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 971,
+"maghrib": 1131,
+"isha": 1203
+},
+{
+"date": "2020-11-07",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 971,
+"maghrib": 1131,
+"isha": 1203
+},
+{
+"date": "2020-11-08",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 971,
+"maghrib": 1131,
+"isha": 1203
+},
+{
+"date": "2020-11-09",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 972,
+"maghrib": 1131,
+"isha": 1203
+},
+{
+"date": "2020-11-10",
+"offset": 480,
+"fajr": 327,
+"sunrise": 407,
+"dhuhr": 770,
+"asr": 972,
+"maghrib": 1131,
+"isha": 1203
+},
+{
+"date": "2020-11-11",
+"offset": 480,
+"fajr": 327,
+"sunrise": 408,
+"dhuhr": 770,
+"asr": 972,
+"maghrib": 1131,
+"isha": 1203
+},
+{
+"date": "2020-11-12",
+"offset": 480,
+"fajr": 327,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 972,
+"maghrib": 1131,
+"isha": 1204
+},
+{
+"date": "2020-11-13",
+"offset": 480,
+"fajr": 327,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 973,
+"maghrib": 1132,
+"isha": 1204
+},
+{
+"date": "2020-11-14",
+"offset": 480,
+"fajr": 327,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 973,
+"maghrib": 1132,
+"isha": 1204
+},
+{
+"date": "2020-11-15",
+"offset": 480,
+"fajr": 327,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 973,
+"maghrib": 1132,
+"isha": 1204
+},
+{
+"date": "2020-11-16",
+"offset": 480,
+"fajr": 327,
+"sunrise": 408,
+"dhuhr": 771,
+"asr": 974,
+"maghrib": 1132,
+"isha": 1205
+},
+{
+"date": "2020-11-17",
+"offset": 480,
+"fajr": 327,
+"sunrise": 409,
+"dhuhr": 771,
+"asr": 974,
+"maghrib": 1132,
+"isha": 1205
+},
+{
+"date": "2020-11-18",
+"offset": 480,
+"fajr": 327,
+"sunrise": 409,
+"dhuhr": 772,
+"asr": 974,
+"maghrib": 1132,
+"isha": 1205
+},
+{
+"date": "2020-11-19",
+"offset": 480,
+"fajr": 328,
+"sunrise": 409,
+"dhuhr": 772,
+"asr": 975,
+"maghrib": 1133,
+"isha": 1206
+},
+{
+"date": "2020-11-20",
+"offset": 480,
+"fajr": 328,
+"sunrise": 409,
+"dhuhr": 772,
+"asr": 975,
+"maghrib": 1133,
+"isha": 1206
+},
+{
+"date": "2020-11-21",
+"offset": 480,
+"fajr": 328,
+"sunrise": 410,
+"dhuhr": 772,
+"asr": 975,
+"maghrib": 1133,
+"isha": 1206
+},
+{
+"date": "2020-11-22",
+"offset": 480,
+"fajr": 328,
+"sunrise": 410,
+"dhuhr": 773,
+"asr": 976,
+"maghrib": 1133,
+"isha": 1207
+},
+{
+"date": "2020-11-23",
+"offset": 480,
+"fajr": 328,
+"sunrise": 410,
+"dhuhr": 773,
+"asr": 976,
+"maghrib": 1134,
+"isha": 1207
+},
+{
+"date": "2020-11-24",
+"offset": 480,
+"fajr": 328,
+"sunrise": 411,
+"dhuhr": 773,
+"asr": 976,
+"maghrib": 1134,
+"isha": 1207
+},
+{
+"date": "2020-11-25",
+"offset": 480,
+"fajr": 329,
+"sunrise": 411,
+"dhuhr": 774,
+"asr": 977,
+"maghrib": 1134,
+"isha": 1208
+},
+{
+"date": "2020-11-26",
+"offset": 480,
+"fajr": 329,
+"sunrise": 411,
+"dhuhr": 774,
+"asr": 977,
+"maghrib": 1135,
+"isha": 1208
+},
+{
+"date": "2020-11-27",
+"offset": 480,
+"fajr": 329,
+"sunrise": 412,
+"dhuhr": 774,
+"asr": 978,
+"maghrib": 1135,
+"isha": 1209
+},
+{
+"date": "2020-11-28",
+"offset": 480,
+"fajr": 329,
+"sunrise": 412,
+"dhuhr": 775,
+"asr": 978,
+"maghrib": 1135,
+"isha": 1209
+},
+{
+"date": "2020-11-29",
+"offset": 480,
+"fajr": 330,
+"sunrise": 412,
+"dhuhr": 775,
+"asr": 978,
+"maghrib": 1136,
+"isha": 1210
+},
+{
+"date": "2020-11-30",
+"offset": 480,
+"fajr": 330,
+"sunrise": 413,
+"dhuhr": 775,
+"asr": 979,
+"maghrib": 1136,
+"isha": 1210
+},
+{
+"date": "2020-12-01",
+"offset": 480,
+"fajr": 330,
+"sunrise": 413,
+"dhuhr": 776,
+"asr": 979,
+"maghrib": 1136,
+"isha": 1210
+},
+{
+"date": "2020-12-02",
+"offset": 480,
+"fajr": 331,
+"sunrise": 414,
+"dhuhr": 776,
+"asr": 980,
+"maghrib": 1137,
+"isha": 1211
+},
+{
+"date": "2020-12-03",
+"offset": 480,
+"fajr": 331,
+"sunrise": 414,
+"dhuhr": 777,
+"asr": 980,
+"maghrib": 1137,
+"isha": 1211
+},
+{
+"date": "2020-12-04",
+"offset": 480,
+"fajr": 331,
+"sunrise": 414,
+"dhuhr": 777,
+"asr": 981,
+"maghrib": 1137,
+"isha": 1212
+},
+{
+"date": "2020-12-05",
+"offset": 480,
+"fajr": 332,
+"sunrise": 415,
+"dhuhr": 777,
+"asr": 981,
+"maghrib": 1138,
+"isha": 1212
+},
+{
+"date": "2020-12-06",
+"offset": 480,
+"fajr": 332,
+"sunrise": 415,
+"dhuhr": 778,
+"asr": 982,
+"maghrib": 1138,
+"isha": 1213
+},
+{
+"date": "2020-12-07",
+"offset": 480,
+"fajr": 332,
+"sunrise": 416,
+"dhuhr": 778,
+"asr": 982,
+"maghrib": 1139,
+"isha": 1213
+},
+{
+"date": "2020-12-08",
+"offset": 480,
+"fajr": 333,
+"sunrise": 416,
+"dhuhr": 779,
+"asr": 983,
+"maghrib": 1139,
+"isha": 1214
+},
+{
+"date": "2020-12-09",
+"offset": 480,
+"fajr": 333,
+"sunrise": 417,
+"dhuhr": 779,
+"asr": 983,
+"maghrib": 1140,
+"isha": 1214
+},
+{
+"date": "2020-12-10",
+"offset": 480,
+"fajr": 334,
+"sunrise": 417,
+"dhuhr": 780,
+"asr": 984,
+"maghrib": 1140,
+"isha": 1215
+},
+{
+"date": "2020-12-11",
+"offset": 480,
+"fajr": 334,
+"sunrise": 418,
+"dhuhr": 780,
+"asr": 984,
+"maghrib": 1140,
+"isha": 1215
+},
+{
+"date": "2020-12-12",
+"offset": 480,
+"fajr": 334,
+"sunrise": 418,
+"dhuhr": 781,
+"asr": 984,
+"maghrib": 1141,
+"isha": 1216
+},
+{
+"date": "2020-12-13",
+"offset": 480,
+"fajr": 335,
+"sunrise": 419,
+"dhuhr": 781,
+"asr": 985,
+"maghrib": 1141,
+"isha": 1216
+},
+{
+"date": "2020-12-14",
+"offset": 480,
+"fajr": 335,
+"sunrise": 419,
+"dhuhr": 782,
+"asr": 985,
+"maghrib": 1142,
+"isha": 1217
+},
+{
+"date": "2020-12-15",
+"offset": 480,
+"fajr": 336,
+"sunrise": 419,
+"dhuhr": 782,
+"asr": 986,
+"maghrib": 1142,
+"isha": 1217
+},
+{
+"date": "2020-12-16",
+"offset": 480,
+"fajr": 336,
+"sunrise": 420,
+"dhuhr": 782,
+"asr": 986,
+"maghrib": 1143,
+"isha": 1218
+},
+{
+"date": "2020-12-17",
+"offset": 480,
+"fajr": 337,
+"sunrise": 420,
+"dhuhr": 783,
+"asr": 987,
+"maghrib": 1143,
+"isha": 1218
+},
+{
+"date": "2020-12-18",
+"offset": 480,
+"fajr": 337,
+"sunrise": 421,
+"dhuhr": 783,
+"asr": 987,
+"maghrib": 1144,
+"isha": 1219
+},
+{
+"date": "2020-12-19",
+"offset": 480,
+"fajr": 338,
+"sunrise": 421,
+"dhuhr": 784,
+"asr": 988,
+"maghrib": 1144,
+"isha": 1219
+},
+{
+"date": "2020-12-20",
+"offset": 480,
+"fajr": 338,
+"sunrise": 422,
+"dhuhr": 784,
+"asr": 988,
+"maghrib": 1145,
+"isha": 1220
+},
+{
+"date": "2020-12-21",
+"offset": 480,
+"fajr": 339,
+"sunrise": 422,
+"dhuhr": 785,
+"asr": 989,
+"maghrib": 1145,
+"isha": 1220
+},
+{
+"date": "2020-12-22",
+"offset": 480,
+"fajr": 339,
+"sunrise": 423,
+"dhuhr": 785,
+"asr": 989,
+"maghrib": 1146,
+"isha": 1221
+},
+{
+"date": "2020-12-23",
+"offset": 480,
+"fajr": 340,
+"sunrise": 423,
+"dhuhr": 786,
+"asr": 990,
+"maghrib": 1146,
+"isha": 1221
+},
+{
+"date": "2020-12-24",
+"offset": 480,
+"fajr": 340,
+"sunrise": 424,
+"dhuhr": 786,
+"asr": 990,
+"maghrib": 1147,
+"isha": 1222
+},
+{
+"date": "2020-12-25",
+"offset": 480,
+"fajr": 341,
+"sunrise": 424,
+"dhuhr": 787,
+"asr": 991,
+"maghrib": 1147,
+"isha": 1222
+},
+{
+"date": "2020-12-26",
+"offset": 480,
+"fajr": 341,
+"sunrise": 425,
+"dhuhr": 787,
+"asr": 991,
+"maghrib": 1148,
+"isha": 1223
+},
+{
+"date": "2020-12-27",
+"offset": 480,
+"fajr": 342,
+"sunrise": 425,
+"dhuhr": 788,
+"asr": 992,
+"maghrib": 1148,
+"isha": 1223
+},
+{
+"date": "2020-12-28",
+"offset": 480,
+"fajr": 342,
+"sunrise": 426,
+"dhuhr": 788,
+"asr": 992,
+"maghrib": 1149,
+"isha": 1224
+},
+{
+"date": "2020-12-29",
+"offset": 480,
+"fajr": 343,
+"sunrise": 426,
+"dhuhr": 789,
+"asr": 993,
+"maghrib": 1149,
+"isha": 1224
+},
+{
+"date": "2020-12-30",
+"offset": 480,
+"fajr": 343,
+"sunrise": 427,
+"dhuhr": 789,
+"asr": 993,
+"maghrib": 1150,
+"isha": 1225
+},
+{
+"date": "2020-12-31",
+"offset": 480,
+"fajr": 344,
+"sunrise": 427,
+"dhuhr": 790,
+"asr": 994,
+"maghrib": 1150,
+"isha": 1225
+}
+]
+},
+{
+"name": "Tehran-Tehran",
+"latitude": 35.715298,
+"longitude": 51.404343,
+"method": "Tehran",
+"madhab": "Shafi",
+"highLatitudeRule": "MiddleOfTheNight",
+"variance": 1,
+"source": "http://praytimes.org/",
+"days": [
+{
+"date": "2018-01-01",
+"offset": 210,
+"fajr": 344,
+"sunrise": 434,
+"dhuhr": 728,
+"asr": 884,
+"maghrib": 1042,
+"isha": 1092
+},
+{
+"date": "2018-02-01",
+"offset": 210,
+"fajr": 339,
+"sunrise": 425,
+"dhuhr": 738,
+"asr": 910,
+"maghrib": 1071,
+"isha": 1119
+},
+{
+"date": "2018-03-01",
+"offset": 210,
+"fajr": 311,
+"sunrise": 395,
+"dhuhr": 737,
+"asr": 930,
+"maghrib": 1097,
+"isha": 1144
+},
+{
+"date": "2018-04-01",
+"offset": 270,
+"fajr": 326,
+"sunrise": 411,
+"dhuhr": 788,
+"asr": 1002,
+"maghrib": 1184,
+"isha": 1232
+},
+{
+"date": "2018-05-01",
+"offset": 270,
+"fajr": 280,
+"sunrise": 373,
+"dhuhr": 782,
+"asr": 1006,
+"maghrib": 1210,
+"isha": 1262
+},
+{
+"date": "2018-06-01",
+"offset": 270,
+"fajr": 246,
+"sunrise": 350,
+"dhuhr": 782,
+"asr": 1011,
+"maghrib": 1236,
+"isha": 1294
+},
+{
+"date": "2018-07-01",
+"offset": 270,
+"fajr": 246,
+"sunrise": 352,
+"dhuhr": 788,
+"asr": 1017,
+"maghrib": 1245,
+"isha": 1305
+},
+{
+"date": "2018-08-01",
+"offset": 270,
+"fajr": 275,
+"sunrise": 372,
+"dhuhr": 791,
+"asr": 1018,
+"maghrib": 1229,
+"isha": 1283
+},
+{
+"date": "2018-09-01",
+"offset": 270,
+"fajr": 309,
+"sunrise": 396,
+"dhuhr": 784,
+"asr": 1003,
+"maghrib": 1191,
+"isha": 1240
+},
+{
+"date": "2018-10-01",
+"offset": 210,
+"fajr": 276,
+"sunrise": 359,
+"dhuhr": 714,
+"asr": 916,
+"maghrib": 1087,
+"isha": 1134
+},
+{
+"date": "2018-11-01",
+"offset": 210,
+"fajr": 301,
+"sunrise": 386,
+"dhuhr": 708,
+"asr": 886,
+"maghrib": 1048,
+"isha": 1096
+},
+{
+"date": "2018-12-01",
+"offset": 210,
+"fajr": 327,
+"sunrise": 415,
+"dhuhr": 713,
+"asr": 872,
+"maghrib": 1031,
+"isha": 1081
+}
+]
+}
+]
+}

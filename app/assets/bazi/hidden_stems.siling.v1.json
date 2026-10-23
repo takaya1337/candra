@@ -1,0 +1,235 @@
+{
+  "schema": 1,
+  "name": "hidden_stems",
+  "id": "siling.v1",
+  "english": "Month command",
+  "indonesian": "Penguasa bulan",
+  "lineage": "人元司令分野, 《淵海子平》「又論節氣歌」 as tabulated by 徐樂吾",
+  "source": "Stems and day counts: 《淵海子平》卷一「又論節氣歌」 (假如子上十日壬，中旬下旬方是癸 ...), read on 2026-10-13 at donglishuzhai.net/chapter/12807.html. The order in which the stems take command within the month: 徐樂吾《子平真詮評註》「十二月令人元司令分野表」, read only in a repost at blog.sina.com.cn/s/blog_4a66051f01010kl2.html.",
+  "verified": false,
+  "notes": "A different kind of table: which stem commands the month on which days after its node term, so each branch holds every stem that has a turn. Six branches hold a stem the verse table does not: 子 壬, 卯 甲, 午 丙, 酉 庚, 亥 戊, 申 己. Not verified because the order of command rests on a repost of 徐樂吾, not his book. The two sources differ at 午: the verse gives 丁 ten days (丙 10, 丁 10, 己 9, a month of 29), 徐樂吾 eleven; his is used. For 申 徐樂吾 writes 戊己土 ten days together; the verse splits them 己 7, 戊 3. 《三命通會》「論人元司事」 gives yet another division (寅: 土 5, 丙 5, 甲 20 ...) and quotes 醉醒子 against counting days at all. Under \"branches\" the principal stem, the one that commands last and longest, is first.",
+  "order": "principal (本氣) first, then the others in the order they command",
+  "branches": {
+    "子": [
+      "癸",
+      "壬"
+    ],
+    "丑": [
+      "己",
+      "癸",
+      "辛"
+    ],
+    "寅": [
+      "甲",
+      "戊",
+      "丙"
+    ],
+    "卯": [
+      "乙",
+      "甲"
+    ],
+    "辰": [
+      "戊",
+      "乙",
+      "癸"
+    ],
+    "巳": [
+      "丙",
+      "戊",
+      "庚"
+    ],
+    "午": [
+      "丁",
+      "丙",
+      "己"
+    ],
+    "未": [
+      "己",
+      "丁",
+      "乙"
+    ],
+    "申": [
+      "庚",
+      "己",
+      "戊",
+      "壬"
+    ],
+    "酉": [
+      "辛",
+      "庚"
+    ],
+    "戌": [
+      "戊",
+      "辛",
+      "丁"
+    ],
+    "亥": [
+      "壬",
+      "戊",
+      "甲"
+    ]
+  },
+  "commandOrder": "from the node term that opens the month: stem, days",
+  "command": {
+    "子": [
+      [
+        "壬",
+        10
+      ],
+      [
+        "癸",
+        20
+      ]
+    ],
+    "丑": [
+      [
+        "癸",
+        9
+      ],
+      [
+        "辛",
+        3
+      ],
+      [
+        "己",
+        18
+      ]
+    ],
+    "寅": [
+      [
+        "戊",
+        7
+      ],
+      [
+        "丙",
+        7
+      ],
+      [
+        "甲",
+        16
+      ]
+    ],
+    "卯": [
+      [
+        "甲",
+        10
+      ],
+      [
+        "乙",
+        20
+      ]
+    ],
+    "辰": [
+      [
+        "乙",
+        9
+      ],
+      [
+        "癸",
+        3
+      ],
+      [
+        "戊",
+        18
+      ]
+    ],
+    "巳": [
+      [
+        "戊",
+        5
+      ],
+      [
+        "庚",
+        9
+      ],
+      [
+        "丙",
+        16
+      ]
+    ],
+    "午": [
+      [
+        "丙",
+        10
+      ],
+      [
+        "己",
+        9
+      ],
+      [
+        "丁",
+        11
+      ]
+    ],
+    "未": [
+      [
+        "丁",
+        9
+      ],
+      [
+        "乙",
+        3
+      ],
+      [
+        "己",
+        18
+      ]
+    ],
+    "申": [
+      [
+        "己",
+        7
+      ],
+      [
+        "戊",
+        3
+      ],
+      [
+        "壬",
+        3
+      ],
+      [
+        "庚",
+        17
+      ]
+    ],
+    "酉": [
+      [
+        "庚",
+        10
+      ],
+      [
+        "辛",
+        20
+      ]
+    ],
+    "戌": [
+      [
+        "辛",
+        9
+      ],
+      [
+        "丁",
+        3
+      ],
+      [
+        "戊",
+        18
+      ]
+    ],
+    "亥": [
+      [
+        "戊",
+        7
+      ],
+      [
+        "甲",
+        5
+      ],
+      [
+        "壬",
+        18
+      ]
+    ]
+  }
+}

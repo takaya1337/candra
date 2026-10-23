@@ -1,0 +1,15 @@
+World Magnetic Model 2025
+https://www.ncei.noaa.gov/products/world-magnetic-model
+
+Used by Candra: the model's coefficients (WMM2025.COF), to turn the
+phone's compass from magnetic north to true north in Light.
+
+The World Magnetic Model is produced by the NOAA National Centers for
+Environmental Information and the British Geological Survey, for the
+US National Geospatial-Intelligence Agency and the UK Defence
+Geographic Centre. It is a work of the United States government and
+is in the public domain.
+
+Chulliat, A., and others (2025), The US/UK World Magnetic Model for
+2025-2030: Technical Report, NOAA National Centers for Environmental
+Information.

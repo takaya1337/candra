@@ -1,0 +1,6 @@
+/* The permission prompts in Indonesian, made by
+   tool/permission_strings.sh from assets/samples/showcase-strings.json.
+   Do not edit here. */
+
+"NSLocationWhenInUseUsageDescription" = "Candra menggunakan lokasi hanya untuk fitur yang membutuhkan posisi, seperti geotag pada catatan jurnal, posisi untuk menentukan waktu matahari terbit, tenggelam, jam salat lima waktu, fitur-fitur langit seperti efemeris dan peta bintang, atau perhitungan Bazi. Apabila Anda sudah mengizinkan penggunaan lokasi, aplikasi akan memperbarui lokasi setiap kali Anda menekan tombol 'Hari ini' atau menggunakan fitur-fitur terkait, tidak secara terus-menerus dalam background. Posisi sengaja dibulatkan sebelum disimpan.";
+"NSPhotoLibraryAddUsageDescription" = "Candra akan menyimpan screenshot untuk hari yang dipilih ketika Anda menyentuh tombol simpan pada fitur Bacaan lengkap. Aplikasi tidak melihat foto Anda.";

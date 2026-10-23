@@ -1,0 +1,792 @@
+{
+  "_note": "Every text the store screenshots' sample journal shows (lib/journal/samples.dart, Samples.showcase). Fill each \"id\" with the Indonesian; leave \"en\" as it is. Keep every {placeholder} exactly as written, in braces, wherever it belongs in the sentence: the app fills it in for the day the screenshots are taken ({weton}: Senin Pahing; {neptu}: 13; {chineseMonth}: Kau Gwee; {date}: the day and month in the screen's language; {month}: a month's name in the screen's language). Markdown stays: **bold**, *italic*, '- ' for a list, '> ' for a quote, and \\n for a new line. An empty \"id\" falls back to the English, and store_screenshots.sh refuses to take the Indonesian screenshots until none is empty. The keys beginning manual. are the manual in the menu (owner, 22 October 2026): drafts in both languages, by Claude, for the owner to rewrite. For each feature: .name and .line (its row in its wing), .what (what it is), .button.<glyph> (one line per button, drawn with that glyph; system and monthButton are drawn as the bar's centre and the month button), .use.N (its uses, the first words in bold naming each), and .tip (good to know, not every feature has one). manual.pageWhat, pageButtons, pageUses and pageTip name the pages; manual.group.<wing>.name and .line are the wings, the cards of the lower panel. The keys beginning ios.permission. are what the iPhone says when Candra asks for a permission, one per Info.plist key: the English is the app's (keep it as the app says it), the Indonesian is the owner's to write; tool/permission_strings.sh puts them into the app.",
+
+  "category.occasion": { "en": "Occasion", "id": "Hari Khusus" },
+  "category.observance": { "en": "Observance", "id": "Kebatinan" },
+  "category.dream": { "en": "Dream", "id": "Mimpi" },
+  "category.divination": { "en": "Divination", "id": "Konsultasi" },
+  "category.plantLog": { "en": "Plant log", "id": "Tanaman" },
+
+  "entry.morningSitting.title": {
+    "en": "Morning sitting",
+    "id": "Meditasi pagi"
+  },
+  "entry.morningSitting.body": {
+    "en": "Twenty minutes before sunrise. The mind was **quiet** by the end; the knees less so.\n\n{weton}, neptu {neptu}. A good day to begin things slowly.",
+    "id": "Terbangun 30 menit sebelum fajar. Duduk semedi sekitar 15 menit sebelum kopi pagi dan rokok."
+  },
+  "entry.basilWeekThree.title": { "en": "Basil, week three", "id": "Kangkung" },
+  "entry.basilWeekThree.body": {
+    "en": "- Two new pairs of leaves\n- Watered, about a glass\n- Moved to the east window\n\nThe lower leaves are yellowing. Less water, perhaps.",
+    "id": "Hari ke-2. Tunas mulai tumbuh. Rock wool dijaga jangan sampai kering. Temperatur paling tinggi siang tadi 34C, 19 dari 72 slot di rak semai mulai layu. Periksa sekitar jam 10:00 dan tambahkan air secukupnya."
+  },
+  "entry.jasmine.title": { "en": "Repotted the jasmine", "id": "Melati pindah pot" },
+  "entry.jasmine.body": {
+    "en": "Bigger pot, new soil, a stake for the long stem.",
+    "id": "Pindah ke pot baru dengan tanah dan pupuk baru. Penyangga dipasang."
+  },
+
+  "reminder.sejit": { "en": "Sejit Kwan Im", "id": "Sejit Mak Kwan Im" },
+  "reminder.suro": {
+    "en": "Malam 1 Suro: bathe the keris",
+    "id": "Malam 1 Suro: mandikan keris dan ritual seperti biasa"
+  },
+  "reminder.imlek": { "en": "Imlek", "id": "Imlek" },
+  "reminder.fullMoon": {
+    "en": "Full moon sitting",
+    "id": "Meditasi terang bulan"
+  },
+  "reminder.eveningOffering": {
+    "en": "Evening offering",
+    "id": "Sesajen malam"
+  },
+
+  "ios.permission.NSLocationWhenInUseUsageDescription": {
+    "en": "Candra uses where you are only for what needs a place: a geotag on an entry, the place for sunrise, sunset, prayer times and the sky, or the place of a bazi chart. It asks when you press for one of these. Once you allow it, pressing Today or opening a tool of the sky also brings that place up to date, never in the background. Positions are rounded before they are kept.",
+    "id": "Candra menggunakan lokasi hanya untuk fitur yang membutuhkan posisi, seperti geotag pada catatan jurnal, posisi untuk menentukan waktu matahari terbit, tenggelam, jam salat lima waktu, fitur-fitur langit seperti efemeris dan peta bintang, atau perhitungan Bazi. Apabila Anda sudah mengizinkan penggunaan lokasi, aplikasi akan memperbarui lokasi setiap kali Anda menekan tombol 'Hari ini' atau menggunakan fitur-fitur terkait, tidak secara terus-menerus dalam background. Posisi sengaja dibulatkan sebelum disimpan."
+  },
+  "ios.permission.NSPhotoLibraryAddUsageDescription": {
+    "en": "Candra saves a picture of a day's reading to your photos when you ask it to. It never reads your photos.",
+    "id": "Candra akan menyimpan screenshot untuk hari yang dipilih ketika Anda menyentuh tombol simpan pada fitur Bacaan lengkap. Aplikasi tidak melihat foto Anda."
+  },
+
+  "manual.title": { "en": "Manual", "id": "Panduan" },
+
+  "manual.offer": {
+    "en": "New here? The manual is in the menu: every feature, what it is for, and how people use it. Look whenever you like.",
+    "id": "Pengguna baru? Silakan baca contoh penggunaan pada Menu > Panduan."
+  },
+
+  "manual.pageWhat": { "en": "What it is", "id": "Deskripsi" },
+
+  "manual.pageButtons": { "en": "Its buttons", "id": "Tombol" },
+
+  "manual.pageUses": { "en": "Use it for", "id": "Contoh penggunaan" },
+
+  "manual.pageTip": { "en": "Good to know", "id": "Perlu diketahui" },
+
+  "manual.takeMeThere": { "en": "Take me there", "id": "Bawa ke fitur" },
+
+  "manual.group.menu.name": { "en": "Menu", "id": "Menu" },
+  "manual.group.menu.line": {
+    "en": "Look, your data, help, about",
+    "id": "Tampilan, data Anda, bantuan, tentang"
+  },
+  "manual.group.calendar.name": { "en": "Calendar", "id": "Kalender" },
+  "manual.group.calendar.line": {
+    "en": "The days, the systems, today",
+    "id": "Hari, sistem, hari ini"
+  },
+  "manual.group.utilities.name": { "en": "Utilities", "id": "Utilitas" },
+  "manual.group.utilities.line": {
+    "en": "Each calendar's tools, and the place",
+    "id": "Alat tiap kalender, dan posisi"
+  },
+  "manual.group.practice.name": { "en": "Practice", "id": "Laku" },
+  "manual.group.practice.line": {
+    "en": "A stopwatch, a timer, a tally",
+    "id": "Stopwatch, timer, penghitung"
+  },
+  "manual.group.reminders.name": { "en": "Reminders", "id": "Pengingat" },
+  "manual.group.reminders.line": {
+    "en": "Repeats every calendar knows",
+    "id": "Pengingat multi-kalender"
+  },
+  "manual.group.journal.name": { "en": "Journal", "id": "Jurnal" },
+  "manual.group.journal.line": {
+    "en": "Writing, categories, search",
+    "id": "Menulis, kategori, pencarian"
+  },
+
+  "manual.menu.name": { "en": "Menu", "id": "Menu" },
+  "manual.menu.line": {
+    "en": "Everything used now and then",
+    "id": "Untuk fitur yang hanya sesekali dipakai"
+  },
+  "manual.menu.what": {
+    "en": "The first room on the left. It holds what most people touch less than once a week: the colours of each calendar, your journal file and sync, how every date is reckoned, the essay on why Candra is free, the privacy policy and the licences. Dark and light are switched at the top of its lower panel.",
+    "id": "Tombol pertama di kiri. Isinya yang jarang disentuh, kurang dari sekali seminggu: warna tiap kalender, berkas jurnal dan sinkronisasi, mekanisme setiap tanggal dihitung, kebijakan privasi dan lisensi. Mode gelap dan terang dapat diganti melalui tombol bulan dan matahari di bagian bawah."
+  },
+  "manual.menu.button.menu": {
+    "en": "Opens the menu. Touched again inside one of its pages, it comes back to the menu itself.",
+    "id": "Membuka menu. Apabila disentuh lagi dari salah satu halamannya, maka aplikasi akan kembali ke menu itu sendiri."
+  },
+  "manual.menu.use.1": {
+    "en": "**Check a reckoning.** Your grandmother says this Friday is Kliwon and the calendar on her wall agrees with Candra, your cousin's app says otherwise. \"How the dates are reckoned\" says which rule Candra follows and where it comes from, so you can see why.",
+    "id": "**Periksa perhitungan.** Nenek bilang Jumat ini Kliwon, dan kalender dinding beliau sama dengan Candra; aplikasi sepupu berkata lain. \"Cara tanggal dihitung\" menjelaskan aturan yang dipakai Candra dan sumbernya, jadi Anda bisa melihat penyebab perbedaan dengan terperinci."
+  },
+  "manual.menu.use.2": {
+    "en": "**Read at night.** Switch to light for a bright room, dark for the evening sitting. The whole app follows.",
+    "id": "**Membaca malam hari.** Pilih mode terang untuk tempat dengan pencahayaan yang baik, mode gelap untuk duduk malam. Digunakan dalam seluruh halaman pada aplikasi."
+  },
+  "manual.menu.tip": {
+    "en": "A dot on the menu button means your sync needs a look: a conflict to settle, or a token GitHub refused.",
+    "id": "Titik di tombol menu berarti sinkronisasi perlu dilihat: ada konflik yang harus dipilih, atau token ditolak GitHub."
+  },
+
+  "manual.colours.name": { "en": "Colours", "id": "Warna" },
+  "manual.colours.line": {
+    "en": "Each calendar's colour scheme",
+    "id": "Skema warna tiap kalender"
+  },
+  "manual.colours.what": {
+    "en": "Every calendar has its own colours: amber for the Weton, moss for the Javanese, vermilion for the Chinese, teal for the Hijri, and night, Candra's own navy, for the Gregorian. Here you can give any calendar any of eleven schemes, dark and light alike; two calendars may share one. The sample at the top shows today in the calendar you are colouring.",
+    "id": "Secara pengaturan bawaan, setiap kalender punya warnanya sendiri: amber untuk Weton, hijau lumut untuk kalender Jawa, vermilion untuk kalender Imlek, hijau toska untuk kalender Hijriah, malam untuk kalender Masehi. Setiap kalender dapat diberi salah satu dari sebelas pilihan warna, dua kalender boleh memakai warna yang sama. Contoh di atas menunjukkan hari ini dalam kalender yang sedang diwarnai."
+  },
+  "manual.colours.button.back": {
+    "en": "Restore defaults, at the top right: every calendar back in its own colours, after asking.",
+    "id": "Kembalikan bawaan, di kanan atas: setiap kalender kembali ke warnanya sendiri."
+  },
+  "manual.colours.use.1": {
+    "en": "**Tell the systems apart at a glance.** If you move between the Javanese and the Hijri often, give them colours far apart, so you always know which realm you are in.",
+    "id": "**Bedakan sistem sekilas pandang.** Jika Anda sering menggunakan dua kalender, misalnya kalender Jawa dan Hijriah, Anda dapat menggunakan warna yang jauh berbeda agar lebih mudah membedakan sedang di sistem kalender yang mana."
+  },
+  "manual.colours.use.2": {
+    "en": "**A calmer screen.** Stone or slate on every calendar makes the app quiet, for those who want the dates and not the colours.",
+    "id": "**Layar lebih tenang.** Anda dapat memilih warna netral apabila tidak ingin terganggu dengan warna-warni yang disediakan."
+  },
+
+  "manual.journalFile.name": { "en": "Journal file", "id": "Berkas jurnal" },
+  "manual.journalFile.line": {
+    "en": "Export, import, share, sync",
+    "id": "Ekspor, impor, bagikan, sinkronisasi"
+  },
+  "manual.journalFile.what": {
+    "en": "Your journal lives on your phone and nowhere else. The journal file is all of it in one zip: every entry, category, tag and reminder. Share it, save it, or bring one in; importing only ever adds, it never overwrites. Sync, if you set it up, keeps the journal in a private GitHub repository of your own. The cards in the lower panel are the actions; touch the one in the middle again to do it.",
+    "id": "Jurnal Anda hanya ada di ponsel Anda. Berkas jurnal adalah seluruhnya dalam satu zip: setiap catatan, kategori, tag dan pengingat. Bagikan, simpan, atau masukkan berkas; impor hanya menambah, tidak pernah menimpa. Sinkron, jika dipasang, menyimpan jurnal di repositori GitHub pribadi milik Anda sendiri. Kartu di panel bawah adalah tindakannya; sentuh lagi kartu yang di tengah untuk menjalankannya."
+  },
+  "manual.journalFile.button.share": {
+    "en": "Share: send the journal file through any app.",
+    "id": "Bagikan: kirim berkas jurnal lewat aplikasi apa pun."
+  },
+  "manual.journalFile.button.archive": {
+    "en": "Save: keep the journal file in your files.",
+    "id": "Simpan: taruh berkas jurnal di folder Anda."
+  },
+  "manual.journalFile.button.import": {
+    "en": "Import: add a journal file to this one.",
+    "id": "Impor: tambahkan isi berkas jurnal ke jurnal ini."
+  },
+  "manual.journalFile.button.sync": {
+    "en": "Connect or Sync: your own private repository on GitHub.",
+    "id": "Hubungkan atau Sinkronisasi: repositori pribadi Anda di GitHub."
+  },
+  "manual.journalFile.use.1": {
+    "en": "**A new phone.** Save the journal file on the old one, open it on the new one with Import. Nothing is lost, and nothing is doubled.",
+    "id": "**Ponsel baru.** Simpan berkas jurnal di ponsel lama, buka di ponsel baru dengan Impor. Tidak ada yang hilang, tidak ada yang ganda."
+  },
+  "manual.journalFile.use.2": {
+    "en": "**A backup before a trip.** Share the journal file to yourself once a month; it is the whole of it, ready to bring back.",
+    "id": "**Cadangan sebelum bepergian.** Simpan berkas jurnal secara periodik setiap bulan misalnya, yang dapat diimpor kapan pun."
+  },
+  "manual.journalFile.use.3": {
+    "en": "**Two phones, one journal.** Connect both to the same private repository; what you write on one appears on the other. If both changed the same entry, Candra asks which to keep, or keeps both.",
+    "id": "**Dua ponsel, satu jurnal.** Hubungkan keduanya ke repositori pribadi yang sama, yang ditulis di satu muncul di yang lain. Jika ada dua sumber mengubah catatan yang sama, Candra akan bertanya mana yang disimpan, salah satu atau keduanya."
+  },
+  "manual.journalFile.tip": {
+    "en": "The journal file is not encrypted. Keep it where you would keep a diary.",
+    "id": "Berkas jurnal tidak dienkripsi dan berbentuk _markdown_ biasa."
+  },
+
+  "manual.today.name": { "en": "Today", "id": "Hari ini" },
+  "manual.today.line": {
+    "en": "Back to today, wherever you are",
+    "id": "Kembalikan kursor ke hari ini"
+  },
+  "manual.today.what": {
+    "en": "The second button of the bar. Whatever page is in front, it brings that page back to today: the calendar, the journal, the reminders, the search's month, a utility's moment. It is lit when you are already there, and faint on a page that has no days. If you have already let Candra know where you are, it also brings the sky's place up to date; it never asks.",
+    "id": "Tombol kedua dari kiri. Halaman apa pun yang di depan, tombol ini membawanya kembali ke hari ini: kalender, jurnal, pengingat, bulan di pencarian, saat di sebuah utilitas. Tombol menyala bila kursor sudah di hari ini, dan pudar di halaman yang tidak punya hari. Jika Anda sudah mengizinkan Candra untuk menyimpan lokasi, tombol ini juga akan memperbarui segala fitur yang membutuhkan posisi secara otomatis."
+  },
+  "manual.today.button.today": {
+    "en": "Today: the page in front goes back to today and now.",
+    "id": "Hari ini: halaman di depan kembali ke hari ini dan saat ini."
+  },
+  "manual.today.use.1": {
+    "en": "**After looking ahead.** You leafed six months forward to find next year's Malam 1 Suro. One touch, and you are home again.",
+    "id": "**Setelah melihat jauh ke depan.** Anda membalik enam bulan untuk mencari Malam 1 Suro tahun depan. Anda dapat kembali ke hari ini dengan sekali sentuh."
+  },
+  "manual.today.use.2": {
+    "en": "**In a utility.** You moved the star map to midnight to see what rises; Today puts the sky back to this moment.",
+    "id": "**Di utilitas.** Peta bintang Anda geser ke tengah malam untuk melihat posisi benda langit, tombol akan mengembalikan posisi langit ke saat ini."
+  },
+
+  "manual.utilities.name": { "en": "Utilities", "id": "Utilitas" },
+  "manual.utilities.line": {
+    "en": "Each calendar's tools",
+    "id": "Alat tiap kalender"
+  },
+  "manual.utilities.what": {
+    "en": "Each calendar brings its own tools: the bazi for the Chinese; the pranata mangsa and Lintang Jawa for the Javanese; prayer times and the hilal for the Hijri; the ephemeris, the planets, the star map and Light for the Gregorian. The utilities button raises the tools of the calendar you are in as cards; touch one to open it. Every tool opens on today and now.",
+    "id": "Setiap kalender punya alat masing-masing: Bazi untuk kalender Imlek; Pranata Mangsa dan Lintang Jawa untuk kalender Jawa; Waktu Salat dan Hilal untuk kalender Hijriah; Efemeris, Planet, Peta Bintang dan Cahaya untuk kalender Masehi. Tombol utilitas mengeluarkan alat-alat sistem kalender yang sedang dipakai sebagai kartu; sentuh salah satu untuk membukanya. Setiap alat terbuka pada hari ini dan saat ini."
+  },
+  "manual.utilities.button.utilities": {
+    "en": "Utilities: the cards up, or down. From another room it goes home with the cards up.",
+    "id": "Utilitas: kartu naik atau turun. Dari ruang lain, kembali ke halaman utama dengan kartu siap digunakan."
+  },
+  "manual.utilities.use.1": {
+    "en": "**Change calendar to change tools.** Want prayer times? Choose the Hijri at the centre of the bar, then the utilities.",
+    "id": "**Ganti kalender untuk ganti alat.** Ingin waktu salat? Pilih Hijriah melalui tombol utama, lalu pilih utilitas."
+  },
+  "manual.utilities.tip": {
+    "en": "Draw the cards down to let them go. A tool left open comes back by the same button.",
+    "id": "Tarik kartu ke bawah untuk menutupnya. Alat yang sedang digunakan dan ditinggal akan terbuka kembali lewat tombol yang sama."
+  },
+
+  "manual.bazi.name": { "en": "Bazi", "id": "Bazi" },
+  "manual.bazi.line": {
+    "en": "The four pillars of a moment",
+    "id": "Empat pilar pada suatu waktu"
+  },
+  "manual.bazi.what": {
+    "en": "The four pillars (hour, day, month, year) of any moment at any place, with the ten gods, the hidden stems, the nayin, the elements, the void branches, the relations and, once a sex is given, the luck pillars. The rules where the schools differ are yours to choose: true solar time or the clock, the 23:00 rule, the year's boundary, the tables. Nothing you put in is kept unless you write the chart to the journal.",
+    "id": "Empat pilar (jam, hari, bulan, tahun) dari saat mana pun di tempat mana pun, dengan sepuluh dewa, batang tersembunyi, nayin, unsur, cabang kosong, hubungan, dan pilar keberuntungan setelah jenis kelamin diisi. Aturan yang berbeda antar aliran Anda pilih sendiri: waktu matahari sejati atau jam, aturan 23:00, batas tahun, tabel-tabelnya. Tidak ada yang disimpan kecuali Anda menulis bagan ke jurnal."
+  },
+  "manual.bazi.button.import": {
+    "en": "From the journal, in Options: open a chart you wrote before.",
+    "id": "Dari jurnal, di Opsi: buka bagan yang pernah ditulis."
+  },
+  "manual.bazi.button.journal": {
+    "en": "To the journal, in Options: write this chart as an entry, under a category, with a name.",
+    "id": "Ke jurnal, di Opsi: tulis bagan ini sebagai catatan, di bawah kategori, dengan nama."
+  },
+  "manual.bazi.use.1": {
+    "en": "**A child's chart.** Put in the date, the time and the city of the birth, and write it to the journal under the child's name. It opens again exactly as it was, whenever you want it.",
+    "id": "**Bagan anak.** Masukkan tanggal, jam dan kota kelahiran, lalu tulis ke jurnal dengan nama anak. Bagan terbuka lagi persis seperti semula, kapan pun dibutuhkan."
+  },
+  "manual.bazi.use.2": {
+    "en": "**Before an appointment.** Look at the pillars of the hour you plan to sign, open, or move house, and of the hours around it.",
+    "id": "**Sebelum janji penting.** Lihat pilar jam yang Anda rencanakan untuk tanda tangan, membuka usaha, atau pindah rumah, dan jam-jam di sekitarnya."
+  },
+  "manual.bazi.use.3": {
+    "en": "**Compare the schools.** Your teacher counts the day from 23:00, a book from midnight. Change the rule and see which pillar moves.",
+    "id": "**Bandingkan aliran.** Guru Anda menghitung hari dari 23:00, sebuah buku dari tengah malam. Ganti aturannya dan lihat pilar mana yang berubah."
+  },
+  "manual.bazi.tip": {
+    "en": "Old births: the time zone follows its history. Jakarta was UTC+07:20 in 1930 and +09:00 in 1943, and the chart knows.",
+    "id": "Kelahiran lama: zona waktu mengikuti sejarahnya. Jakarta UTC+07:20 pada 1930 dan +09:00 pada 1943, dan bagan mengetahuinya."
+  },
+
+  "manual.mangsa.name": { "en": "Pranata mangsa", "id": "Pranata mangsa" },
+  "manual.mangsa.line": {
+    "en": "The Javanese year of seasons",
+    "id": "Tahun musim orang Jawa"
+  },
+  "manual.mangsa.what": {
+    "en": "The farmer's year of Java: twelve mangsa of unequal length, from Kasa on 22 June round the year, drawn as a wheel. Each has its candra (its image in Javanese, with a translation), what it stands for, the signs in nature, the work in the field, and the noon shadow it opens at. The day is a dot on the rim.",
+    "id": "Tahun petani Jawa: dua belas mangsa yang panjangnya tidak sama, dari Kasa pada 22 Juni sepanjang tahun, digambar sebagai roda. Setiap mangsa punya candra (gambarannya dalam bahasa Jawa, dengan terjemahan), maknanya, tanda-tanda alam, pekerjaan di sawah, dan bayangan tengah hari saat mangsa dibuka. Hari ini digambarkan dengan titik di tepi roda."
+  },
+  "manual.mangsa.button.mangsa": {
+    "en": "Pranata mangsa, among the Javanese utilities.",
+    "id": "Pranata mangsa, di antara utilitas kalender Jawa."
+  },
+  "manual.mangsa.use.1": {
+    "en": "**Plan the garden.** The first rains of Kalima are the time to sow; the dry heat of Katiga is not. Touch an arc to read its mangsa ahead of time.",
+    "id": "**Rencanakan kebun.** Hujan pertama di Kalima adalah saat menabur; panas kering Katiga bukan. Sentuh busur untuk membaca mangsanya lebih dulu."
+  },
+  "manual.mangsa.use.2": {
+    "en": "**Read with your elders.** The candra are the sayings your grandparents knew. Here each one stands with its meaning.",
+    "id": "**Baca bersama orang tua.** Candra adalah ungkapan yang dikenal kakek nenek. Di sini setiap candra berdiri dengan maknanya."
+  },
+
+  "manual.lintang.name": { "en": "Lintang Jawa", "id": "Lintang Jawa" },
+  "manual.lintang.line": {
+    "en": "The stars the seasons were read by",
+    "id": "Bintang penanda musim"
+  },
+  "manual.lintang.what": {
+    "en": "The night sky as Java's farmers named it: Waluku the plough, Wuluh, Lumbung, Banyakangrem, Klapa Doyong and the rest, drawn over the real stars at your place and time. The Mangsa tab gives the mornings Waluku first stands in the east before dawn and first sets in the west, beside the days the mangsa open.",
+    "id": "Langit malam sebagaimana dinamai petani Jawa: Waluku si bajak, Wuluh, Lumbung, Banyakangrem, Klapa Doyong dan lainnya, digambar di atas bintang yang sebenarnya di tempat dan waktu Anda. Tab Mangsa memberi pagi saat Waluku pertama berdiri di timur sebelum fajar dan pertama terbenam di barat, di samping hari mangsa dibuka."
+  },
+  "manual.lintang.button.planets": {
+    "en": "Planets, at the bottom right: show or hide them. Venus is Panjer Sore in the evening, Panjer Esuk at dawn.",
+    "id": "Planet, di kanan bawah: tampilkan atau sembunyikan. Venus adalah Panjer Sore di petang, Panjer Esuk menjelang fajar."
+  },
+  "manual.lintang.use.1": {
+    "en": "**Show the children Waluku.** Before dawn in the dry season, find Waluku in the east together, and tell them it once said when to plough.",
+    "id": "**Tunjukkan Waluku kepada anak-anak.** Sebelum fajar di musim kemarau, cari Waluku di timur bersama, dan ceritakan bahwa dulu ia menandai saat membajak."
+  },
+  "manual.lintang.use.2": {
+    "en": "**Check an old saying.** \"When Wuluh stands at dusk as high as the mid-morning sun...\" Move the time to dusk and see where Wuluh stands tonight.",
+    "id": "**Periksa ungkapan lama.** \"Bila Wuluh di senja setinggi matahari pagi...\" Geser waktu ke senja dan lihat di mana Wuluh malam ini."
+  },
+
+  "manual.salat.name": { "en": "Prayer times", "id": "Waktu salat" },
+  "manual.salat.line": {
+    "en": "The five prayers on the clock",
+    "id": "Lima waktu salat"
+  },
+  "manual.salat.what": {
+    "en": "The day as a 24-hour dial: Subuh, Duha, Zuhur, Asar, Magrib and Isya as arcs, Imsak and Terbit as marks, and a hand for now. The centre gives the chosen time and the next, with a countdown. In Indonesia it reckons as the Ministry of Religious Affairs does; elsewhere you choose the convention used where you are.",
+    "id": "Hari sebagai jam 24 jam: Subuh, Duha, Zuhur, Asar, Magrib dan Isya sebagai busur, Imsak dan Terbit sebagai tanda, dan jarum untuk saat ini. Bagian tengah memberi waktu yang dipilih dan waktu berikutnya, dengan hitung mundur. Di Indonesia perhitungannya mengikuti Kementerian Agama; di tempat lain Anda memilih konvensi yang berlaku di sana."
+  },
+  "manual.salat.button.salat": {
+    "en": "Prayer times, among the Hijri utilities.",
+    "id": "Waktu salat, di antara utilitas kalender Hijriah."
+  },
+  "manual.salat.button.place": {
+    "en": "Place, in the lower panel: the times follow it, to a tenth of a degree.",
+    "id": "Tempat, di panel bawah: waktu mengikutinya, sampai sepersepuluh derajat."
+  },
+  "manual.salat.use.1": {
+    "en": "**Plan the evening.** Before you agree to dinner at seven, see when Isya falls tonight.",
+    "id": "**Rencanakan malam.** Sebelum setuju makan malam jam tujuh, lihat kapan Isya malam ini."
+  },
+  "manual.salat.use.2": {
+    "en": "**Travelling.** In another city, set the place there and the times follow; abroad, choose the convention of that country.",
+    "id": "**Bepergian.** Di kota lain, atur tempat di sana dan waktunya mengikuti; di luar negeri, pilih konvensi negara itu."
+  },
+  "manual.salat.use.3": {
+    "en": "**Ramadan.** Imsak and Magrib on the dial for every day of the month: move the date and read them ahead.",
+    "id": "**Ramadan.** Imsak dan Magrib di jam untuk setiap hari bulan itu: geser tanggal dan baca lebih dulu."
+  },
+
+  "manual.hilal.name": { "en": "Hilal", "id": "Hilal" },
+  "manual.hilal.line": {
+    "en": "The young crescent after the new moon",
+    "id": "Bulan sabit muda setelah bulan baru"
+  },
+  "manual.hilal.what": {
+    "en": "The western sky at sunset on the evening after a new moon: the horizon, the sun just under it, and the young moon where it stands. The criteria are weighed at your place: MABIMS, wujudul hilal, Odeh and Yallop. It is astronomy only; it never says a month has begun. That belongs to those who decide it.",
+    "id": "Langit barat saat matahari terbenam pada petang setelah bulan baru: cakrawala, matahari tepat di bawahnya, dan bulan muda di tempatnya. Kriteria ditimbang di tempat Anda: MABIMS, wujudul hilal, Odeh dan Yallop. Aplikasi ini hanya untuk astronomi saja dan bukan menyatakan bulan baru telah dimulai. Hal tersebut bukan wewenang kami."
+  },
+  "manual.hilal.button.hilal": {
+    "en": "Hilal, among the Hijri utilities.",
+    "id": "Hilal, di antara utilitas kalender Hijriah."
+  },
+  "manual.hilal.use.1": {
+    "en": "**Before Ramadan or Syawal.** On the evening of the rukyat, see how high the moon stands at sunset where you are, and which criteria it meets.",
+    "id": "**Menjelang Ramadan atau Syawal.** Pada petang rukyat, lihat setinggi apa bulan saat matahari terbenam di tempat Anda, dan kriteria mana yang terpenuhi."
+  },
+  "manual.hilal.use.2": {
+    "en": "**Go and look.** The best time and the bearing tell you when and where to stand to try to see it yourself.",
+    "id": "**Pergi dan lihat.** Waktu terbaik dan arahnya memberi tahu kapan dan ke mana menghadap untuk mencoba melihatnya sendiri."
+  },
+
+  "manual.ephemeris.name": { "en": "Ephemeris", "id": "Efemeris" },
+  "manual.ephemeris.line": {
+    "en": "Where the sun and moon stand",
+    "id": "Letak matahari dan bulan"
+  },
+  "manual.ephemeris.what": {
+    "en": "The sky seen from above, horizon as the rim: the day's paths of the sun and the moon, where each stands now, their rise and set with the compass bearing, the twilights, the moon's phase and the next full and new moon. The month and year views show the sun's year as a diagram.",
+    "id": "Langit dilihat dari atas, cakrawala sebagai tepi: lintasan harian matahari dan bulan, letak masing-masing saat ini, terbit dan terbenamnya dengan arah kompas, senja, fase bulan, dan bulan purnama serta bulan baru berikutnya. Tampilan bulan dan tahun menunjukkan tahun matahari sebagai diagram."
+  },
+  "manual.ephemeris.button.sky": {
+    "en": "Ephemeris, among the Gregorian utilities.",
+    "id": "Efemeris, di antara utilitas kalender Masehi."
+  },
+  "manual.ephemeris.button.lock": {
+    "en": "Lock, in the Time tab in month and year views: hold the clock time, so dragging moves only the day.",
+    "id": "Kunci, di tab Waktu pada tampilan bulan dan tahun: tahan jam, agar geseran hanya mengubah hari."
+  },
+  "manual.ephemeris.use.1": {
+    "en": "**Where will the sun rise?** \"05:32 · 99° E\": the bearing tells you which window, which gap between the trees.",
+    "id": "**Di mana matahari terbit?** \"05:32 · 99° T\": arahnya memberi tahu jendela mana, celah pohon mana."
+  },
+  "manual.ephemeris.use.2": {
+    "en": "**A garden in shade.** In the year view, see how low the sun runs in your December and which hours it clears the wall.",
+    "id": "**Kebun yang teduh.** Di tampilan tahun, lihat serendah apa matahari di bulan Desember dan jam berapa ia melewati tembok."
+  },
+
+  "manual.planets.name": { "en": "Planets", "id": "Planet" },
+  "manual.planets.line": {
+    "en": "The planets, their hours and lore",
+    "id": "Planet, jam dan ajarannya"
+  },
+  "manual.planets.what": {
+    "en": "The seven of the old sky on the dome: where each stands, how bright, when it rises and sets, evening or morning sky. The Hours tab gives the planetary hours of the day, twelve from sunrise and twelve from sunset; the Lore tab their names, metals and weekdays.",
+    "id": "Tujuh benda langit lama: letak masing-masing, terangnya, kapan terbit dan terbenam, langit petang atau pagi. Tab Jam memberi jam planet hari itu, dua belas dari matahari terbit dan dua belas dari terbenam; tab Ajaran memberi nama, logam dan hari masing-masing."
+  },
+  "manual.planets.button.planets": {
+    "en": "Planets, among the Gregorian utilities.",
+    "id": "Planet, di antara utilitas kalender Masehi."
+  },
+  "manual.planets.use.1": {
+    "en": "**Choose an hour.** The hour of Venus for a meeting about love or art, of Jupiter for a request; the Hours tab shows when each falls today.",
+    "id": "**Memilih jam.** Jam Venus untuk urusan cinta atau seni, Jupiter untuk permohonan; tab Jam menunjukkan jam planet masing-masing pada hari ini."
+  },
+  "manual.planets.use.2": {
+    "en": "**Find the evening star.** Is that bright light over the west Venus or Jupiter? The dome says which, and how high.",
+    "id": "**Temukan bintang senja.** Cahaya terang di barat itu Venus atau Jupiter? Peta memberi tahu yang mana, dan setinggi apa."
+  },
+  "manual.planets.tip": {
+    "en": "A reminder can fall on a planet's hour every day, worked out again for each day: choose Planetary hour in the reminder's time.",
+    "id": "Anda dapat memasang pengingat pada jam sebuah planet yang dihitung ulang secara otomatis setiap harinya: pilih Jam planet yang Anda inginkan pada waktu pengingat."
+  },
+
+  "manual.stars.name": { "en": "Star map", "id": "Peta bintang" },
+  "manual.stars.line": {
+    "en": "The stars as they stand",
+    "id": "Bintang sebagaimana adanya"
+  },
+  "manual.stars.what": {
+    "en": "Every star the eye can see, the constellations' figures, 108 galaxies and the planets, at your place and time. One finger moves the sky and two bring it nearer; below the horizon is drawn faint, so even Polaris can be brought to the centre from Jakarta. Touch a star to read it, or search by name.",
+    "id": "Setiap bintang yang tampak mata, rasi bintang, 108 galaksi dan planet, di tempat dan waktu Anda. Satu jari menggeser peta dan dua jari mendekatkannya; di bawah cakrawala digambar pudar. Sentuh bintang untuk membacanya, atau cari dengan nama."
+  },
+  "manual.stars.button.stars": {
+    "en": "Star map, among the Gregorian utilities.",
+    "id": "Peta bintang, di antara utilitas kalender Masehi."
+  },
+  "manual.stars.button.planets": {
+    "en": "Planets, at the bottom right: show or hide them.",
+    "id": "Planet, di kanan bawah: tampilkan atau sembunyikan."
+  },
+  "manual.stars.use.1": {
+    "en": "**What is that bright star?** Point at it in your head, touch the nearest bright dot on the map, and it is named.",
+    "id": "**Bintang terang apa itu?** Bayangkan arahnya, sentuh titik terang terdekat di peta, dan namanya muncul."
+  },
+  "manual.stars.use.2": {
+    "en": "**Find the Southern Cross.** Search \"Cru\" and it comes to the centre, with how high it stands tonight.",
+    "id": "**Temukan Rasi Pari.** Cari \"Cru\" dan rasi itu dibawa ke tengah, dengan ketinggiannya malam ini."
+  },
+
+  "manual.light.name": { "en": "Light", "id": "Cahaya" },
+  "manual.light.line": {
+    "en": "Planning photographs",
+    "id": "Merencanakan foto"
+  },
+  "manual.light.what": {
+    "en": "For planning photographs of real light: where and when, never whether, which is the weather's. The golden and blue hours, the sun's and moon's bearings, the shadow, the rainbow and halo, the Milky Way, meteor showers, eclipses, close pairs of the moon and planets, and the days the sun or moon rises along a line you draw.",
+    "id": "Untuk merencanakan foto dengan cahaya alami: di mana dan kapan, namun perlu diingat bahwa faktor cuaca juga menentukan. Jam emas dan jam biru, arah matahari dan bulan, bayangan, pelangi dan halo, Bimasakti, hujan meteor, gerhana, pasangan dekat bulan dan planet, dan hari-hari matahari atau bulan terbit di garis yang Anda tarik."
+  },
+  "manual.light.button.light": {
+    "en": "Light, among the Gregorian utilities.",
+    "id": "Cahaya, di antara utilitas kalender Masehi."
+  },
+  "manual.light.button.compass": {
+    "en": "Compass, at the bottom right: where the top of the phone faces, from true north.",
+    "id": "Kompas, di kanan bawah: ke mana ujung atas ponsel menghadap, dari utara sejati."
+  },
+  "manual.light.button.reminder": {
+    "en": "The bell beside a row: make it a reminder, already filled in.",
+    "id": "Lonceng di samping baris: jadikan pengingat secara otomatis."
+  },
+  "manual.light.use.1": {
+    "en": "**The full moon behind the temple.** Draw a line from where you will stand through the temple; Line up lists the days the moon rises along it.",
+    "id": "**Purnama di belakang candi.** Tarik garis dari tempat Anda berdiri melewati candi; Sejajarkan mendaftar hari-hari bulan terbit di garis itu."
+  },
+  "manual.light.use.2": {
+    "en": "**Sunrise at Borobudur.** Read the morning blue and golden hours for the day you go, and set a reminder twenty minutes before.",
+    "id": "**Matahari terbit di Borobudur.** Baca jam biru dan jam emas pagi untuk hari Anda pergi, dan pasang pengingat dua puluh menit sebelumnya."
+  },
+  "manual.light.use.3": {
+    "en": "**The Milky Way.** Tonight's dark stretches with its heart up and no moon, to the minute.",
+    "id": "**Bimasakti.** Rentang gelap malam ini dengan intinya terbit dan tanpa bulan, sampai ke menitnya."
+  },
+
+  "manual.place.name": { "en": "Place", "id": "Tempat" },
+  "manual.place.line": {
+    "en": "Where the sky is read from",
+    "id": "Dari mana langit dibaca"
+  },
+  "manual.place.what": {
+    "en": "Prayer times, the sky, the stars, Light and reminders by the sun all need to know where you are. Set it once: with the steps, from the phone with the pin, by name, or with a touch on the map (in Indonesia a touch picks your kecamatan). It is rounded to about 11 km and kept only on your phone.",
+    "id": "Waktu salat, langit, bintang, Cahaya dan pengingat berdasarkan matahari semua perlu tahu di mana Anda. Atur sekali: dengan tombol langkah, dari ponsel dengan pin, dengan nama, atau dengan sentuhan di peta (di Indonesia sentuhan memilih kecamatan Anda). Dibulatkan sampai sekitar 11 km dan hanya disimpan di ponsel."
+  },
+  "manual.place.button.place": {
+    "en": "Place, in the lower panel of every tool of the sky.",
+    "id": "Tempat, di panel bawah setiap alat langit."
+  },
+  "manual.place.button.search": {
+    "en": "Find: by name or on the map, offline.",
+    "id": "Cari: dengan nama atau di peta, tanpa internet."
+  },
+  "manual.place.use.1": {
+    "en": "**No location needed.** Type the name of your kecamatan instead of giving Candra your position; the times are as good.",
+    "id": "**Tanpa lokasi.** Ketik nama kecamatan Anda bila tidak ingin memberi akses lokasi kepada Candra, waktu yang dihitung sama saja."
+  },
+  "manual.place.use.2": {
+    "en": "**Plan from home.** Set the place to the town you will visit and read its prayer times and sunsets before you go.",
+    "id": "**Rencanakan dari rumah.** Atur tempat ke kota yang akan dikunjungi dan baca waktu salat serta matahari terbenamnya sebelum berangkat."
+  },
+
+  "manual.calendar.name": { "en": "Calendar", "id": "Kalender" },
+  "manual.calendar.line": {
+    "en": "The living room: day, month, year",
+    "id": "Halaman utama: hari, bulan, tahun"
+  },
+  "manual.calendar.what": {
+    "en": "The heart of the house, at the centre of the bar. One day as a page of a tear-off calendar, a month, or a year, in the calendar you choose: under the Chinese, Hijri and Javanese, the months and years are theirs, with the Gregorian date under each day. Reminder dots show what is coming. The lower panel reads the day.",
+    "id": "Jantung aplikasi, tombol paling tengah. Dibuat menyerupai kalender sobek yang dikenal masyarakat luas pada mode hari, dapat juga diganti ke mode bulan dan mode tahun, dan masing-masing akan mengikuti sistem kalender yang Anda pilih, mulai dari kalender Imlek, Hijriah, Jawa, maupun kalender Masehi dengan weton dan pasaran. Titik berwarna menunjukkan pengingat yang akan datang. Panel bawah membaca harinya."
+  },
+  "manual.calendar.button.monthButton": {
+    "en": "The month button, at the top left: the date wheels, to go to any day.",
+    "id": "Tombol 'bulan ini', di kiri atas: roda tanggal, untuk memilih hari mana pun."
+  },
+  "manual.calendar.button.monthView": {
+    "en": "The view, at the top right: month, year, day in turn. Hold it to start the app in that view.",
+    "id": "Tampilan, di kanan atas: bulan, tahun, dan hari, sesuai urutan. Tahan tombol untuk menjadikan tampilan bawaan."
+  },
+  "manual.calendar.use.1": {
+    "en": "**When is the next Kliwon Friday?** Under the Weton, the month view marks each day's pasaran; the year view rings every day of your weton.",
+    "id": "**Kapan Jumat Kliwon berikutnya?** Dalam kalender Weton, tampilan bulan menandai pasaran tiap hari; tampilan tahun melingkari setiap hari weton Anda."
+  },
+  "manual.calendar.use.2": {
+    "en": "**A month in the Javanese count.** Choose the Javanese: Sura, Sapar, Mulud and the rest, each with the Gregorian days it spans.",
+    "id": "**Satu bulan dalam hitungan Jawa.** Pilih Jawa: Sura, Sapar, Mulud dan lainnya, masing-masing dengan hari Masehi yang dicakupnya."
+  },
+  "manual.calendar.tip": {
+    "en": "Swipe up or down for the next day, month or year. Pinch to step out, spread to step in. Touch the selected day again to open it.",
+    "id": "Usap ke atas atau bawah untuk hari, bulan atau tahun berikutnya. Cubit untuk keluar, renggangkan untuk masuk. Sentuh lagi hari yang dipilih untuk membukanya."
+  },
+
+  "manual.systems.name": { "en": "Systems", "id": "Sistem" },
+  "manual.systems.line": {
+    "en": "Five calendars, one day",
+    "id": "Lima kalender, satu hari"
+  },
+  "manual.systems.what": {
+    "en": "Candra reads every day through five calendars: the weton, the Javanese, the Chinese, the Hijri and the Gregorian. The button at the centre of the bar shows the one you are in; touch it at home to raise the five as cards, and the one that comes to rest in the middle is chosen. Hold it to start the app in that calendar.",
+    "id": "Candra membaca setiap hari lewat lima kalender: Weton, Jawa, Imlek, Hijriah dan Masehi. Tombol utama di tengah menunjukkan sistem yang sedang dipakai. Tahan tombol untuk menjadikan sistem yang dipilih sebagai bawaan."
+  },
+  "manual.systems.button.system": {
+    "en": "The centre of the bar: the calendar you are in. From another room it only goes home.",
+    "id": "Tombol tengah: kalender yang sedang dipakai. Apabila disentuh dari halaman lain maka akan kembali ke halaman utama."
+  },
+  "manual.systems.use.1": {
+    "en": "**A family of many traditions.** Grandmother keeps the weton, an uncle the Imlek, the house the Hijri: one app reads the same day all three ways.",
+    "id": "**Keluarga dengan banyak tradisi.** Nenek memegang weton, paman memegang Imlek, rumah memakai Hijriah: satu aplikasi membaca hari yang sama dengan ketiga cara."
+  },
+
+  "manual.reading.name": { "en": "Full reading", "id": "Bacaan lengkap" },
+  "manual.reading.line": {
+    "en": "One day, every calendar",
+    "id": "Satu hari, semua kalender"
+  },
+  "manual.reading.what": {
+    "en": "Touch the reading in the lower panel and the day opens whole: the moon, the Chinese date and shio, the bazi of the day, the Hijri, the Javanese, the mangsa, the weton and its neptu, then the sky over it, with the day's reminders under.",
+    "id": "Sentuh bacaan di panel bawah dan hari terbuka seutuhnya: bulan, tanggal Tionghoa dan shio, bazi hari itu, Hijriah, Jawa, mangsa, weton dan neptunya, lalu langit di atasnya, dengan pengingat hari itu di bawah."
+  },
+  "manual.reading.button.copy": {
+    "en": "Copy: the whole reading as text.",
+    "id": "Salin: seluruh bacaan sebagai teks."
+  },
+  "manual.reading.button.saveImage": {
+    "en": "Save as picture: the day sheet into your photos.",
+    "id": "Simpan gambar: lembar hari ke foto Anda."
+  },
+  "manual.reading.use.1": {
+    "en": "**Send a wedding date to the family.** Save the day as a picture and share it: every calendar on one sheet.",
+    "id": "**Kirim tanggal pernikahan ke keluarga.** Simpan hari sebagai gambar dan bagikan: semua kalender dalam satu lembar."
+  },
+
+  "manual.practice.name": { "en": "Practice", "id": "Laku" },
+  "manual.practice.line": {
+    "en": "A stopwatch, a timer, a tally",
+    "id": "Stopwatch, timer, penghitung"
+  },
+  "manual.practice.what": {
+    "en": "For one thing timed or counted: a sitting, a fast, a vigil, or prayer beads. Choose the stopwatch, the timer or the tally in the lower panel, and start. It runs on with the app closed, on the lock screen or in the island. When it ends, write it into the journal under a category, or let it go.",
+    "id": "Untuk satu hal yang diukur waktunya atau dihitung: duduk hening, puasa, tirakat, atau tasbih. Pilih stopwatch, timer atau penghitung di panel bawah, lalu mulai. Terus berjalan walau aplikasi ditutup. Saat selesai, Anda dapat menulis pengalaman ke dalam jurnal dalam sebuah kategori."
+  },
+  "manual.practice.button.start": {
+    "en": "Start, at the foot of the body.",
+    "id": "Mulai, di tengah halaman."
+  },
+  "manual.practice.button.stop": {
+    "en": "Stop: then Write or Discard.",
+    "id": "Berhenti: lalu Tulis atau Buang."
+  },
+  "manual.practice.button.tally": {
+    "en": "Tally: one more, at the bottom right.",
+    "id": "Penghitung: tambah satu, di kanan bawah."
+  },
+  "manual.practice.button.reset": {
+    "en": "Start again, at the bottom left: the count back to nothing.",
+    "id": "Mulai lagi, di kiri bawah: hitungan kembali ke nol."
+  },
+  "manual.practice.use.1": {
+    "en": "**Morning sitting.** Start the stopwatch, sit; stop, write it under Observance. Your journal keeps how long you sat, every day.",
+    "id": "**Duduk pagi.** Mulai stopwatch, duduk bermeditasi; klik Berhenti, lalu tulis jurnal dalam kategori Kebatinan. Jurnal menyimpan berapa lama Anda duduk berdasarkan stopwatch yang Anda pasang tadi."
+  },
+  "manual.practice.use.2": {
+    "en": "**Dhikr or a mantra.** The tally counts each touch, like beads, and never loses its place.",
+    "id": "**Zikir atau mantra.** Penghitung menghitung setiap sentuhan, seperti tasbih, dan tidak pernah kehilangan hitungan."
+  },
+  "manual.practice.use.3": {
+    "en": "**Twenty minutes, no more.** The timer runs down and tells you when it is done, even locked.",
+    "id": "**Dua puluh menit, tidak lebih.** Timer menghitung mundur dan memberi tahu saat selesai, walau ponsel terkunci."
+  },
+  "manual.practice.tip": {
+    "en": "Hold the discard to throw away a practice that is running.",
+    "id": "Tahan tombol buang untuk membuang catatan laku yang sedang berjalan."
+  },
+
+  "manual.reminders.name": { "en": "Reminders", "id": "Pengingat" },
+  "manual.reminders.line": {
+    "en": "Repeats every calendar knows",
+    "id": "Pengulangan yang dikenal setiap kalender"
+  },
+  "manual.reminders.what": {
+    "en": "A reminder repeats the way the day itself is counted: every weekday, pasaran or weton; the same day of each Javanese, Hijri, Chinese or Gregorian month or year; each full or new moon; or by the sun, at sunrise or sunset or a planet's hour, worked out again for each day. The rail shows each category's reminders; the bell under a time turns it on or off.",
+    "id": "Pengingat berulang menurut cara hari itu sendiri dihitung: setiap hari, pasaran atau weton; tanggal yang sama setiap bulan atau tahun Jawa, Hijriah, Imlek atau Masehi; setiap purnama atau bulan baru; atau menurut matahari, saat terbit atau terbenam atau jam sebuah planet, dihitung ulang tiap hari. Rel menunjukkan pengingat tiap kategori; lonceng di bawah waktu menyalakan atau mematikannya."
+  },
+  "manual.reminders.button.reminder": {
+    "en": "Reminders: the room, between practice and the journal.",
+    "id": "Pengingat: tombol di antara laku dan jurnal."
+  },
+  "manual.reminders.button.add": {
+    "en": "New reminder, at the right of the lower panel.",
+    "id": "Pengingat baru, di kanan panel bawah."
+  },
+  "manual.reminders.button.delete": {
+    "en": "The red bin, at the top right: every reminder of the category in front, after asking.",
+    "id": "Tempat sampah merah, di kanan atas: hapus semua pengingat kategori di depan, dengan konfirmasi."
+  },
+  "manual.reminders.use.1": {
+    "en": "**Your mother's weton.** Start a reminder on her weton day and choose her weton as the repeat (\"Every Selasa Kliwon\"): it comes every 35 days, for as long as you keep it.",
+    "id": "**Weton ibu.** Mulai pengingat pada hari weton beliau dan pilih wetonnya sebagai ulangan (\"Setiap Selasa Kliwon\"): datang setiap 35 hari, selama Anda menyimpannya."
+  },
+  "manual.reminders.use.2": {
+    "en": "**Kwan Im's sejit.** Start it on the 19th of Kau Gwee and choose the Chinese yearly repeat; it finds the right Gregorian day every year.",
+    "id": "**Sejit Kwan Im.** Mulai pada tanggal 19 Kau Gwee dan pilih ulangan tahunan Imlek; tanggal Masehinya akan terlihat setiap tahun."
+  },
+  "manual.reminders.use.3": {
+    "en": "**Water the garden at sunset.** In the time, choose Sunset, ten minutes before, and repeat every day: it moves with the season.",
+    "id": "**Siram kebun saat matahari terbenam.** Pada waktu, pilih Terbenam, sepuluh menit sebelumnya, dan ulangi setiap hari: waktunya bergeser mengikuti musim."
+  },
+
+  "manual.journal.name": { "en": "Journal", "id": "Jurnal" },
+  "manual.journal.line": {
+    "en": "A folder for each category",
+    "id": "Map untuk tiap kategori"
+  },
+  "manual.journal.what": {
+    "en": "The last room on the right. Each category is a folder; swipe sideways to bring the next one to the front, up and down to read its entries. The day strip below goes from day to day; the date at the top opens the journal's own calendar, where every day shows what you wrote.",
+    "id": "Tombol terakhir di kanan. Setiap kategori adalah sebuah map; usap ke samping untuk membawa map berikutnya ke depan, ke atas dan bawah untuk membaca catatannya. Pita hari di bawah berpindah dari hari ke hari; tanggal di atas membuka kalender jurnal sendiri, tempat setiap hari menunjukkan yang Anda tulis."
+  },
+  "manual.journal.button.journal": {
+    "en": "Journal: the room.",
+    "id": "Jurnal: halamannya."
+  },
+  "manual.journal.button.add": {
+    "en": "New entry, at the right of the lower panel, in the category in front.",
+    "id": "Catatan baru, di kanan panel bawah, di kategori yang dipilih dalam halaman."
+  },
+  "manual.journal.button.categories": {
+    "en": "Categories: make, rename, recolour or delete them.",
+    "id": "Kategori: buat, ganti nama, ganti warna atau hapus."
+  },
+  "manual.journal.button.search": {
+    "en": "Search: everything you wrote, by word, tag, category or day.",
+    "id": "Cari: semua yang Anda tulis, menurut kata, tag, kategori atau hari."
+  },
+  "manual.journal.use.1": {
+    "en": "**A dream journal.** Write it before you get up, under Dream. In a year, search the dreams of every Kliwon Thursday night.",
+    "id": "**Jurnal mimpi.** Tulis sebelum keluar dari tempat tidur, dalam kategori Mimpi. Setahun kemudian, cari mimpi yang telah Anda catat setiap malam Jumat Kliwon."
+  },
+  "manual.journal.use.2": {
+    "en": "**A garden log.** One entry a week under Plant log, with a photo of the pot in your mind and the words on the page.",
+    "id": "**Catatan kebun.** Satu catatan seminggu dalam kategori Tanaman, seperti perkembangan dan germinasi."
+  },
+
+  "manual.entry.name": { "en": "Writing", "id": "Menulis" },
+  "manual.entry.line": {
+    "en": "An entry, its tags and its place",
+    "id": "Catatan, tagnya dan tempatnya"
+  },
+  "manual.entry.what": {
+    "en": "An entry is a title and as much as you want to say, with a little formatting: bold, italic, lists, headings, quotes, footnotes. It is dated to the minute, and the day it belongs to can be changed. Tags mark it for the search; the pin can note where you were, rounded to about 100 m.",
+    "id": "Catatan adalah judul dan sebanyak yang ingin Anda tuliskan, dengan beberapa opsi format: tebal, miring, daftar, judul, kutipan, catatan kaki. Bertanggal sampai menit, dan harinya bisa diubah. Tag menandainya untuk pencarian; pin bisa mencatat di mana Anda berada, dibulatkan sampai sekitar 100 m."
+  },
+  "manual.entry.button.edit": {
+    "en": "Edit, at the sheet's bottom right.",
+    "id": "Ubah, di kanan bawah lembar."
+  },
+  "manual.entry.button.tag": {
+    "en": "Tags: put a tag on, take it off, or make a new one.",
+    "id": "Tag: pasang tag, lepas, atau buat yang baru."
+  },
+  "manual.entry.button.place": {
+    "en": "The pin, at the top right while writing: where you are, only when pressed.",
+    "id": "Pin, di kanan atas saat menulis: tempat Anda, hanya saat ditekan."
+  },
+  "manual.entry.button.save": {
+    "en": "Save, the tick.",
+    "id": "Simpan, tanda centang."
+  },
+  "manual.entry.button.delete": {
+    "en": "The red bin: delete the entry, after asking.",
+    "id": "Tempat sampah merah: hapus catatan, setelah konfirmasi."
+  },
+  "manual.entry.use.1": {
+    "en": "**Write it later, file it right.** You write on Monday about Saturday's ceremony: touch the time line and move it to Saturday.",
+    "id": "**Tulis belakangan, simpan dengan tepat.** Pada hari Senin Anda menulis tentang upacara hari Sabtu: sentuh baris waktu dan pindahkan ke Sabtu."
+  },
+  "manual.entry.use.2": {
+    "en": "**Places you return to.** Pin the temple once; next time, its name is offered when you are near it.",
+    "id": "**Tempat yang sering didatangi.** Sematkan pin di candi sekali; lain kali namanya ditawarkan saat Anda dekat."
+  },
+  "manual.entry.tip": {
+    "en": "Double tap a word to select it. Holding text offers Word, Sentence, Paragraph or All to copy.",
+    "id": "Ketuk dua kali sebuah kata untuk memilihnya. Menahan teks memberikan opsi Kata, Kalimat, Paragraf atau Semua untuk disalin."
+  },
+
+  "manual.categories.name": { "en": "Categories", "id": "Kategori" },
+  "manual.categories.line": {
+    "en": "Up to 24, each its colour",
+    "id": "Hingga 24, masing-masing berwarna"
+  },
+  "manual.categories.what": {
+    "en": "Every entry and every reminder belongs to one category, and every category has a colour no other has. Touch a row to rename or recolour it; draw it to the left to delete it. Deleting takes its entries and reminders with it, after asking twice.",
+    "id": "Setiap catatan dan pengingat adalah milik satu kategori, dan setiap kategori punya warna yang tidak dimiliki yang lain. Sentuh sebuah baris untuk mengganti nama atau warnanya; tarik ke kiri untuk menghapusnya. Menghapus ikut membawa catatan dan pengingatnya, setelah konfirmasi dua kali."
+  },
+  "manual.categories.button.add": {
+    "en": "New category, at the bottom right.",
+    "id": "Kategori baru, di kanan bawah."
+  },
+  "manual.categories.button.close": {
+    "en": "Leave the row as it was.",
+    "id": "Tinggalkan baris seperti semula."
+  },
+  "manual.categories.button.save": {
+    "en": "Save the row.",
+    "id": "Simpan baris."
+  },
+  "manual.categories.use.1": {
+    "en": "**Keep life apart.** Observance for your practice, Occasion for family days, Divination for readings: each its colour, each its folder.",
+    "id": "**Pisahkan urusan.** Kebatinan untuk laku, Hari Khusus untuk hari keluarga, Konsultasi untuk bacaan: masing-masing berwarna, masing-masing memiliki map."
+  },
+  "manual.categories.tip": {
+    "en": "Choose a colour another category has, and Candra offers to trade the two.",
+    "id": "Pilih warna milik kategori lain, dan Candra menawarkan untuk menukar keduanya."
+  },
+
+  "manual.search.name": { "en": "Search and tags", "id": "Cari dan tag" },
+  "manual.search.line": {
+    "en": "Find by word, tag, cycle, or evening",
+    "id": "Cari menurut kata, tag, siklus atau malam"
+  },
+  "manual.search.what": {
+    "en": "The search finds entries and reminders by words, categories, tags, and by the cycles of the day: weekday, pasaran, weton, moon phase, a Javanese, Hijri or Chinese date, the mangsa, the day's element, even the planetary hour. Results come as a list, a month or a year, where a cycle shows as lines. Tags are plain names, finer than categories, for the search alone.",
+    "id": "Pencarian menemukan catatan dan pengingat menurut kata, kategori, tag, dan siklus hari: hari, pasaran, weton, fase bulan, tanggal Jawa, Hijriah atau Imlek, mangsa, unsur hari, bahkan jam planet. Hasilnya berupa daftar, bulan atau tahun, tempat sebuah siklus tampak sebagai garis. Tag adalah nama biasa, lebih rinci dari kategori, hanya untuk pencarian."
+  },
+  "manual.search.button.search": {
+    "en": "Search, in the journal's or the reminders' lower panel.",
+    "id": "Cari, di panel bawah jurnal atau pengingat."
+  },
+  "manual.search.button.monthView": {
+    "en": "The view, at the top right: list, month, year.",
+    "id": "Tampilan, di kanan atas: daftar, bulan, tahun."
+  },
+  "manual.search.button.close": {
+    "en": "Clear, at the bottom right: start the search again.",
+    "id": "Bersihkan, di kanan bawah: mulai pencarian lagi."
+  },
+  "manual.search.use.1": {
+    "en": "**Every malam Jumat.** Ask for Jumat, and set Evening to sunset: Thursday night's entries count as Friday's, as the Javanese and Islamic day turns.",
+    "id": "**Setiap malam Jumat.** Pilih Jumat, dan atur Malam ke matahari terbenam: catatan Kamis malam terhitung Jumat, sebagaimana hari Jawa dan Islam berganti."
+  },
+  "manual.search.use.2": {
+    "en": "**Do your dreams follow the moon?** Ask for the full moon under Dream, and look at the year: the dots line up, or they do not.",
+    "id": "**Apakah mimpi mengikuti bulan?** Pilih purnama di bawah Mimpi, dan lihat tahunnya: titik-titik berbaris, atau tidak."
+  },
+  "manual.search.use.3": {
+    "en": "**One person across categories.** Tag every entry about your grandfather with his name; one tag finds them all.",
+    "id": "**Satu orang lintas kategori.** Beri tag nama kakek pada setiap catatan tentang beliau; satu tag menemukan semuanya."
+  },
+  "manual.search.tip": {
+    "en": "In the year view, touch a day to put a magnifying glass over it; hold and drag to move it day by day.",
+    "id": "Di tampilan tahun, sentuh sebuah hari untuk memasang kaca pembesar di atasnya; tahan dan geser untuk memindahkannya hari demi hari."
+  }
+}

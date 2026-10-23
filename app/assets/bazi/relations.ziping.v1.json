@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "name": "relations",
+  "id": "ziping.v1",
+  "english": "Sanming Tonghui",
+  "indonesian": "Sanming Tonghui",
+  "lineage": "子平 Ziping, 《三命通會》「論三刑」「論六害」",
+  "source": "《三命通會》卷二「論三刑」 (子逆至卯極十數而為無禮之刑，寅逆至巳巳逆至申極十數而為無恩之刑，丑順至戍戍順至未極十數而為恃勢之刑 ... 辰午酉亥 ... 謂之自刑) and 「論六害」 (子未相害 丑午相害 寅巳相害 卯辰相害 申亥相害 酉戍相害), read on 2026-10-13 in the 四庫全書 transcription at zh.wikisource.org/wiki/三命通會_(四庫全書本)/卷02.",
+  "verified": true,
+  "notes": "Clashes, six harmonies and trines are the same in every school and are worked out in code, not listed here. The pairs, the names of the three punishments and the four self-punishing branches agree with the text. Checked against a transcription, not a printed edition. 《淵海子平》 has the same pairs but gives the names 恃勢 and 無恩 the other way round (relations.yuanhai.v1), and the six harms agree there too, under the name 相穿. 任鐵樵 rejects punishments and harms altogether (relations.renshi.v1).",
+  "punishments": [
+    {
+      "branches": [
+        "寅",
+        "巳",
+        "申"
+      ],
+      "name": "無恩之刑",
+      "english": "Ungrateful punishment",
+      "indonesian": "Hukuman tak tahu budi"
+    },
+    {
+      "branches": [
+        "丑",
+        "戌",
+        "未"
+      ],
+      "name": "恃勢之刑",
+      "english": "Bullying punishment",
+      "indonesian": "Hukuman sewenang-wenang"
+    },
+    {
+      "branches": [
+        "子",
+        "卯"
+      ],
+      "name": "無禮之刑",
+      "english": "Uncivil punishment",
+      "indonesian": "Hukuman tak santun"
+    }
+  ],
+  "selfPunishing": [
+    "辰",
+    "午",
+    "酉",
+    "亥"
+  ],
+  "harms": [
+    [
+      "子",
+      "未"
+    ],
+    [
+      "丑",
+      "午"
+    ],
+    [
+      "寅",
+      "巳"
+    ],
+    [
+      "卯",
+      "辰"
+    ],
+    [
+      "申",
+      "亥"
+    ],
+    [
+      "酉",
+      "戌"
+    ]
+  ]
+}
