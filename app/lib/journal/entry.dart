@@ -122,6 +122,11 @@ class Entry {
   /// (`BaziRecord`). The content is the user's own.
   final String? bazi;
 
+  /// A cast of the Yijing, where the entry holds one: saved by the I Ching
+  /// page and read only by it and the cast's card, never shown as text
+  /// (`IchingRecord`). The content is the user's own.
+  final String? iching;
+
   /// The moment it was first saved, as every calendar read it
   /// (`MomentStamp`): written once, kept as it is, never shown. Empty on
   /// an entry made before it was kept.
@@ -145,6 +150,7 @@ class Entry {
     this.duration,
     this.tags = const [],
     this.bazi,
+    this.iching,
     this.moment = const {},
   });
 
@@ -168,6 +174,7 @@ class Entry {
     bool untagged = false,
     List<String>? tags,
     String? bazi,
+    String? iching,
     Map<String, String?>? moment,
   }) => Entry(
     id: id,
@@ -182,6 +189,7 @@ class Entry {
     duration: duration,
     tags: tags ?? this.tags,
     bazi: bazi ?? this.bazi,
+    iching: iching ?? this.iching,
     moment: moment ?? this.moment,
   );
 
@@ -202,6 +210,7 @@ class Entry {
       place == other.place &&
       duration == other.duration &&
       bazi == other.bazi &&
+      iching == other.iching &&
       tags.length == other.tags.length &&
       tags.toSet().containsAll(other.tags);
 
@@ -219,6 +228,7 @@ class Entry {
     duration: duration,
     tags: tags,
     bazi: bazi,
+    iching: iching,
     moment: moment,
   );
 

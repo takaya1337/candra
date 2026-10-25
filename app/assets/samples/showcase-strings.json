@@ -216,8 +216,8 @@
     "id": "Alat tiap kalender"
   },
   "manual.utilities.what": {
-    "en": "Each calendar brings its own tools: the bazi for the Chinese; the pranata mangsa and Lintang Jawa for the Javanese; prayer times and the hilal for the Hijri; the ephemeris, the planets, the star map and Light for the Gregorian. The utilities button raises the tools of the calendar you are in as cards; touch one to open it. Every tool opens on today and now.",
-    "id": "Setiap kalender punya alat masing-masing: Bazi untuk kalender Imlek; Pranata Mangsa dan Lintang Jawa untuk kalender Jawa; Waktu Salat dan Hilal untuk kalender Hijriah; Efemeris, Planet, Peta Bintang dan Cahaya untuk kalender Masehi. Tombol utilitas mengeluarkan alat-alat sistem kalender yang sedang dipakai sebagai kartu; sentuh salah satu untuk membukanya. Setiap alat terbuka pada hari ini dan saat ini."
+    "en": "Each calendar brings its own tools: the bazi and the I Ching for the Chinese; the pranata mangsa and Lintang Jawa for the Javanese; prayer times and the hilal for the Hijri; the ephemeris, the planets, the star map and Light for the Gregorian. The utilities button raises the tools of the calendar you are in as cards; touch one to open it. Every tool opens on today and now.",
+    "id": "Setiap kalender punya alat masing-masing: Bazi dan I Ching untuk kalender Imlek; Pranata Mangsa dan Lintang Jawa untuk kalender Jawa; Waktu Salat dan Hilal untuk kalender Hijriah; Efemeris, Planet, Peta Bintang dan Cahaya untuk kalender Masehi. Tombol utilitas mengeluarkan alat-alat sistem kalender yang sedang dipakai sebagai kartu; sentuh salah satu untuk membukanya. Setiap alat terbuka pada hari ini dan saat ini."
   },
   "manual.utilities.button.utilities": {
     "en": "Utilities: the cards up, or down. From another room it goes home with the cards up.",
@@ -264,6 +264,70 @@
   "manual.bazi.tip": {
     "en": "Old births: the time zone follows its history. Jakarta was UTC+07:20 in 1930 and +09:00 in 1943, and the chart knows.",
     "id": "Kelahiran lama: zona waktu mengikuti sejarahnya. Jakarta UTC+07:20 pada 1930 dan +09:00 pada 1943, dan bagan mengetahuinya."
+  },
+  "manual.iching.name": {
+    "en": "I Ching",
+    "id": "I Ching"
+  },
+  "manual.iching.line": {
+    "en": "Cast a hexagram, or read the book",
+    "id": "Buang undi, atau baca heksagram"
+  },
+  "manual.iching.what": {
+    "en": "The Book of Changes in our own edition: the Chinese of all 64 hexagrams with its pinyin, our English, and beside it Wilhelm's German (1924) and Legge's English (1882). Cast with the yarrow stalks or with three coins, each with the odds the old texts give it, or set the six lines by hand from a cast made elsewhere. The lines that change glow; the reading shows those lines, and turns to the hexagram the cast becomes. Nothing about a cast is kept unless you save it to the journal.",
+    "id": "Kitab Perubahan (atau I Ching atau Yi Jing) dalam edisi kami sendiri: teks orisinil dalam bahasa Mandarin dengan pinyinnya, terjemahan bahasa Inggris kami, dan juga kami sertakan terjemahan Jerman Wilhelm (1924) dan Inggris Legge (1882). Buang undi dengan metode batang daun seribu (yarrow stalk) atau tiga koin, masing-masing dengan peluang sesuai dengan yang diberikan teks-teks lama, atau isi keenam garis sendiri dari undian di tempat lain. Garis yang berubah dibuat menyala. Tidak ada yang disimpan dari ramalan kecuali Anda menyimpannya ke jurnal."
+  },
+  "manual.iching.button.stalks": {
+    "en": "Stalks: the forty-nine yarrow stalks, counted off in three changes for each line.",
+    "id": "Batang: empat puluh sembilan batang daun seribu (yarrow stalk), dihitung dalam tiga tahap untuk setiap garis."
+  },
+  "manual.iching.button.coins": {
+    "en": "Coins: three coins, thrown once for each line.",
+    "id": "Koin: tiga koin, dilempar sekali untuk setiap garis."
+  },
+  "manual.iching.button.byHand": {
+    "en": "Manual: set each line to 6, 7, 8 or 9 yourself, from the bottom.",
+    "id": "Manual: isi setiap garis dengan 6, 7, 8 atau 9 sendiri, dari bawah."
+  },
+  "manual.iching.button.book": {
+    "en": "Read: the book, all 64 hexagrams, chosen by number or by their two trigrams.",
+    "id": "Baca: kitabnya, ke-64 heksagram, dipilih menurut nomor atau kedua trigramnya."
+  },
+  "manual.iching.button.reset": {
+    "en": "Cast again, red, at the bottom left of a cast: begin anew.",
+    "id": "Undi lagi, merah, di kiri bawah undian: mulai dari awal."
+  },
+  "manual.iching.button.import": {
+    "en": "Load, under a cast: open a cast you saved before.",
+    "id": "Muat, di bawah undian: buka undian yang pernah disimpan."
+  },
+  "manual.iching.button.journal": {
+    "en": "Save, under a cast: write it to the journal as an entry.",
+    "id": "Simpan, di bawah undian: tulis ke jurnal sebagai catatan."
+  },
+  "manual.iching.button.becomes": {
+    "en": "At the foot of the reading, where lines change: turn to the hexagram the cast becomes, and back.",
+    "id": "Di kaki bacaan, bila ada garis yang berubah: beralih ke heksagram yang dijadikan undian atau kembali ke heksagram semula."
+  },
+  "manual.iching.button.copy": {
+    "en": "Copy, beside the page's name at the foot of the reading: that page alone, as markdown.",
+    "id": "Salin, di samping nama halaman di kaki bacaan: halaman itu saja, sebagai markdown."
+  },
+  "manual.iching.use.1": {
+    "en": "**A question for the morning.** Cast with the coins, read the lines that change, and save the cast to the journal under the day you asked.",
+    "id": "**Pertanyaan pagi hari.** Lempar dengan koin, baca garis yang berubah, dan simpan undian ke jurnal pada hari Anda bertanya."
+  },
+  "manual.iching.use.2": {
+    "en": "**A cast from elsewhere.** Your teacher cast with stalks on paper: set the six numbers by hand and read it here, with three translations side by side.",
+    "id": "**Undian dari tempat lain.** Guru Anda melempar dengan batang di atas kertas: isi keenam angka sendiri dan baca di sini, dengan tiga terjemahan berdampingan."
+  },
+  "manual.iching.use.3": {
+    "en": "**Study the book.** Open a hexagram from Read and page through it: the text, Wilhelm, Legge. Copy a page into your notes.",
+    "id": "**Pelajari kitabnya.** Buka heksagram dari Baca dan telusuri halamannya: teks, Wilhelm, atau Legge. Salin satu halaman ke catatan Anda."
+  },
+  "manual.iching.tip": {
+    "en": "The stalks and the coins do not give the same odds: with the stalks a changing yin line comes half as often as with the coins (1 in 16 against 1 in 8), a changing yang line one and a half times as often (3 in 16 against 2 in 16). Choose the way your tradition uses. The Indonesian translation of the book is not finished; until it is, the English is shown.",
+    "id": "Batang dan koin tidak memberi peluang yang sama: dengan batang, garis yin yang berubah muncul 50% lebih jarang daripada dengan koin (1:16 lawan 1:8), garis yang yang berubah 50% lebih sering (3:16 lawan 2:16). Pilih cara yang dipakai sesuai tradisi Anda. Terjemahan bahasa Indonesia kitab ini belum selesai, maka yang ditampilkan bahasa Inggris untuk sementara."
   },
 
   "manual.mangsa.name": { "en": "Pranata mangsa", "id": "Pranata mangsa" },

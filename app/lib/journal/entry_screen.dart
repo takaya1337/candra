@@ -10,6 +10,9 @@ import '../bar_button.dart';
 import '../bazi/bazi_card.dart';
 import '../bazi/bazi_record.dart';
 import '../bazi/bazi_screen.dart';
+import '../iching/iching_card.dart';
+import '../iching/iching_record.dart';
+import '../iching/iching_screen.dart';
 import '../confirm_bar.dart';
 import '../date_picker.dart';
 import '../day_reading.dart';
@@ -112,6 +115,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   // What the entry holds beyond the writing: its own, or the draft's.
   String? get _bazi => (_entry ?? widget.draft)?.bazi;
+  String? get _iching => (_entry ?? widget.draft)?.iching;
 
   // A new entry is stamped with the time it was started.
   late final int _startedAt =
@@ -287,6 +291,26 @@ class _EntryScreenState extends State<EntryScreen> {
     final record = BaziRecord.parse(entry.bazi);
     if (record == null) return;
     final said = await pushBaziOf(context, entry: entry, record: record);
+    if (!mounted) return;
+    final fresh = JournalScope.of(context)
+        .entriesFor(entry.date, utcOffset: entry.utcOffset)
+        .where((e) => e.id == entry.id)
+        .firstOrNull;
+    if (fresh != null) {
+      setState(() {
+        _entry = fresh;
+        _fill();
+      });
+    }
+    if (said != null) _say(said);
+  }
+
+  // The entry's cast in the I Ching's casting page, standing whole; back,
+  // the entry as it now stands, and what was done to it said.
+  Future<void> _openIching(Entry entry) async {
+    final record = IchingRecord.parse(entry.iching);
+    if (record == null) return;
+    final said = await pushIchingOf(context, entry: entry, record: record);
     if (!mounted) return;
     final fresh = JournalScope.of(context)
         .entriesFor(entry.date, utcOffset: entry.utcOffset)
@@ -518,6 +542,7 @@ class _EntryScreenState extends State<EntryScreen> {
       a.place?.longitude == b.place?.longitude &&
       a.place?.name == b.place?.name &&
       a.bazi == b.bazi &&
+      a.iching == b.iching &&
       a.tags.length == b.tags.length &&
       a.tags.toSet().containsAll(b.tags);
 
@@ -525,9 +550,12 @@ class _EntryScreenState extends State<EntryScreen> {
     final store = JournalScope.of(context);
     final title = _title.text.trim();
     final content = _content.text.trim();
-    // A chart is something on its own: it needs no words.
-    if (title.isEmpty && content.isEmpty && _bazi == null) {
-      _say(Strings.of(context).entryNeedsText);
+    // A chart or a cast is something on its own: it needs no words.
+    // Nothing written is nothing to save: Save then leaves as cancelling
+    // would, which is the way out while the keyboard covers the bar
+    // (owner, 25 October 2026).
+    if (title.isEmpty && content.isEmpty && _bazi == null && _iching == null) {
+      _stopEditing();
       return;
     }
     HapticFeedback.selectionClick();
@@ -558,6 +586,7 @@ class _EntryScreenState extends State<EntryScreen> {
           place: _place,
           duration: opened.duration,
           bazi: opened.bazi,
+          iching: opened.iching,
           tags: _tags.toList(),
         ),
       );
@@ -603,6 +632,7 @@ class _EntryScreenState extends State<EntryScreen> {
                   place: _place,
                   duration: widget.entry?.duration,
                   bazi: widget.draft?.bazi,
+                  iching: widget.draft?.iching,
                   tags: _tags.toList(),
                 ),
             previous: _entry,
@@ -616,8 +646,9 @@ class _EntryScreenState extends State<EntryScreen> {
       _whenMinute = null;
       _fill();
     });
-    // A chart from the bazi page is in the journal only now.
-    if (wasDraft && saved.bazi != null) {
+    // A chart from the bazi page, or a cast from the I Ching, is in the
+    // journal only now.
+    if (wasDraft && (saved.bazi != null || saved.iching != null)) {
       _say(Strings.of(context).baziWritten);
     }
   }
@@ -877,10 +908,12 @@ class _EntryScreenState extends State<EntryScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
-                                          // A chart's entry is its name first,
-                                          // the moment it was written under it;
-                                          // any other, the moment first.
-                                          if (_bazi != null) ...[
+                                          // A chart's or a cast's entry is its
+                                          // name first, the moment it was
+                                          // written under it; any other, the
+                                          // moment first.
+                                          if (_bazi != null ||
+                                              _iching != null) ...[
                                             SmTextField(
                                               key: const ValueKey(
                                                 'entry-title',
@@ -1089,6 +1122,18 @@ class _EntryScreenState extends State<EntryScreen> {
                                               onOpen: _editing || _entry == null
                                                   ? null
                                                   : () => _openBazi(_entry!),
+                                            ),
+                                            SizedBox(height: spacing.md),
+                                          ],
+                                          // A cast's entry: the hexagram,
+                                          // drawn from its lines.
+                                          if (_iching case final iching?) ...[
+                                            IchingCard(
+                                              value: iching,
+                                              hue: category.color,
+                                              onOpen: _editing || _entry == null
+                                                  ? null
+                                                  : () => _openIching(_entry!),
                                             ),
                                             SizedBox(height: spacing.md),
                                           ],

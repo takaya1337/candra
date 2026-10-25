@@ -201,7 +201,7 @@ class MemoryJournalStorage extends JournalStorage {
 /// opening them. It holds nothing the files do not, and is rebuilt from
 /// them whenever it is missing, out of date, or was left half-written.
 class FileJournalStorage extends JournalStorage {
-  static const _indexVersion = 7;
+  static const _indexVersion = 8;
 
   final Directory _journal;
   final File _dirty;
@@ -251,6 +251,7 @@ class FileJournalStorage extends JournalStorage {
         duration INTEGER,
         tags TEXT NOT NULL,
         bazi TEXT,
+        iching TEXT,
         moment TEXT,
         -- The category is part of the key: two devices can write an entry
         -- at the same second in two categories, and both are files.
@@ -316,7 +317,7 @@ class FileJournalStorage extends JournalStorage {
 
   void _indexPut(Entry entry) => _index.execute(
     'INSERT OR REPLACE INTO entries VALUES '
-    '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [
       entry.date.dayNumber,
       entry.secondOfDay,
@@ -330,6 +331,7 @@ class FileJournalStorage extends JournalStorage {
       entry.duration?.inSeconds,
       entry.tags.join(','),
       entry.bazi,
+      entry.iching,
       // Kept so an entry read back from the index and saved again keeps
       // it too.
       entry.moment.isEmpty ? null : jsonEncode(entry.moment),
@@ -373,6 +375,7 @@ class FileJournalStorage extends JournalStorage {
             if (id.isNotEmpty) id,
         ],
         bazi: row['bazi'] as String?,
+        iching: row['iching'] as String?,
         moment: row['moment'] == null
             ? const {}
             : {

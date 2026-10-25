@@ -11,6 +11,7 @@ import 'package:sm_design/sm_design.dart';
 import 'app_shell.dart';
 import 'appearance.dart';
 import 'house.dart';
+import 'iching/iching_reading_screen.dart' show IchingDrafts;
 import 'first_run.dart';
 import 'calendar_system.dart';
 import 'colour_schemes.dart';
@@ -83,6 +84,14 @@ Future<void> main() async {
   PlanetLook.shown.value = preferences.getBool(PlanetLook.shownKey) ?? true;
   PlanetLook.shown.addListener(
     () => preferences.setBool(PlanetLook.shownKey, PlanetLook.shown.value),
+  );
+
+  // Whether our I Ching notes, drafts kept from view, are shown: the
+  // owner's, turned by a hold on the I Ching page.
+  IchingDrafts.shown.value =
+      preferences.getBool(IchingDrafts.shownKey) ?? false;
+  IchingDrafts.shown.addListener(
+    () => preferences.setBool(IchingDrafts.shownKey, IchingDrafts.shown.value),
   );
 
   // How prayer times are reckoned outside Indonesia, once chosen.

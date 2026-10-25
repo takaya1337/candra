@@ -240,12 +240,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   void _save(String? categoryId) {
     final title = _title.text.trim();
-    if (title.isEmpty) {
-      _say(Strings.of(context).categoryNeedsName);
-      return;
-    }
     HapticFeedback.selectionClick();
     FocusManager.instance.primaryFocus?.unfocus();
+    // Nothing named is nothing to save: Save then leaves as cancelling
+    // would, the reminder as it was (owner, 25 October 2026).
+    if (title.isEmpty) {
+      Navigator.of(context).pop();
+      return;
+    }
     final saved = ReminderScope.of(context).save(
       _draft.copyWith(title: title, enabled: true, categoryId: categoryId),
     );

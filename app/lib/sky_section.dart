@@ -194,11 +194,7 @@ class _SkySectionState extends State<SkySection> {
                   key: const ValueKey('moonset'),
                 ),
               ],
-              row(
-                strings.moonLit,
-                '${(Moon.of(date, utcOffset: offset).illumination * 100).round()}%',
-                key: const ValueKey('moon-lit'),
-              ),
+              // How much is lit is said at the reading's head.
               row(
                 strings.nextFullMoon,
                 phase(180),

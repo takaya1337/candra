@@ -196,6 +196,18 @@ void main() {
           },
           marks: {'import': 'bazi-read', 'journal': 'bazi-export'},
         ),
+        ManualFeature.iching: (
+          system: CalendarSystem.chinese,
+          view: MonthScreenView.month,
+          // Its page: the faint 易 and the four ways in.
+          show: (t, j) => utility(t, 'iching'),
+          marks: {
+            'stalks': 'iching-stalks',
+            'coins': 'iching-coins',
+            'byHand': 'iching-manual',
+            'book': 'iching-read',
+          },
+        ),
         ManualFeature.mangsa: (
           system: CalendarSystem.javanese,
           view: MonthScreenView.month,

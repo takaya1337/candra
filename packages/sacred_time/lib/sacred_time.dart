@@ -25,3 +25,4 @@ export 'src/sky_position.dart';
 export 'src/stars.dart';
 export 'src/sun.dart';
 export 'src/weton.dart';
+export 'src/yijing_cast.dart';

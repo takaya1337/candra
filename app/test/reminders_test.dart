@@ -365,13 +365,13 @@ void main() {
       // The time has the lower panel to begin with.
       expect(key('picker-hour'), findsOneWidget);
 
-      // A name is needed.
-      await tester.tap(key('reminder-save'));
-      await tester.pump();
-      await tester.pump();
-      expect(find.text('Give it a name first.'), findsOneWidget);
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
+      // Saved with no name, nothing is saved: Save leaves as cancelling
+      // would, the way out while the keyboard is up.
+      await tap(tester, key('reminder-save'));
+      expect(find.byType(ReminderScreen), findsNothing);
+      expect(store.reminders, isEmpty);
+      expect(find.text('No reminders yet.'), findsOneWidget);
+      await tap(tester, key('reminder-add'));
 
       await tester.enterText(titleField(), 'Offering');
       // The line for the repeat brings its wheel into the lower panel.

@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:sacred_time/sacred_time.dart';
 import 'package:sm_design/sm_design.dart';
 
+import 'day_detail.dart';
 import 'day_reading.dart';
 import 'glyph_button.dart';
 import 'house.dart';
@@ -159,13 +160,10 @@ class _ReadingScreenState extends State<ReadingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: spacing.sm),
-                  child: DayReading(
-                    date: widget.date,
-                    utcOffset: widget.utcOffset,
-                    strings: strings,
-                  ),
+                DayDetail(
+                  date: widget.date,
+                  utcOffset: widget.utcOffset,
+                  strings: strings,
                 ),
                 SkySection(
                   date: widget.date,

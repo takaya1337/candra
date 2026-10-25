@@ -82,6 +82,7 @@ enum ManualFeature {
   today(Glyph.today),
   utilities(Glyph.utilities),
   bazi(Glyph.bazi, Utility.bazi),
+  iching(Glyph.iching, Utility.iching),
   mangsa(Glyph.mangsa, Utility.mangsa),
   lintang(Glyph.lintang, Utility.lintang),
   salat(Glyph.salat, Utility.salat),
@@ -139,6 +140,7 @@ enum ManualGroup {
   utilities(Glyph.utilities, [
     ManualFeature.utilities,
     ManualFeature.bazi,
+    ManualFeature.iching,
     ManualFeature.mangsa,
     ManualFeature.lintang,
     ManualFeature.salat,

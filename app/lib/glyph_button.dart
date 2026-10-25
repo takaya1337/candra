@@ -50,6 +50,12 @@ enum Glyph {
   lock,
   search,
   tag,
+  iching,
+  coins,
+  stalks,
+  book,
+  becomes,
+  byHand,
   utilities,
   menu,
   dayView,
@@ -632,6 +638,134 @@ class _GlyphPainter extends CustomPainter {
           line,
         );
         canvas.restore();
+
+      // I Ching: a trigram, a broken line between two whole ones.
+      case Glyph.iching:
+        final bar = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.13
+          ..strokeCap = StrokeCap.butt;
+        canvas.drawLine(
+          const Offset(0.12, 0.22),
+          const Offset(0.88, 0.22),
+          bar,
+        );
+        canvas.drawLine(const Offset(0.12, 0.5), const Offset(0.42, 0.5), bar);
+        canvas.drawLine(const Offset(0.58, 0.5), const Offset(0.88, 0.5), bar);
+        canvas.drawLine(
+          const Offset(0.12, 0.78),
+          const Offset(0.88, 0.78),
+          bar,
+        );
+
+      // Coins: a cash coin, round with a square hole, and the rim of a
+      // second behind it.
+      case Glyph.coins:
+        canvas.drawArc(
+          const Rect.fromLTRB(0.3, 0.06, 0.94, 0.7),
+          -2.2,
+          2.9,
+          false,
+          line,
+        );
+        canvas.drawCircle(const Offset(0.4, 0.6), 0.32, line);
+        canvas.drawRect(
+          Rect.fromCenter(
+            center: const Offset(0.4, 0.6),
+            width: 0.2,
+            height: 0.2,
+          ),
+          line,
+        );
+
+      // Stalks: a bundle of yarrow stalks, tied at the middle, their ends
+      // spread a little.
+      case Glyph.stalks:
+        for (final lean in const [-0.16, -0.08, 0.0, 0.08, 0.16]) {
+          canvas.drawLine(
+            Offset(0.5 + lean * 1.6, 0.1),
+            Offset(0.5 - lean * 1.6, 0.9),
+            Paint()
+              ..color = color
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 0.06
+              ..strokeCap = StrokeCap.round,
+          );
+        }
+        canvas.drawLine(const Offset(0.32, 0.5), const Offset(0.68, 0.5), line);
+
+      // The book: a bound book seen from the front, the old Chinese way,
+      // its thread stitched down the spine.
+      case Glyph.book:
+        canvas.drawRRect(
+          RRect.fromLTRBR(0.18, 0.1, 0.82, 0.9, const Radius.circular(0.06)),
+          line,
+        );
+        for (final y in const [0.24, 0.42, 0.58, 0.76]) {
+          canvas.drawLine(Offset(0.18, y), Offset(0.3, y), line);
+        }
+        canvas.drawLine(const Offset(0.3, 0.1), const Offset(0.3, 0.9), line);
+        canvas.drawLine(
+          const Offset(0.46, 0.28),
+          const Offset(0.66, 0.28),
+          line,
+        );
+
+      // Becomes: a whole line turning into a broken one, an arrow
+      // between.
+      case Glyph.becomes:
+        final bar = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.13
+          ..strokeCap = StrokeCap.butt;
+        canvas.drawLine(
+          const Offset(0.12, 0.18),
+          const Offset(0.88, 0.18),
+          bar,
+        );
+        canvas.drawLine(
+          const Offset(0.12, 0.84),
+          const Offset(0.42, 0.84),
+          bar,
+        );
+        canvas.drawLine(
+          const Offset(0.58, 0.84),
+          const Offset(0.88, 0.84),
+          bar,
+        );
+        canvas.drawLine(const Offset(0.5, 0.34), const Offset(0.5, 0.66), line);
+        canvas.drawPath(
+          Path()
+            ..moveTo(0.38, 0.54)
+            ..lineTo(0.5, 0.66)
+            ..lineTo(0.62, 0.54),
+          line,
+        );
+
+      // By hand: a hexagram's lines being written, two whole and a broken
+      // one, and the pen that sets them.
+      case Glyph.byHand:
+        final bar = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.11
+          ..strokeCap = StrokeCap.butt;
+        canvas.drawLine(const Offset(0.1, 0.24), const Offset(0.56, 0.24), bar);
+        canvas.drawLine(const Offset(0.1, 0.5), const Offset(0.28, 0.5), bar);
+        canvas.drawLine(const Offset(0.38, 0.5), const Offset(0.56, 0.5), bar);
+        canvas.drawLine(const Offset(0.1, 0.76), const Offset(0.4, 0.76), bar);
+        canvas.drawPath(
+          Path()
+            ..moveTo(0.5, 0.86)
+            ..lineTo(0.54, 0.72)
+            ..lineTo(0.8, 0.3)
+            ..lineTo(0.9, 0.36)
+            ..lineTo(0.64, 0.78)
+            ..close(),
+          line,
+        );
 
       // Utilities: a four-pointed star, what a system has besides its
       // dates.

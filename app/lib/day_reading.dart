@@ -216,11 +216,25 @@ String readingText(
   CivilDate date, {
   required Duration utcOffset,
   required Strings strings,
-}) => [
-  strings.gregorian(date),
-  for (final line in readingLines(date, utcOffset: utcOffset, strings: strings))
-    '${line.label}: ${line.value}',
-].join('\n');
+}) {
+  // In the order the detailed reading lays them out: the moon, the
+  // Javanese reckonings, the Hijri, and last the two in characters.
+  final order = [
+    strings.moon,
+    strings.systemLabel(CalendarSystem.weton),
+    strings.systemLabel(CalendarSystem.javanese),
+    strings.mangsa,
+    strings.systemLabel(CalendarSystem.hijri),
+    strings.systemLabel(CalendarSystem.chinese),
+    strings.bazi,
+  ];
+  final lines = readingLines(date, utcOffset: utcOffset, strings: strings)
+    ..sort((a, b) => order.indexOf(a.label).compareTo(order.indexOf(b.label)));
+  return [
+    strings.gregorian(date),
+    for (final line in lines) '${line.label}: ${line.value}',
+  ].join('\n');
+}
 
 /// What each system makes of [year]: when its own new year falls inside
 /// it, and how often the weton of [selected] comes round.

@@ -343,6 +343,14 @@ class HouseState extends State<House> with SingleTickerProviderStateMixin {
       return;
     }
     if (living == null) return;
+    // Home with a page open over it (the day's full reading, a place):
+    // home closes it, eased (owner, 26 October 2026), before it does
+    // anything else.
+    if (_ways[Room.living]!.routes.length > 1) {
+      HapticFeedback.selectionClick();
+      navigatorOf(Room.living)?.popUntil((route) => route.isFirst);
+      return;
+    }
     living.showCards(
       living.cards.value == LivingCards.systems
           ? LivingCards.none

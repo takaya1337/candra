@@ -169,21 +169,44 @@ void main() {
         tester.element(find.byKey(const ValueKey('colours-sample'))),
       ).colors.background;
 
-      await tap(tester, 'colours-system-chinese');
-      expect(background(), ColourScheme.vermilion.dark.background);
-      await tester.dragUntilVisible(
-        key('colours-scheme-plum'),
-        key('colours-schemes'),
-        const Offset(-200, 0),
+      // Two wheels: the calendar at the left, its scheme at the right.
+      // A wheel turned by [steps] rows.
+      Future<void> turn(String wheel, int steps) async {
+        await tester.drag(key(wheel), Offset(0, -36.0 * steps));
+        await tester.pumpAndSettle();
+      }
+
+      int heading() => CalendarSystem.values.indexOf(
+        CalendarSystem.values.firstWhere(
+          (each) => find
+              .byKey(ValueKey('colours-second-${each.index}'))
+              .evaluate()
+              .isNotEmpty,
+        ),
       );
-      await tester.pumpAndSettle();
-      await tap(tester, 'colours-scheme-plum');
+
+      // To the Chinese calendar: its own scheme, vermilion.
+      await turn('colours-first', CalendarSystem.chinese.index - heading());
+      expect(heading(), CalendarSystem.chinese.index);
+      expect(background(), ColourScheme.vermilion.dark.background);
+      // Its scheme turned to plum: the screen in plum at once.
+      final chinese = 'colours-second-${CalendarSystem.chinese.index}';
+      await turn(
+        chinese,
+        ColourScheme.plum.index - ColourScheme.vermilion.index,
+      );
       expect(ColourChoice.of(CalendarSystem.chinese), ColourScheme.plum);
       expect(background(), ColourScheme.plum.dark.background);
-      // The same scheme for a second calendar.
-      await tap(tester, 'colours-system-hijri');
-      await tap(tester, 'colours-scheme-plum');
-      expect(ColourChoice.of(CalendarSystem.hijri), ColourScheme.plum);
+      // The same scheme for a second calendar; the first keeps its own.
+      await turn('colours-first', 1);
+      final hijri = CalendarSystem.values[heading()];
+      final from = ColourChoice.of(hijri);
+      await turn(
+        'colours-second-${hijri.index}',
+        ColourScheme.plum.index - from.index,
+      );
+      expect(ColourChoice.of(hijri), ColourScheme.plum);
+      expect(ColourChoice.of(CalendarSystem.chinese), ColourScheme.plum);
 
       // Restore asks; back is no.
       await tap(tester, 'colours-restore');
@@ -191,7 +214,7 @@ void main() {
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.byType(ColoursScreen), findsOneWidget);
-      expect(ColourChoice.of(CalendarSystem.hijri), ColourScheme.plum);
+      expect(ColourChoice.of(hijri), ColourScheme.plum);
       await tap(tester, 'colours-restore');
       await tester.tap(find.text('Restore defaults').last);
       await tester.pumpAndSettle();

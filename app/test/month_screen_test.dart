@@ -886,8 +886,26 @@ void main() {
       await openDetail(tester);
 
       expect(find.byType(ReadingScreen), findsOneWidget);
-      expect(find.text('11 October 2026'), findsOneWidget);
-      expect(find.text('Minggu Legi · neptu 10'), findsOneWidget);
+      Finder inRow(String row, String text) => find.descendant(
+        of: find.byKey(ValueKey('detail-$row')),
+        matching: find.text(text),
+      );
+      // At the head the moon drawing itself, the date, and the moon said.
+      expect(find.byType(TracedMoon), findsOneWidget);
+      expect(inRow('head', '11 October 2026'), findsOneWidget);
+      expect(inRow('head', 'Waxing Crescent'), findsOneWidget);
+      expect(inRow('head', '0% lit'), findsOneWidget);
+      // Each value in two tiers.
+      expect(inRow('weton', 'Minggu Legi'), findsOneWidget);
+      expect(inRow('weton', 'neptu 10'), findsOneWidget);
+      // The Javanese reckonings, then the Hijri, then the two in
+      // characters, last.
+      double top(String row) =>
+          tester.getTopLeft(find.byKey(ValueKey('detail-$row'))).dy;
+      final order = ['weton', 'javanese', 'mangsa', 'hijri', 'chinese', 'bazi'];
+      for (var i = 1; i < order.length; i++) {
+        expect(top(order[i]), greaterThan(top(order[i - 1])), reason: order[i]);
+      }
       // No expand glyph on the sheet itself, and no button to close it:
       // the house's bar stands under it, as everywhere.
       expect(find.byKey(const ValueKey('expand-reading')), findsNothing);
@@ -949,13 +967,8 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(
-        find.descendant(
-          of: find.byKey(const ValueKey('moon-lit')),
-          matching: find.text('0%'),
-        ),
-        findsOneWidget,
-      );
+      // How much is lit is said once, at the head.
+      expect(find.byKey(const ValueKey('moon-lit')), findsNothing);
       expect(find.textContaining('depend on where you are'), findsOneWidget);
     });
 
@@ -1042,6 +1055,18 @@ void main() {
       );
     });
 
+    testWidgets('home closes the reading, and does nothing else', (
+      tester,
+    ) async {
+      await openDetail(tester);
+      expect(find.byType(ReadingScreen), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('system-label')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ReadingScreen), findsNothing);
+      // The calendars' cards stay down: that is the next tap's.
+      expect(find.byKey(const ValueKey('picker-done')), findsNothing);
+    });
+
     testWidgets('Copy puts the reading on the clipboard', (tester) async {
       String? copied;
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
@@ -1062,12 +1087,12 @@ void main() {
         copied,
         '11 October 2026\n'
         'Moon: Waxing Crescent · 0%\n'
-        'Chinese: 陽土 丙午年九月初二 · Fire Horse (火馬)\n'
-        'Bazi: 丙午年 戊戌月 戊午日\n'
-        "Hijri: 28 Rabi' al-Thani 1448 AH\n"
+        'Weton: Minggu Legi · neptu 10\n'
         'Javanese: 28 Bakdamulud 1960 Be\n'
         'Mangsa: 24 Kapat 172 · Labuh\n'
-        'Weton: Minggu Legi · neptu 10',
+        "Hijri: 28 Rabi' al-Thani 1448 AH\n"
+        'Chinese: 陽土 丙午年九月初二 · Fire Horse (火馬)\n'
+        'Bazi: 丙午年 戊戌月 戊午日',
       );
       expect(find.text('Copied.'), findsOneWidget);
 
@@ -1292,12 +1317,12 @@ void main() {
         copied,
         '11 Oktober 2026\n'
         'Bulan: Sabit Muda · 0%\n'
-        'Imlek: 陽土 2 Kau Gwee 2577 · Kuda Api (火馬)\n'
-        'Bazi: 丙午年 戊戌月 戊午日\n'
-        'Hijriah: 28 Rabiulakhir 1448 H\n'
+        'Weton: Minggu Legi · neptu 10\n'
         'Jawa: 28 Bakdamulud 1960 Be\n'
         'Mangsa: 24 Kapat 172 · Labuh\n'
-        'Weton: Minggu Legi · neptu 10',
+        'Hijriah: 28 Rabiulakhir 1448 H\n'
+        'Imlek: 陽土 2 Kau Gwee 2577 · Kuda Api (火馬)\n'
+        'Bazi: 丙午年 戊戌月 戊午日',
       );
       expect(find.text('Disalin.'), findsOneWidget);
       await tester.pump(const Duration(seconds: 3));
@@ -1449,17 +1474,22 @@ void main() {
       await tapReading(tester);
       await tester.pumpAndSettle();
       expect(find.text('BAZI'), findsOneWidget);
-      final row = find.text('丙午年 戊戌月 戊午日');
-      expect(row, findsOneWidget);
+      // Three pillars side by side, each captioned with what it is the
+      // pillar of.
+      Finder inBazi(String text) => find.descendant(
+        of: find.byKey(const ValueKey('detail-bazi')),
+        matching: find.text(text),
+      );
+      for (final (pillar, mark) in [('丙午', '年'), ('戊戌', '月'), ('戊午', '日')]) {
+        expect(inBazi(pillar), findsOneWidget);
+        expect(inBazi(mark), findsOneWidget);
+      }
       // Each stem is in its element's colour: fire, earth, earth.
-      final coloured = {
-        for (final span in spansOf(tester, row))
-          if (span.style?.color != null)
-            (span as TextSpan).text: span.style!.color,
-      };
-      expect(coloured['丙'], elementColors[Unsur.api]);
-      expect(coloured['戊'], elementColors[Unsur.tanah]);
-      expect(coloured.keys, ['丙', '戊']);
+      Color? stem(String pillar) =>
+          (spansOf(tester, inBazi(pillar)).first as TextSpan).style!.color;
+      expect(stem('丙午'), elementColors[Unsur.api]);
+      expect(stem('戊戌'), elementColors[Unsur.tanah]);
+      expect(stem('戊午'), elementColors[Unsur.tanah]);
     });
 
     testWidgets('a tap anywhere else on the reading opens the detailed one', (
@@ -1469,10 +1499,17 @@ void main() {
       await tester.tap(find.text('Minggu Legi · neptu 10'));
       await tester.pumpAndSettle();
       expect(find.byType(ReadingScreen), findsOneWidget);
-      // Which is as it always was: every system, characters in brackets.
-      expect(find.text('陽土 丙午年九月初二 · Fire Horse (火馬)'), findsOneWidget);
-      expect(find.text("28 Rabi' al-Thani 1448 AH"), findsOneWidget);
-      expect(find.text('28 Bakdamulud 1960 Be'), findsOneWidget);
+      // Every system, each value in two tiers.
+      Finder inRow(String row, String text) => find.descendant(
+        of: find.byKey(ValueKey('detail-$row')),
+        matching: find.text(text),
+      );
+      expect(inRow('chinese', '陽土 丙午年九月初二'), findsOneWidget);
+      expect(inRow('chinese', 'Fire Horse'), findsOneWidget);
+      expect(inRow('hijri', "28 Rabi' al-Thani"), findsOneWidget);
+      expect(inRow('hijri', '1448 AH'), findsOneWidget);
+      expect(inRow('javanese', '28 Bakdamulud'), findsOneWidget);
+      expect(inRow('javanese', '1960 Be'), findsOneWidget);
     });
 
     testWidgets('leap months and the turn of the year', (tester) async {
@@ -2934,20 +2971,26 @@ void main() {
       expect(find.text('Half a thought'), findsNothing);
     });
 
-    testWidgets('an empty entry is not saved', (tester) async {
+    testWidgets('an empty entry is not saved: Save leaves, as cancelling '
+        'would', (tester) async {
       await openJournal(tester);
+      final before = tester
+          .widget<JournalScope>(find.byType(JournalScope))
+          .notifier!
+          .allEntries()
+          .length;
       await tap(tester, find.byKey(const ValueKey('new-entry')));
-      // The keyboard is up: Save is the tick at the right of the bar.
-      await tester.tap(find.byKey(const ValueKey('entry-save')));
-      await tester.pump();
-      await tester.pump();
-
-      await putKeyboardAway(tester);
-
-      expect(barLabel(tester), 'Save');
-      expect(find.text('Write a title or some text first.'), findsOneWidget);
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
+      // The keyboard is up: Save is the tick at the right of the bar, and
+      // with nothing written it is the way out.
+      await tap(tester, find.byKey(const ValueKey('entry-save')));
+      expect(find.byType(EntryScreen), findsNothing);
+      expect(
+        tester
+            .widget<JournalScope>(find.byType(JournalScope))
+            .notifier!
+            .allEntries(),
+        hasLength(before),
+      );
     });
 
     testWidgets('the category is chosen in the journal, before writing', (

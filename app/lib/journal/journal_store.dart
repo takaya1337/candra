@@ -300,6 +300,7 @@ class JournalStore extends ChangeNotifier {
       duration: entry.duration,
       tags: entry.tags,
       bazi: entry.bazi,
+      iching: entry.iching,
       moment: entry.moment,
     );
     return _save(moved, stamped: false);

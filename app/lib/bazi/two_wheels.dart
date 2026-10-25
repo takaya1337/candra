@@ -26,6 +26,10 @@ class TwoWheels extends StatefulWidget {
   final int firstFlex;
   final int secondFlex;
 
+  /// Drawn before each row of the second wheel, when given: a scheme's
+  /// colours beside its name.
+  final Widget Function(int heading, int choice)? secondLead;
+
   const TwoWheels({
     super.key,
     required this.name,
@@ -36,6 +40,7 @@ class TwoWheels extends StatefulWidget {
     required this.onChanged,
     this.firstFlex = 4,
     this.secondFlex = 5,
+    this.secondLead,
   });
 
   @override
@@ -109,6 +114,9 @@ class _TwoWheelsState extends State<TwoWheels> {
                 _second,
                 offered,
                 _onChoice,
+                lead: widget.secondLead == null
+                    ? null
+                    : (choice) => widget.secondLead!(_heading, choice),
               ),
             ),
           ],
@@ -121,8 +129,9 @@ class _TwoWheelsState extends State<TwoWheels> {
     Key key,
     FixedExtentScrollController controller,
     List<String> labels,
-    ValueChanged<int> onMoved,
-  ) {
+    ValueChanged<int> onMoved, {
+    Widget Function(int index)? lead,
+  }) {
     final theme = SmTheme.of(context);
 
     return ListWheelScrollView.useDelegate(
@@ -144,14 +153,25 @@ class _TwoWheelsState extends State<TwoWheels> {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                labels[index],
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.fade,
-                style: theme.type.label.copyWith(
-                  color: theme.colors.textPrimary,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (lead != null) ...[
+                    lead(index),
+                    SizedBox(width: theme.spacing.sm),
+                  ],
+                  Flexible(
+                    child: Text(
+                      labels[index],
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
+                      style: theme.type.label.copyWith(
+                        color: theme.colors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -5,6 +5,9 @@ import 'package:sacred_time/sacred_time.dart';
 import 'package:sm_design/sm_design.dart';
 
 import 'calendar_system.dart';
+import 'iching/iching_pack.dart';
+import 'iching/iching_reading_screen.dart';
+import 'iching/iching_record.dart';
 import 'colour_schemes.dart';
 import 'menu/notes_text.dart';
 import 'reminders/reminder.dart';
@@ -77,9 +80,6 @@ class Strings {
             'kept beside it'
       : 'Catatan ini diubah oleh sinkronisasi saat sedang dibuka, jadi '
             'milik Anda disimpan di sampingnya';
-  String get entryNeedsText => _en
-      ? 'Write a title or some text first.'
-      : 'Tulis judul atau isi terlebih dahulu.';
 
   // What to copy of a selection in an entry being read.
   String get copyWord => _en ? 'Word' : 'Kata';
@@ -628,10 +628,186 @@ class Strings {
   // assets/samples/showcase-strings.json, under manual.*.
   String get manualGotIt => _en ? 'Got it' : 'Mengerti';
 
+  // The I Ching.
+  String get ichingTitle => 'I Ching';
+  String get ichingSubtitle => _en
+      ? 'Cast a hexagram, or read the book'
+      : 'Buang undi, atau baca heksagram';
+  String get ichingCoins => _en ? 'Coins' : 'Koin';
+  String get ichingStalks => _en ? 'Stalks' : 'Batang';
+  String get ichingRead => _en ? 'Read' : 'Baca';
+  String get ichingManual => 'Manual';
+  String get ichingManualLine =>
+      _en ? 'Six lines, set by hand' : 'Enam garis, diisi sendiri';
+  String get ichingManualAsk => _en
+      ? 'Set the six lines, from the bottom.'
+      : 'Isi keenam garis, dari bawah.';
+  String get ichingManualNote => _en
+      ? '6 is old yin and 9 old yang, the lines that change; 7 is young '
+            'yang and 8 young yin, at rest.'
+      : '6 yin tua dan 9 yang tua, garis yang berubah; 7 yang muda dan 8 '
+            'yin muda, diam.';
+  String get ichingCoinsLine =>
+      _en ? 'Three coins, six throws' : 'Tiga koin, enam lemparan';
+  String get ichingStalksLine => _en
+      ? 'Forty-nine stalks, the old way'
+      : 'Empat puluh sembilan batang, cara lama';
+  String get ichingReadLine =>
+      _en ? 'The sixty-four, one by one' : 'Keenam puluh empat, satu per satu';
+  String get ichingCoinsNote => _en
+      ? 'Three coins, six throws. A changing line comes once in four '
+            'throws, yin and yang alike.'
+      : 'Tiga koin, enam lemparan. Garis berubah muncul sekali dalam '
+            'empat lemparan, yin dan yang sama seringnya.';
+  String get ichingStalksNote => _en
+      ? 'Forty-nine stalks, counted three times for each line. A changing '
+            'yang comes three times in sixteen, a changing yin once.'
+      : 'Empat puluh sembilan batang, dihitung tiga kali untuk tiap garis. '
+            'Yang berubah muncul tiga kali dalam enam belas, yin berubah '
+            'sekali.';
+  String ichingLineOf(int line) =>
+      _en ? 'Line $line of 6' : 'Garis $line dari 6';
+  String get ichingAsk => _en
+      ? 'Hold the question, then cast.'
+      : 'Pegang pertanyaannya, lalu buang undi.';
+  String ichingLineValue(LineValue value) => switch (value) {
+    LineValue.oldYin => _en ? '6 · yin, changing' : '6 · yin, berubah',
+    LineValue.youngYang => _en ? '7 · yang' : '7 · yang',
+    LineValue.youngYin => _en ? '8 · yin' : '8 · yin',
+    LineValue.oldYang => _en ? '9 · yang, changing' : '9 · yang, berubah',
+  };
+
+  // The cast and the journal.
+  String get ichingSave => _en ? 'Save' : 'Simpan';
+  String get ichingLoad => _en ? 'Load' : 'Muat';
+  String get ichingSaveHere => _en ? 'Save here' : 'Simpan di sini';
+  String get ichingSaveNew =>
+      _en ? 'Save as new entry' : 'Simpan sebagai catatan baru';
+  String get ichingDiscard => _en ? 'Discard' : 'Buang';
+  String get ichingSaveTo =>
+      _en ? 'Save under which category?' : 'Simpan di kategori mana?';
+  String get ichingLoadNone => _en
+      ? 'No cast has been saved to the journal yet. Casts saved from here '
+            'can be loaded back.'
+      : 'Belum ada undian yang disimpan di jurnal. Undian yang '
+            'disimpan dari sini bisa dimuat kembali.';
+  String get ichingLoadUnusable =>
+      _en ? 'Cannot be read back' : 'Tidak bisa dibaca kembali';
+  String ichingLoadCast(String day) => _en ? 'Cast $day' : 'Diundi $day';
+  String ichingLoaded(String title) =>
+      _en ? 'Cast from $title loaded' : 'Undian dari $title dimuat';
+  String get ichingDiscarded => _en ? 'Changes discarded' : 'Perubahan dibuang';
+  String ichingSaveAsk(String title) => _en
+      ? 'Save this cast to "$title", or as a new entry?'
+      : 'Simpan undian ini ke "$title", atau sebagai catatan baru?';
+  String ichingSavedAsk(String title) => _en
+      ? 'This cast is already in the journal, as "$title". Save it again '
+            'as a new entry?'
+      : 'Undian ini sudah ada di jurnal, sebagai "$title". Simpan lagi '
+            'sebagai catatan baru?';
+  String ichingDiscardAsk(String title) => _en
+      ? 'Discard the new cast, and go back to the one in "$title"?'
+      : 'Buang undian baru, dan kembali ke undian di "$title"?';
+  String get ichingRewritten =>
+      _en ? 'The entry was changed.' : 'Catatan diubah.';
+  String get ichingCardOpen => _en ? 'Open the cast' : 'Buka undian';
+  String get ichingCardIncomplete => _en
+      ? 'This cast cannot be read back.'
+      : 'Undian ini tidak bisa dibaca kembali.';
+  String ichingMethod(CastMethod method) => switch (method) {
+    CastMethod.coins => ichingCoins,
+    CastMethod.stalks => ichingStalks,
+    CastMethod.manual => ichingManual,
+  };
+
+  // A hexagram read.
+  String get ichingLines => _en ? 'Lines' : 'Garis';
+  String get ichingNotes => _en ? 'Notes' : 'Catatan';
+  String get ichingReadings => _en ? 'Readings' : 'Tafsir';
+  String get ichingCredit => _en ? 'Credit' : 'Kredit';
+  String get ichingJudgment => _en ? 'Judgment' : 'Putusan';
+  String get ichingImage => _en ? 'Image' : 'Citra';
+  String get ichingLater =>
+      _en ? 'a later layer of the book' : 'lapisan kitab yang lebih muda';
+  String ichingAsRead(String who) =>
+      _en ? 'As $who reads it' : 'Menurut bacaan $who';
+  String get ichingChanges => _en ? 'changes' : 'berubah';
+  String get ichingPinyin => 'Pinyin';
+  String ichingPage(ReadingPage page) => switch (page) {
+    ReadingPage.main => _en ? 'Main' : 'Utama',
+    ReadingPage.wilhelm => 'Wilhelm',
+    ReadingPage.legge => 'Legge',
+    ReadingPage.notes => ichingNotes,
+    ReadingPage.readings => ichingReadings,
+    ReadingPage.credit => ichingCredit,
+  };
+  String ichingBecomesTo(int number, String name) =>
+      _en ? 'Becomes $number $name' : 'Menjadi $number $name';
+  String ichingBackTo(int number, String name) =>
+      _en ? 'Back to $number $name' : 'Kembali ke $number $name';
+
+  /// The translator's page: the year of his book after his name in its
+  /// title, and a quiet line where his text is not in the pack yet.
+  String ichingTranslatorYear(ReadingPage page) => switch (page) {
+    ReadingPage.wilhelm => '1924',
+    ReadingPage.legge => '1882',
+    _ => '',
+  };
+  String ichingTranslatorNotYet(ReadingPage page) => _en
+      ? '${ichingPage(page)}\'s text of this hexagram is not in yet.'
+      : 'Teks ${ichingPage(page)} untuk heksagram ini belum dimuat.';
+  String get ichingNoReadings => _en
+      ? 'No reading of this hexagram is in dispute.'
+      : 'Tak ada bacaan heksagram ini yang diperdebatkan.';
+  String get ichingNoLineChanges => _en
+      ? 'No line changes: the judgment and the Image are read.'
+      : 'Tak ada garis berubah: yang dibaca putusan dan citranya.';
+  String get ichingBecomesLines => _en
+      ? 'What the cast becomes: its judgment and its Image are read. The '
+            'lines that change are read in the hexagram cast.'
+      : 'Yang dijadikan undian: putusan dan citranya yang dibaca. Garis '
+            'yang berubah dibaca pada heksagram yang diundi.';
+  String get ichingNotYet => _en
+      ? 'Our translation of this hexagram is not finished. The Chinese is '
+            'given as it stands.'
+      : 'Terjemahan kami untuk heksagram ini belum selesai. Teks Tionghoanya '
+            'ditampilkan apa adanya.';
+  String get ichingNoIndonesian => _en
+      ? 'The Indonesian is not done yet; this is the English.'
+      : 'Terjemahan bahasa Indonesia belum selesai; ini versi bahasa '
+            'Inggrisnya.';
+  String get ichingAllChange => _en
+      ? 'All six lines change: this is the text to read.'
+      : 'Keenam garis berubah: inilah teks yang dibaca.';
+  String ichingTrigram(Trigram trigram) => switch (trigram) {
+    Trigram.qian => _en ? 'Heaven' : 'Langit',
+    Trigram.dui => _en ? 'Lake' : 'Danau',
+    Trigram.li => _en ? 'Fire' : 'Api',
+    Trigram.zhen => _en ? 'Thunder' : 'Guntur',
+    Trigram.xun => _en ? 'Wind' : 'Angin',
+    Trigram.kan => _en ? 'Water' : 'Air',
+    Trigram.gen => _en ? 'Mountain' : 'Gunung',
+    Trigram.kun => _en ? 'Earth' : 'Bumi',
+  };
+  String ichingBelowAbove(Trigram lower, Trigram upper) => _en
+      ? '${lower.name} ${ichingTrigram(lower)} below · '
+            '${upper.name} ${ichingTrigram(upper)} above'
+      : '${lower.name} ${ichingTrigram(lower)} di bawah · '
+            '${upper.name} ${ichingTrigram(upper)} di atas';
+
+  // The book, the sixty-four.
+  String get ichingLibrary => _en ? 'The sixty-four' : 'Enam puluh empat';
+  String get ichingByNumber => _en ? 'Number' : 'Nomor';
+  String get ichingByTrigrams => _en ? 'Trigrams' : 'Trigram';
+  String get ichingUpper => _en ? 'Upper' : 'Atas';
+  String get ichingLower => _en ? 'Lower' : 'Bawah';
+  String get ichingOpen => _en ? 'Open' : 'Buka';
+
   // Utilities: what a system can do beyond naming the day.
   String utilityName(Utility utility) => switch (utility) {
     Utility.bazi => baziTitle,
     Utility.mangsa => mangsaTitle,
+    Utility.iching => ichingTitle,
     Utility.sky => skyTitle,
     Utility.stars => starsTitle,
     Utility.lintang => lintangTitle,
@@ -646,6 +822,8 @@ class Strings {
       _en ? 'The four pillars of a moment' : 'Empat pilar suatu saat',
     Utility.mangsa =>
       _en ? 'The Javanese year of seasons' : 'Tahun musim orang Jawa',
+    Utility.iching =>
+      _en ? 'Cast and read a hexagram' : 'Buang undi dan baca heksagram',
     Utility.sky =>
       _en ? 'Where the sun and moon stand' : 'Letak matahari dan bulan',
     Utility.stars =>

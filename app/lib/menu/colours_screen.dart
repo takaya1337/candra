@@ -5,13 +5,13 @@ import 'package:sm_design/sm_design.dart';
 
 import '../app_shell.dart';
 import '../appearance.dart';
+import '../bazi/two_wheels.dart';
 import '../bar_button.dart';
 import '../calendar_system.dart';
 import '../colour_schemes.dart';
 import '../confirm_bar.dart';
 import '../day_page.dart';
 import '../house.dart';
-import '../panel_tabs.dart';
 import '../parts.dart';
 import '../routes.dart';
 import '../strings.dart';
@@ -25,8 +25,9 @@ Future<void> pushColours(BuildContext context) =>
 ///
 ///  * Top bar: the name, and the system and its scheme.
 ///  * Main body: today's day view in that system, as a sample.
-///  * Lower panel: the schemes, and under them the systems. A system
-///    touched is the one being coloured; a scheme touched is its colours
+///  * Lower panel: two wheels (owner, 25 October 2026, after a row of
+///    pills): at the left the calendar being coloured, at the right the
+///    schemes, standing at its own; the scheme turned to is its colours
 ///    at once (two systems may share one). The whole screen, bars and
 ///    all, is in the scheme of the system shown, to see it as it would
 ///    be.
@@ -45,6 +46,10 @@ class _ColoursScreenState extends State<ColoursScreen> {
   // The bar asking whether to put every system back to its own colours.
   bool _confirming = false;
 
+  // Counts the restores, so the wheels stand afresh where the defaults
+  // put them.
+  int _restored = 0;
+
   void _setConfirming(bool confirming) {
     HapticFeedback.selectionClick();
     setState(() => _confirming = confirming);
@@ -53,7 +58,10 @@ class _ColoursScreenState extends State<ColoursScreen> {
   void _restore() {
     HapticFeedback.mediumImpact();
     ColourChoice.restore();
-    setState(() => _confirming = false);
+    setState(() {
+      _confirming = false;
+      _restored++;
+    });
   }
 
   @override
@@ -164,50 +172,63 @@ class _ColoursScreenState extends State<ColoursScreen> {
                     ],
                   ),
                 )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    heading(strings.coloursScheme),
-                    SizedBox(height: spacing.xs),
-                    PillRow(
-                      listKey: const ValueKey('colours-schemes'),
-                      children: [
-                        for (final each in ColourScheme.values)
-                          _SchemePill(
-                            key: ValueKey('colours-scheme-${each.name}'),
-                            scheme: each,
+              : Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    spacing.md,
+                    0,
+                    spacing.md,
+                    spacing.sm,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: heading(strings.coloursCalendar),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: heading(strings.coloursScheme),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: spacing.xs),
+                      Expanded(
+                        child: TwoWheels(
+                          key: ValueKey('colours-wheels-$_restored'),
+                          name: 'colours',
+                          headings: [
+                            for (final each in CalendarSystem.values)
+                              strings.systemLabel(each),
+                          ],
+                          under: (_) => [
+                            for (final each in ColourScheme.values)
+                              strings.colourSchemeName(each),
+                          ],
+                          heading: CalendarSystem.values.indexOf(system),
+                          chosen: (each) =>
+                              ColourChoice.of(CalendarSystem.values[each])
+                                  .index,
+                          onChanged: (each, choice) {
+                            final calendar = CalendarSystem.values[each];
+                            final chosen = ColourScheme.values[choice];
+                            if (calendar != _system) {
+                              setState(() => _system = calendar);
+                            }
+                            if (ColourChoice.of(calendar) != chosen) {
+                              ColourChoice.choose(calendar, chosen);
+                            }
+                          },
+                          secondLead: (_, choice) => _Swatch(
+                            scheme: ColourScheme.values[choice],
                             side: side,
-                            label: strings.colourSchemeName(each),
-                            chosen: each == scheme,
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              ColourChoice.choose(system, each);
-                            },
                           ),
-                      ],
-                    ),
-                    heading(strings.coloursCalendar),
-                    SizedBox(height: spacing.xs),
-                    PillRow(
-                      listKey: const ValueKey('colours-systems'),
-                      children: [
-                        for (final each in CalendarSystem.values)
-                          BarButton(
-                            key: ValueKey('colours-system-${each.name}'),
-                            label: strings.systemLabel(each),
-                            compact: true,
-                            small: true,
-                            filled: each == system,
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              setState(() => _system = each);
-                            },
-                          ),
-                      ],
-                    ),
-                    SizedBox(height: spacing.sm),
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
           bar: const RoomBar(),
         ),
@@ -216,57 +237,23 @@ class _ColoursScreenState extends State<ColoursScreen> {
   }
 }
 
-/// A scheme to choose: its accent on its own ground, and its name.
-class _SchemePill extends StatelessWidget {
+/// A scheme's colours, small: its accent on its own ground.
+class _Swatch extends StatelessWidget {
   final ColourScheme scheme;
   final Brightness side;
-  final String label;
-  final bool chosen;
-  final VoidCallback onTap;
 
-  const _SchemePill({
-    super.key,
-    required this.scheme,
-    required this.side,
-    required this.label,
-    required this.chosen,
-    required this.onTap,
-  });
+  const _Swatch({required this.scheme, required this.side});
 
   @override
   Widget build(BuildContext context) {
-    final theme = SmTheme.of(context);
-    final colors = theme.colors;
     final own = scheme.on(side);
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: theme.spacing.md),
-        decoration: BoxDecoration(
-          color: chosen ? colors.surfaceRaised : null,
-          border: Border.all(color: chosen ? colors.accent : colors.outline),
-          borderRadius: BorderRadius.circular(theme.radii.lg),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: own.accent,
-                border: Border.all(color: own.background, width: 3),
-              ),
-            ),
-            SizedBox(width: theme.spacing.sm),
-            Text(
-              label,
-              style: theme.type.label.copyWith(color: colors.textPrimary),
-            ),
-          ],
-        ),
+    return Container(
+      width: 16,
+      height: 16,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: own.accent,
+        border: Border.all(color: own.background, width: 3),
       ),
     );
   }

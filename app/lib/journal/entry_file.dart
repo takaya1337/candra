@@ -78,6 +78,12 @@ abstract final class EntryFile {
         '# this line; the text below is the writer\'s own.',
         'bazi: ${_oneLine(bazi)}',
       ],
+      if (entry.iching case final iching?) ...[
+        '# A cast of the I Ching: its lines from the bottom up, and when it',
+        '# was cast. The app draws the hexagram from this line; the text',
+        '# below is the writer\'s own.',
+        'iching: ${_oneLine(iching)}',
+      ],
       if (entry.place case final place?) ...[
         '# Where it was written, rounded to about 100 m: not the exact spot.',
         'latitude: ${place.latitude.toStringAsFixed(GeoTag.decimals)}',
@@ -187,6 +193,7 @@ abstract final class EntryFile {
           if (id.trim().isNotEmpty) id.trim(),
       ],
       bazi: fields['bazi'],
+      iching: fields['iching'],
       moment: {
         for (final MapEntry(:key, :value) in fields.entries)
           if (key.startsWith('moment_'))

@@ -32,6 +32,7 @@ import 'utilities.dart';
 import 'toast.dart';
 import 'year_grid.dart';
 import 'bazi/bazi_screen.dart';
+import 'iching/iching_screen.dart';
 import 'mangsa/mangsa_screen.dart';
 import 'salat/salat_screen.dart';
 import 'sky/sky_screen.dart';
@@ -506,6 +507,7 @@ class _MonthScreenState extends State<MonthScreen>
       await switch (utility) {
         Utility.bazi => pushBazi(context, date: now, utcOffset: _offsetOn(now)),
         Utility.mangsa => pushMangsa(context, date: now),
+        Utility.iching => pushIching(context),
         Utility.salat => pushSalat(context, date: now),
         Utility.sky => pushSky(context, date: now),
         Utility.stars => pushStars(context, date: now),

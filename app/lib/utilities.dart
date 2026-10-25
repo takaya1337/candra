@@ -16,6 +16,9 @@ enum Utility {
   /// The four pillars of an instant.
   bazi(CalendarSystem.chinese, Glyph.bazi),
 
+  /// The Book of Changes: a hexagram cast and read.
+  iching(CalendarSystem.chinese, Glyph.iching),
+
   /// The Javanese year of the seasons.
   mangsa(CalendarSystem.javanese, Glyph.mangsa),
 

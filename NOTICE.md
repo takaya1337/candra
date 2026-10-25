@@ -9,6 +9,7 @@ Licences). The full texts and notes are in `app/assets/licences/`.
 |---|---|---|
 | HYG star database 4.4, David Nash | The stars of the star map and Lintang Jawa | CC BY-SA 4.0; the star table derived from it carries the same licence |
 | OpenNGC, Mattia Verga | The galaxies of the star map | CC BY-SA 4.0; the galaxy table derived from it carries the same licence |
+| The I Ching text (`app/assets/iching/pack.v2.json`): the Chinese from 周易, Kanripo KR1a0001, collated with 周易 at zh.wikisource.org; our English, notes and pinyin; Richard Wilhelm's German (Jena, 1924) and James Legge's English (Oxford, 1882) | The I Ching | The pack as a whole CC BY-SA 4.0, as its Chinese sources are; Wilhelm's and Legge's texts public domain. Credited on the reading card's Credit page |
 | d3-celestial, Olaf Frohn | The constellations' lines and names | BSD 3-clause |
 | GeoNames | Towns of the world for the place finder | CC BY 4.0 |
 | Wilayah Indonesia, cahya dsn | Indonesia's administrative names and coordinates | MIT |

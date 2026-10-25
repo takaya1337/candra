@@ -19,6 +19,12 @@ class ActionCard {
   /// while one runs).
   final bool enabled;
 
+  /// A card of another kind than the ones before it (the I Ching's Read,
+  /// after its three ways of casting): set apart from them by a rule, and
+  /// drawn on a ground of the accent with no outline, its glyph and name
+  /// in the accent.
+  final bool apart;
+
   const ActionCard({
     required this.id,
     required this.glyph,
@@ -26,6 +32,7 @@ class ActionCard {
     this.line = '',
     required this.onTap,
     this.enabled = true,
+    this.apart = false,
   });
 }
 
@@ -103,6 +110,27 @@ class ActionCards extends StatelessWidget {
             ],
           );
 
+    // Between a card set apart and those before it: a faint rule, with
+    // room either side.
+    Widget rule() {
+      final across = tall ? Axis.vertical : Axis.horizontal;
+      final line = Container(
+        width: across == Axis.horizontal ? 1 : null,
+        height: across == Axis.vertical ? 1 : null,
+        margin: across == Axis.horizontal
+            ? EdgeInsets.symmetric(vertical: spacing.sm)
+            : EdgeInsets.symmetric(horizontal: spacing.sm),
+        color: colors.outline,
+      );
+      final gap = SizedBox(width: spacing.sm, height: spacing.sm);
+      return Flex(
+        direction: across,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [gap, line, gap],
+      );
+    }
+
     Widget card(ActionCard each) {
       // Among ways to choose, the one chosen is lit and the others stand
       // back.
@@ -122,11 +150,17 @@ class ActionCards extends StatelessWidget {
               height: tall ? _cardHeight : null,
               padding: EdgeInsets.all(spacing.md - spacing.xs),
               decoration: BoxDecoration(
-                color: lit
+                color: each.apart
+                    ? colors.accent.withValues(alpha: 0.14)
+                    : lit
                     ? colors.surfaceRaised
                     : colors.surfaceRaised.withValues(alpha: 0),
                 border: Border.all(
-                  color: lit ? colors.accent : colors.outline,
+                  color: each.apart
+                      ? colors.accent.withValues(alpha: 0)
+                      : lit
+                      ? colors.accent
+                      : colors.outline,
                   width: 1.5,
                 ),
                 borderRadius: BorderRadius.circular(theme.radii.md),
@@ -145,7 +179,10 @@ class ActionCards extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (final (i, each) in cards.indexed) ...[
-              if (i > 0) SizedBox(width: spacing.sm),
+              if (i > 0 && each.apart)
+                rule()
+              else if (i > 0)
+                SizedBox(width: spacing.sm),
               Expanded(child: card(each)),
             ],
           ],
@@ -172,7 +209,10 @@ class ActionCards extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               for (final (i, each) in cards.indexed) ...[
-                if (i > 0) SizedBox(width: spacing.sm, height: spacing.sm),
+                if (i > 0 && each.apart)
+                  rule()
+                else if (i > 0)
+                  SizedBox(width: spacing.sm, height: spacing.sm),
                 card(each),
               ],
             ],
@@ -192,7 +232,9 @@ class ActionCards extends StatelessWidget {
             child: GlyphMark(
               glyph: each.glyph,
               size: 28,
-              color: lit ? theme.colors.accent : theme.colors.textSecondary,
+              color: lit || each.apart
+                  ? theme.colors.accent
+                  : theme.colors.textSecondary,
             ),
           ),
         ),
@@ -208,7 +250,7 @@ class ActionCards extends StatelessWidget {
     softWrap: false,
     overflow: TextOverflow.fade,
     style: theme.type.caption.copyWith(
-      color: theme.colors.textSecondary,
+      color: each.apart ? theme.colors.accent : theme.colors.textSecondary,
       letterSpacing: 1.2,
     ),
   );
