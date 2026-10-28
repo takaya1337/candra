@@ -8,6 +8,7 @@ enum Format {
   italic('*', '*'),
   underline('<u>', '</u>'),
   strike('~~', '~~'),
+  highlight('==', '=='),
   code('`', '`');
 
   /// What stands before and after the words.
@@ -27,7 +28,17 @@ typedef _Run = ({Set<Format> formats, int start, int end, int open, int close});
 ///     ~~struck~~   `code`   a footnote[^1]
 ///     # heading (one to three #)
 ///     - list item
+///     - [ ] to do, - [x] done
+///     1. numbered item
 ///     > quote
+///     ---   (a divider, on a line of its own)
+///     ==highlighted==   [a link](https://...)   https://...
+///     [[2026-10-25]]   (a link to a day)
+///     [those words](/entries/2026/10/25)   (a day, by words of one's own:
+///                      its folder, as the journal's repository has it)
+///     [Evening offering](/entries/2026/10/11/3fa9c1/193005.md)
+///                      (a link to an entry, by its file from the journal's
+///                      root, as the journal's repository has it)
 ///     [^1]: what the footnote says
 ///
 /// The text itself is never changed for display. The marks stay in it,
@@ -36,6 +47,15 @@ typedef _Run = ({Set<Format> formats, int start, int end, int open, int close});
 abstract final class Markdown {
   static final _heading = RegExp(r'^(#{1,3}) +');
   static final _bullet = RegExp(r'^(\s*)([-*]) +');
+  static final _check = RegExp(r'^(\s*)([-*] +)\[([ xX])\] ');
+  static final _numbered = RegExp(r'^(\s*)(\d{1,4})\. ');
+  static final _divider = RegExp(r'^\s*(?:-{3,}|\*{3,}|_{3,})\s*$');
+  // A day, a link with its words, or an address on its own.
+  static final _link = RegExp(
+    r'\[\[(\d{4}-\d{2}-\d{2})\]\]'
+    r'|\[([^\]\[]+)\]\(([^)\s]+)\)'
+    r"|(https?://[^\s<>()\[\]]*[^\s<>()\[\].,;:!?'\x22])",
+  );
   static final _quote = RegExp(r'^> ?');
   static final _note = RegExp(r'^\[\^([^\]\s]+)\]: ?');
   static final _noteRef = RegExp(r'\[\^([^\]\s]+)\](?!:)');
@@ -48,11 +68,12 @@ abstract final class Markdown {
     r'|(\*\*)(?!\s)(.+?)(?<!\s)\*\*'
     r'|(~~)(?!\s)(.+?)(?<!\s)~~'
     r'|(<u>)(.+?)</u>'
+    r'|(==)(?!\s)(.+?)(?<!\s)=='
     r'|(?<![*\w])(\*)(?![\s*])(.+?)(?<![\s*])\*(?!\*)'
     r'|(?<!\w)(_)(?![\s_])(.+?)(?<![\s_])_(?!\w)'
     r'|(\[\^[^\]\s]+\])()(?!:)',
   );
-  static const _groups = [1, 3, 5, 7, 9, 11, 13, 15];
+  static const _groups = [1, 3, 5, 7, 9, 11, 13, 15, 17];
 
   // What each opening mark means, and what closes it.
   static (Set<Format>, String) _meaning(String sign) => switch (sign) {
@@ -61,6 +82,7 @@ abstract final class Markdown {
     '**' => ({Format.bold}, '**'),
     '~~' => ({Format.strike}, '~~'),
     '<u>' => ({Format.underline}, '</u>'),
+    '==' => ({Format.highlight}, '=='),
     _ => ({Format.italic}, sign),
   };
 
@@ -69,12 +91,49 @@ abstract final class Markdown {
   /// With [showMarks] the Markdown marks are drawn faintly; without, they
   /// take up no room. [flat] keeps headings at the size of the rest, for
   /// previews.
+  ///
+  /// With [decorated] the checklists' boxes are drawn, not written: their
+  /// characters take their places unseen, for [MarkdownDecorations] to
+  /// draw over.
+  ///
+  /// [finds] says whether a link to an entry finds it; one that does not is
+  /// drawn faint, its line broken (owner, 27 October 2026: "honest when it
+  /// cant resolve"). Without it every link is drawn as found.
   static TextSpan span(
     String text,
     TextStyle base, {
     required SmColors colors,
     required bool showMarks,
     bool flat = false,
+    bool decorated = false,
+    bool Function(String address)? finds,
+  }) {
+    final asked = _finds;
+    _finds = finds;
+    try {
+      return _span(
+        text,
+        base,
+        colors: colors,
+        showMarks: showMarks,
+        flat: flat,
+        decorated: decorated,
+      );
+    } finally {
+      _finds = asked;
+    }
+  }
+
+  // Whether a link to an entry finds it, for the span being made.
+  static bool Function(String address)? _finds;
+
+  static TextSpan _span(
+    String text,
+    TextStyle base, {
+    required SmColors colors,
+    required bool showMarks,
+    bool flat = false,
+    bool decorated = false,
   }) {
     final mark = showMarks
         ? TextStyle(color: colors.textFaint, fontWeight: FontWeight.w400)
@@ -92,7 +151,24 @@ abstract final class Markdown {
       var line = lines[i];
       var style = const TextStyle();
 
+      // A divider: drawn as a rule across the page where decorated; its
+      // dashes faint otherwise.
+      if (_divider.hasMatch(line)) {
+        children.add(
+          TextSpan(
+            text: line,
+            style: decorated
+                ? const TextStyle(color: Color(0x00000000))
+                : TextStyle(color: colors.textFaint),
+          ),
+        );
+        if (i < lines.length - 1) children.add(const TextSpan(text: '\n'));
+        continue;
+      }
+
       final heading = _heading.firstMatch(line);
+      final check = _check.firstMatch(line);
+      final numbered = _numbered.firstMatch(line);
       final bullet = _bullet.firstMatch(line);
       final quote = _quote.firstMatch(line);
       final note = _note.firstMatch(line);
@@ -113,6 +189,62 @@ abstract final class Markdown {
         children.add(TextSpan(text: note[0], style: noteMark));
         line = line.substring(note.end);
         style = TextStyle(color: colors.textSecondary, fontSize: small);
+      } else if (check != null) {
+        // A checklist item: the dash is a mark, and the brackets with what
+        // is between them are its box, in the accent; a done item's words
+        // struck and set back.
+        final done = check[3] != ' ';
+        if (decorated) {
+          // The box is drawn: its characters keep its room, unseen and a
+          // little larger than the words, so it is easy to touch.
+          final room = TextStyle(
+            color: const Color(0x00000000),
+            fontSize: base.fontSize == null ? null : base.fontSize! * 1.3,
+          );
+          children
+            ..add(TextSpan(text: check[1]))
+            ..add(TextSpan(text: check[2], style: _unseenFlat))
+            ..add(TextSpan(text: '[${check[3]}]', style: room))
+            ..add(const TextSpan(text: ' '));
+        } else {
+          final box = TextStyle(
+            color: colors.accent,
+            fontWeight: FontWeight.w700,
+          );
+          children
+            ..add(TextSpan(text: check[1]))
+            ..add(TextSpan(text: check[2], style: mark))
+            ..add(TextSpan(text: '[', style: box))
+            ..add(
+              TextSpan(
+                text: check[3],
+                style: box.copyWith(
+                  backgroundColor: colors.accent.withValues(
+                    alpha: done ? 0.3 : 0.14,
+                  ),
+                ),
+              ),
+            )
+            ..add(TextSpan(text: '] ', style: box));
+        }
+        line = line.substring(check.end);
+        if (done) {
+          style = TextStyle(
+            color: colors.textSecondary,
+            decoration: TextDecoration.lineThrough,
+          );
+        }
+      } else if (numbered != null) {
+        // The number is the bullet: it stays, in the accent colour.
+        children
+          ..add(TextSpan(text: numbered[1]))
+          ..add(
+            TextSpan(
+              text: line.substring(numbered[1]!.length, numbered.end),
+              style: TextStyle(color: colors.accent),
+            ),
+          );
+        line = line.substring(numbered.end);
       } else if (bullet != null) {
         // The dash is the bullet: it stays, in the accent colour.
         children
@@ -149,7 +281,75 @@ abstract final class Markdown {
     return TextSpan(style: base, children: children);
   }
 
+  // Characters that keep no room and show nothing.
+  static const _unseenFlat = TextStyle(
+    color: Color(0x00000000),
+    fontSize: 0.01,
+    height: 0.01,
+    letterSpacing: 0,
+  );
+
+  // The links first, so that an address is never read as marks; the
+  // rest of the words between them as [_marked].
   static List<InlineSpan> _inlineSpans(
+    String text,
+    TextStyle mark,
+    TextStyle noteMark,
+    SmColors colors,
+  ) {
+    final linked = TextStyle(
+      color: colors.accent,
+      decoration: TextDecoration.underline,
+      decorationColor: colors.accent.withValues(alpha: 0.6),
+    );
+    final spans = <InlineSpan>[];
+    var from = 0;
+    for (final link in _link.allMatches(text)) {
+      if (link.start > from) {
+        spans.addAll(
+          _marked(text.substring(from, link.start), mark, noteMark, colors),
+        );
+      }
+      from = link.end;
+      if (link[1] != null) {
+        // A day: its date, the brackets marks.
+        spans
+          ..add(TextSpan(text: '[[', style: mark))
+          ..add(TextSpan(text: link[1], style: linked))
+          ..add(TextSpan(text: ']]', style: mark));
+      } else if (link[2] != null) {
+        // Words that link: they show, the address is a mark. A link to an
+        // entry that is not where it says is faint, its line broken.
+        final address = link[3]!;
+        final lost =
+            entryAddress(address) != null && !(_finds?.call(address) ?? true);
+        spans
+          ..add(TextSpan(text: '[', style: mark))
+          ..add(
+            TextSpan(
+              style: lost
+                  ? TextStyle(
+                      color: colors.textFaint,
+                      decoration: TextDecoration.underline,
+                      decorationStyle: TextDecorationStyle.dashed,
+                      decorationColor: colors.textFaint,
+                    )
+                  : linked,
+              children: _marked(link[2]!, mark, noteMark, colors),
+            ),
+          )
+          ..add(TextSpan(text: '](${link[3]})', style: mark));
+      } else {
+        spans.add(TextSpan(text: link[4], style: linked));
+      }
+    }
+    if (from < text.length) {
+      spans.addAll(_marked(text.substring(from), mark, noteMark, colors));
+    }
+    return spans;
+  }
+
+  static List<InlineSpan> _marked(
     String text,
     TextStyle mark,
     TextStyle noteMark,
@@ -186,6 +386,8 @@ abstract final class Markdown {
             : null,
         backgroundColor: formats.contains(Format.code)
             ? colors.accent.withValues(alpha: 0.12)
+            : formats.contains(Format.highlight)
+            ? colors.accent.withValues(alpha: 0.3)
             : null,
       );
       spans
@@ -265,10 +467,248 @@ abstract final class Markdown {
         0;
   }
 
-  /// Whether the line of the caret is a list item.
+  /// Whether the line of the caret is a list item (not a checklist's).
   static bool listAt(TextEditingValue value) {
     final (start, end) = _lineAt(value.text, _selectionOf(value).start);
-    return _bullet.hasMatch(value.text.substring(start, end));
+    final line = value.text.substring(start, end);
+    return _bullet.hasMatch(line) && !_check.hasMatch(line);
+  }
+
+  /// Whether the line of the caret is a checklist item.
+  static bool checklistAt(TextEditingValue value) {
+    final (start, end) = _lineAt(value.text, _selectionOf(value).start);
+    return _check.hasMatch(value.text.substring(start, end));
+  }
+
+  /// Makes every line the selection touches a checklist item, not done;
+  /// or, if they all are already, plain lines again.
+  static TextEditingValue toggleChecklist(TextEditingValue value) =>
+      _mapLines(value, (lines) {
+        final all = lines.every(_check.hasMatch);
+        return [
+          for (final line in lines)
+            all
+                ? line.substring(_check.firstMatch(line)!.end)
+                : _bare(line, '- [ ] '),
+        ];
+      });
+
+  /// Ticks the checklist item whose box is at [offset] in [text], or
+  /// unticks it; null where there is no box at [offset]. The box is the
+  /// dash and the brackets, and the touch may fall a character either
+  /// side of them.
+  static String? tickAt(String text, int offset) {
+    var at = 0;
+    for (final line in text.split('\n')) {
+      final check = _check.firstMatch(line);
+      if (check != null) {
+        final from = at + check[1]!.length;
+        final to = at + check.end;
+        if (offset >= from - 1 && offset <= to) {
+          final mark = at + check[1]!.length + check[2]!.length + 1;
+          final done = check[3] != ' ';
+          return text.replaceRange(mark, mark + 1, done ? ' ' : 'x');
+        }
+      }
+      at += line.length + 1;
+    }
+    return null;
+  }
+
+  /// The link at [offset] in [text], if one is there: the address of a
+  /// link or of an address written out, or the day of a day's link
+  /// (`yyyy-mm-dd`).
+  static ({String? url, String? day})? linkAt(String text, int offset) {
+    var at = 0;
+    for (final line in text.split('\n')) {
+      if (offset >= at && offset <= at + line.length) {
+        for (final link in _link.allMatches(line)) {
+          if (offset < at + link.start || offset > at + link.end) continue;
+          if (link[1] != null) return (url: null, day: link[1]);
+          // A day by words of one's own: its folder.
+          final folder = _dayAddress.firstMatch(link[3] ?? '');
+          if (folder != null) {
+            return (url: null, day: '${folder[1]}-${folder[2]}-${folder[3]}');
+          }
+          return (url: link[3] ?? link[4], day: null);
+        }
+        return null;
+      }
+      at += line.length + 1;
+    }
+    return null;
+  }
+
+  /// Where each divider is in [text].
+  static List<TextRange> dividers(String text) {
+    final found = <TextRange>[];
+    var at = 0;
+    for (final line in text.split('\n')) {
+      if (_divider.hasMatch(line)) {
+        found.add(TextRange(start: at, end: at + line.length));
+      }
+      at += line.length + 1;
+    }
+    return found;
+  }
+
+  /// Whether the line of the caret is a numbered item.
+  static bool numberedAt(TextEditingValue value) {
+    final (start, end) = _lineAt(value.text, _selectionOf(value).start);
+    return _numbered.hasMatch(value.text.substring(start, end));
+  }
+
+  /// Numbers every line the selection touches, from 1 or on from a
+  /// numbered line just above; or, if they all are numbered already,
+  /// plain lines again.
+  static TextEditingValue toggleNumbered(TextEditingValue value) {
+    final text = value.text;
+    final start = _selectionOf(value).start;
+    final lineStart = start == 0 ? 0 : text.lastIndexOf('\n', start - 1) + 1;
+    var first = 1;
+    if (lineStart > 0) {
+      final above = text.substring(
+        text.lastIndexOf('\n', lineStart - 2) + 1,
+        lineStart - 1,
+      );
+      final number = _numbered.firstMatch(above);
+      if (number != null) first = int.parse(number[2]!) + 1;
+    }
+    return _mapLines(value, (lines) {
+      final all = lines.every(_numbered.hasMatch);
+      return [
+        for (final (i, line) in lines.indexed)
+          all
+              ? line.substring(_numbered.firstMatch(line)!.end)
+              : _bare(line.replaceFirst(_numbered, ''), '${first + i}. '),
+      ];
+    });
+  }
+
+  /// Puts a divider at the caret, on a line of its own, the caret on the
+  /// line after it.
+  static TextEditingValue insertDivider(TextEditingValue value) =>
+      _onItsOwnLine(value, '---');
+
+  static final _dayAddress = RegExp(r'^/entries/(\d{4})/(\d{2})/(\d{2})/?$');
+  static final _entryAddress = RegExp(
+    r'^/entries/(\d{4})/(\d{2})/(\d{2})/([^/]+)/(\d{2})(\d{2})(\d{2})\.md$',
+  );
+
+  /// What a link to an entry points at, read from its address: the day,
+  /// the category's id and the moment; null for any other address.
+  static ({
+    int year,
+    int month,
+    int day,
+    String category,
+    int hour,
+    int minute,
+    int second,
+  })?
+  entryAddress(String address) {
+    final m = _entryAddress.firstMatch(address);
+    if (m == null) return null;
+    int n(int g) => int.parse(m[g]!);
+    return (
+      year: n(1),
+      month: n(2),
+      day: n(3),
+      category: m[4]!,
+      hour: n(5),
+      minute: n(6),
+      second: n(7),
+    );
+  }
+
+  /// A link to the entry at [path] (below the entries folder, as
+  /// `EntryFile.pathOf` has it), at the caret: on the words selected, as
+  /// they were written (owner, 28 October 2026), or with nothing selected
+  /// its words [title].
+  static TextEditingValue insertEntryLink(
+    TextEditingValue value,
+    String title,
+    String path,
+  ) {
+    final text = value.text;
+    final selection = _selectionOf(value);
+    final chosen = text.substring(selection.start, selection.end);
+    final words = (chosen.trim().isNotEmpty ? chosen : title)
+        .replaceAll(RegExp(r'[\[\]\n]'), ' ')
+        .trim();
+    final link = '[$words](/entries/$path)';
+    return TextEditingValue(
+      text: text.replaceRange(selection.start, selection.end, link),
+      selection: TextSelection.collapsed(offset: selection.start + link.length),
+    );
+  }
+
+  /// Puts a link to the day [iso] (`yyyy-mm-dd`) at the caret: on the
+  /// words selected, as they were written, by the day's folder; with
+  /// nothing selected, as the day itself.
+  static TextEditingValue insertDay(TextEditingValue value, String iso) {
+    final text = value.text;
+    final selection = _selectionOf(value);
+    final chosen = text.substring(selection.start, selection.end);
+    final link = chosen.trim().isEmpty
+        ? '[[$iso]]'
+        : '[${chosen.replaceAll(RegExp(r'[\[\]\n]'), ' ')}]'
+              '(/entries/${iso.replaceAll('-', '/')})';
+    final whole = text.replaceRange(selection.start, selection.end, link);
+    return TextEditingValue(
+      text: whole,
+      selection: TextSelection.collapsed(offset: selection.start + link.length),
+    );
+  }
+
+  /// Makes the selection the words of a link, the caret where its address
+  /// goes; with nothing selected, an empty link, the caret where its
+  /// words go.
+  static TextEditingValue toggleLink(TextEditingValue value) {
+    final text = value.text;
+    final selection = _selectionOf(value);
+    final words = text.substring(selection.start, selection.end);
+    final link = '[$words]()';
+    return TextEditingValue(
+      text: text.replaceRange(selection.start, selection.end, link),
+      selection: TextSelection.collapsed(
+        offset: words.isEmpty
+            ? selection.start + 1
+            : selection.start + link.length - 1,
+      ),
+    );
+  }
+
+  static TextEditingValue _onItsOwnLine(TextEditingValue value, String line) {
+    final text = value.text;
+    final at = _selectionOf(value).start.clamp(0, text.length);
+    final before = text.substring(0, at);
+    final after = text.substring(at);
+    final lead = before.isEmpty || before.endsWith('\n') ? '' : '\n';
+    final tail = after.startsWith('\n') ? '' : '\n';
+    final whole = '$before$lead$line$tail$after';
+    return TextEditingValue(
+      text: whole,
+      selection: TextSelection.collapsed(
+        offset: before.length + lead.length + line.length + 1,
+      ),
+    );
+  }
+
+  /// Where each checklist box is in [text]: its three characters, the
+  /// brackets and what is between them; and whether it is ticked.
+  static List<(TextRange, bool)> boxes(String text) {
+    final found = <(TextRange, bool)>[];
+    var at = 0;
+    for (final line in text.split('\n')) {
+      final check = _check.firstMatch(line);
+      if (check != null) {
+        final start = at + check[1]!.length + check[2]!.length;
+        found.add((TextRange(start: start, end: start + 3), check[3] != ' '));
+      }
+      at += line.length + 1;
+    }
+    return found;
   }
 
   // The footnote the caret is on: its name, whether the caret is on its
@@ -436,7 +876,10 @@ abstract final class Markdown {
   /// off if they all have it already.
   static TextEditingValue toggleLines(TextEditingValue value, String prefix) =>
       _mapLines(value, (lines) {
-        final all = lines.every((line) => line.startsWith(prefix));
+        // A checklist item is not a plain list item.
+        bool has(String line) =>
+            line.startsWith(prefix) && !_check.hasMatch(line);
+        final all = lines.every(has);
         return [
           for (final line in lines)
             all ? line.substring(prefix.length) : _bare(line, prefix),
@@ -445,8 +888,10 @@ abstract final class Markdown {
 
   // [line] starting with [prefix], in place of any other block mark.
   static String _bare(String line, String prefix) {
-    if (line.startsWith(prefix)) return line;
+    if (line.startsWith(prefix) && !_check.hasMatch(line)) return line;
     final other =
+        _check.firstMatch(line) ??
+        _numbered.firstMatch(line) ??
         _heading.firstMatch(line) ??
         _bullet.firstMatch(line) ??
         _quote.firstMatch(line);
@@ -555,6 +1000,13 @@ class MarkdownController extends TextEditingController {
   /// While true the marks are hidden, not just faint.
   bool reading = false;
 
+  /// Whether the checklists' boxes are drawn ([MarkdownDecorations])
+  /// rather than written.
+  bool decorated = false;
+
+  /// Whether a link to an entry finds it ([Markdown.span]).
+  bool Function(String address)? finds;
+
   @override
   TextSpan buildTextSpan({
     required BuildContext context,
@@ -569,7 +1021,14 @@ class MarkdownController extends TextEditingController {
         withComposing: withComposing,
       );
     }
-    return Markdown.span(text, style, colors: colors, showMarks: !reading);
+    return Markdown.span(
+      text,
+      style,
+      colors: colors,
+      showMarks: !reading,
+      decorated: decorated,
+      finds: finds,
+    );
   }
 }
 
@@ -578,7 +1037,9 @@ class MarkdownController extends TextEditingController {
 class MarkdownContinuation extends TextInputFormatter {
   const MarkdownContinuation();
 
-  static final _carried = RegExp(r'^(\s*[-*] +|> ?)');
+  static final _carried = RegExp(
+    r'^(\s*[-*] +\[[ xX]\] |\s*\d{1,4}\. |\s*[-*] +|> ?)',
+  );
 
   @override
   TextEditingValue formatEditUpdate(
@@ -601,10 +1062,18 @@ class MarkdownContinuation extends TextInputFormatter {
         ? 0
         : text.lastIndexOf('\n', breakAt - 1) + 1;
     final line = text.substring(lineStart, breakAt);
-    final prefix = _carried.firstMatch(line)?[0];
-    if (prefix == null) return newValue;
+    // A checklist item carries on as one not yet done.
+    final own = _carried.firstMatch(line)?[0];
+    if (own == null) return newValue;
+    // A checklist carries on not done; a numbered item as the next number.
+    final prefix = own
+        .replaceFirst(RegExp(r'\[[xX]\]'), '[ ]')
+        .replaceFirstMapped(
+          RegExp(r'\d{1,4}'),
+          (m) => '${int.parse(m[0]!) + 1}',
+        );
 
-    if (line.length == prefix.length) {
+    if (line.trim() == own.trim()) {
       // An empty item: Enter ends the list, leaving a plain empty line.
       return TextEditingValue(
         text: text.replaceRange(lineStart, caret.start, ''),

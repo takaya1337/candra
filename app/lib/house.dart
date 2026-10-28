@@ -111,6 +111,19 @@ class HouseState extends State<House> with SingleTickerProviderStateMixin {
   /// journal's, the reminders').
   late CivilDate day = today;
 
+  /// Counts the times a room is sent to a day from within it ([showDay]):
+  /// its page goes to [day] as if the room had just been entered.
+  final dayShown = ValueNotifier(0);
+
+  /// Sends the room the house is in to [to]: whatever is open over its
+  /// page closes, and the page stands on that day. For a link to a day in
+  /// an entry (owner, 27 October 2026).
+  void showDay(CivilDate to) {
+    day = to;
+    navigatorOf(room.value)?.popUntil((route) => route.isFirst);
+    dayShown.value++;
+  }
+
   late final CivilDate today =
       widget.today ?? CivilDate.fromDateTime(DateTime.now());
   late final Duration utcOffset =
@@ -164,6 +177,7 @@ class HouseState extends State<House> with SingleTickerProviderStateMixin {
   void dispose() {
     if (NativeBar.inFront != null) NativeBar.inFront = null;
     room.dispose();
+    dayShown.dispose();
     _slide.dispose();
     _bar.dispose();
     super.dispose();
@@ -945,8 +959,10 @@ mixin RoomDay<T extends StatefulWidget> on State<T> {
     final house = House.maybeOf(context);
     if (house == _dayHouse) return;
     _dayHouse?.room.removeListener(_entered);
+    _dayHouse?.dayShown.removeListener(_entered);
     _dayHouse = house;
     house?.room.addListener(_entered);
+    house?.dayShown.addListener(_entered);
   }
 
   void _entered() {
@@ -965,6 +981,7 @@ mixin RoomDay<T extends StatefulWidget> on State<T> {
   @override
   void dispose() {
     _dayHouse?.room.removeListener(_entered);
+    _dayHouse?.dayShown.removeListener(_entered);
     super.dispose();
   }
 }

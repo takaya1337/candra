@@ -83,6 +83,16 @@ class Strings {
 
   // What to copy of a selection in an entry being read.
   String get copyWord => _en ? 'Word' : 'Kata';
+
+  // A link to a day put into an entry.
+  String get dayLinkInsert => _en ? 'Link to this day' : 'Tautkan ke hari itu';
+  String dayLinkEntries(int count) =>
+      _en ? (count == 1 ? '1 entry' : '$count entries') : '$count catatan';
+  String get entryLinkLost => _en
+      ? 'That entry is not where the link says: it has moved or been deleted.'
+      : 'Catatan itu tidak ada di tempat yang ditunjuk tautan: sudah '
+            'dipindah atau dihapus.';
+
   String get copySentence => _en ? 'Sentence' : 'Kalimat';
   String get copyParagraph => _en ? 'Paragraph' : 'Paragraf';
   String get copyAll => _en ? 'All' : 'Semua';

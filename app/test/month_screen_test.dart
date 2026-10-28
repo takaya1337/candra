@@ -20,6 +20,7 @@ import 'package:candra/glyph_button.dart';
 import 'package:candra/journal/card_stack.dart';
 import 'package:candra/journal/categories_screen.dart';
 import 'package:candra/journal/entry.dart';
+import 'package:candra/journal/entry_file.dart';
 import 'package:candra/journal/journal_file_screen.dart';
 import 'package:candra/journal/journal_store.dart';
 import 'package:candra/journal/entry_screen.dart';
@@ -34,6 +35,7 @@ import 'package:candra/system_button.dart';
 import 'package:candra/system_picker.dart';
 import 'package:candra/utilities.dart';
 import 'package:candra/year_grid.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:candra/month_screen.dart';
 import 'package:candra/moon_glyph.dart';
@@ -2803,6 +2805,18 @@ void main() {
     }
 
     Future<void> tap(WidgetTester tester, Finder target) async {
+      // A format button further along the strip: scrolled to first.
+      if (target.hitTestable().evaluate().isEmpty &&
+          find
+              .descendant(
+                of: find.byKey(const ValueKey('format-bar')),
+                matching: target,
+              )
+              .evaluate()
+              .isNotEmpty) {
+        await tester.ensureVisible(target);
+        await tester.pumpAndSettle();
+      }
       if (target.hitTestable().evaluate().isEmpty &&
           find.byKey(const ValueKey('format-bar')).evaluate().isNotEmpty) {
         await putKeyboardAway(tester);
@@ -3621,6 +3635,195 @@ void main() {
         // Tapped again while on it, the mark and the line both go.
         await tap(tester, key('format-footnote'));
         expect(controller.text, 'incense');
+      });
+
+      testWidgets('the checklist button, and a touch on a box while '
+          'reading ticks it and keeps it so', (tester) async {
+        await startWriting(tester);
+        final controller = editable(tester, 'entry-content').controller;
+        controller.value = const TextEditingValue(
+          text: 'incense\nflowers',
+          selection: TextSelection.collapsed(offset: 2),
+        );
+        await tester.pump();
+        await tap(tester, key('format-checklist'));
+        expect(controller.text, '- [ ] incense\nflowers');
+        expect(tester.widget<GlyphButton>(key('format-checklist')).lit, isTrue);
+        await putKeyboardAway(tester);
+        await tap(tester, done);
+        expect(editButton, findsOneWidget);
+
+        // Reading: a touch on the box ticks it, and it is saved so.
+        RenderEditable field() => tester
+            .state<EditableTextState>(
+              find.descendant(
+                of: key('entry-content'),
+                matching: find.byType(EditableText),
+              ),
+            )
+            .renderEditable;
+        final box = field().localToGlobal(
+          field().getLocalRectForCaret(const TextPosition(offset: 3)).center,
+        );
+        await tester.tapAt(box);
+        await tester.pumpAndSettle();
+        expect(textOf(tester, 'entry-content'), '- [x] incense\nflowers');
+        final saved = tester
+            .widget<JournalScope>(find.byType(JournalScope))
+            .notifier!
+            .allEntries()
+            .firstWhere((e) => e.content.contains('incense'));
+        expect(saved.content, '- [x] incense\nflowers');
+      });
+
+      testWidgets('a link to a day from the date wheels; reading, a touch '
+          'on it goes to that day in the journal, and an address opens', (
+        tester,
+      ) async {
+        final opened = <String>[];
+        addTearDown(
+          () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+            const MethodChannel('candra/app'),
+            null,
+          ),
+        );
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          const MethodChannel('candra/app'),
+          (call) async {
+            if (call.method == 'open') {
+              opened.add((call.arguments as Map)['url'] as String);
+            }
+            return true;
+          },
+        );
+        await startWriting(tester);
+        final controller = editable(tester, 'entry-content').controller;
+        controller.value = const TextEditingValue(
+          text: 'see ',
+          selection: TextSelection.collapsed(offset: 4),
+        );
+        await tester.pump();
+        await tap(tester, key('format-day'));
+        // The keyboard down, the date wheels in the panel; the entry's own
+        // day to begin with.
+        expect(key('format-bar'), findsNothing);
+        expect(key('entry-day-panel'), findsOneWidget);
+        await tap(tester, key('entry-day-insert'));
+        expect(controller.text, 'see [[2026-10-11]]');
+        expect(key('entry-day-panel'), findsNothing);
+
+        controller.text = 'see [[2026-10-04]] and https://example.org';
+        await tap(tester, done);
+        expect(editButton, findsOneWidget);
+
+        RenderEditable field() => tester
+            .state<EditableTextState>(
+              find.descendant(
+                of: key('entry-content'),
+                matching: find.byType(EditableText),
+              ),
+            )
+            .renderEditable;
+        Offset onChar(int offset) => field().localToGlobal(
+          field().getLocalRectForCaret(TextPosition(offset: offset)).center,
+        );
+        final text = textOf(tester, 'entry-content');
+
+        // The address opens through the phone.
+        await tester.tapAt(onChar(text.indexOf('example') + 2));
+        await tester.pumpAndSettle();
+        expect(opened, ['https://example.org']);
+
+        // The day: the entry closes, the journal stands on it.
+        await tester.tapAt(onChar(text.indexOf('2026') + 3));
+        await tester.pumpAndSettle();
+        expect(find.byType(EntryScreen), findsNothing);
+        expect(
+          find.descendant(
+            of: key('journal-date'),
+            matching: find.textContaining('4 October 2026'),
+          ),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets('a link to an entry from the day\'s entries under the '
+          'wheels; reading, it opens that entry, or says it has gone', (
+        tester,
+      ) async {
+        await startWriting(tester);
+        final store = tester
+            .widget<JournalScope>(find.byType(JournalScope))
+            .notifier!;
+        final controller = editable(tester, 'entry-content').controller;
+        controller.value = const TextEditingValue(
+          text: 'as in ',
+          selection: TextSelection.collapsed(offset: 6),
+        );
+        await tester.pump();
+        await tap(tester, key('format-day'));
+        // The day's other entries, under the wheels.
+        final other = store
+            .entriesFor(
+              CivilDate(2026, 10, 11),
+              utcOffset: const Duration(hours: 7),
+            )
+            .firstWhere((e) => e.title != 'Evening offering');
+        // The day's entries are a button away from the wheels.
+        await tap(tester, key('entry-day-show-entries'));
+        await tester.scrollUntilVisible(
+          key('entry-day-entry-${other.id}'),
+          100,
+          scrollable: find
+              .descendant(
+                of: key('entry-day-entries'),
+                matching: find.byType(Scrollable),
+              )
+              .first,
+        );
+        await tester.pumpAndSettle();
+        await tap(tester, key('entry-day-entry-${other.id}'));
+        expect(controller.text, startsWith('as in [${other.title}](/entries/'));
+        expect(controller.text, endsWith('${EntryFile.pathOf(other)})'));
+        await tap(tester, done);
+
+        RenderEditable field() => tester
+            .state<EditableTextState>(
+              find.descendant(
+                of: key('entry-content'),
+                matching: find.byType(EditableText),
+              ),
+            )
+            .renderEditable;
+        Offset onChar(int offset) => field().localToGlobal(
+          field().getLocalRectForCaret(TextPosition(offset: offset)).center,
+        );
+
+        // Reading, a touch opens it over this one; back comes back.
+        await tester.tapAt(onChar(8));
+        await tester.pumpAndSettle();
+        expect(find.byType(EntryScreen, skipOffstage: false), findsNWidgets(2));
+        expect(find.text(other.title), findsWidgets);
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+        expect(find.byType(EntryScreen), findsOneWidget);
+
+        // The entry gone, the link says so, and nothing is rewritten.
+        store.delete(other);
+        await tester.pumpAndSettle();
+        await tester.tapAt(onChar(8));
+        await tester.pump();
+        expect(
+          find.textContaining('has moved or been deleted'),
+          findsOneWidget,
+        );
+        expect(find.byType(EntryScreen), findsOneWidget);
+        expect(
+          textOf(tester, 'entry-content'),
+          endsWith('${EntryFile.pathOf(other)})'),
+        );
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('Enter carries a list on', (tester) async {

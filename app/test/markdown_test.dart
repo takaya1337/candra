@@ -343,4 +343,291 @@ void main() {
       expect(enter('# Title|'), '# Title\n|');
     });
   });
+
+  group('checklists', () {
+    TextEditingValue at(String text, int caret) => TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: caret),
+    );
+
+    test('the spans still spell out the text; the box is in the accent, a '
+        'done item struck', () {
+      const text = '- [ ] milk\n- [x] eggs';
+      final span = Markdown.span(
+        text,
+        base,
+        colors: colors.colors,
+        showMarks: false,
+      );
+      expect(span.toPlainText(), text);
+      expect(styleOf(text, '[', showMarks: false).color, colors.colors.accent);
+      expect(
+        styleOf(text, 'eggs', showMarks: false).decoration,
+        TextDecoration.lineThrough,
+      );
+      expect(styleOf(text, 'milk', showMarks: false).decoration, isNull);
+    });
+
+    test('the button makes lines checklist items, and plain again', () {
+      final on = Markdown.toggleChecklist(at('milk\n- eggs', 2));
+      expect(on.text, '- [ ] milk\n- eggs');
+      expect(Markdown.toggleChecklist(at(on.text, 8)).text, 'milk\n- eggs');
+      // A list item becomes a checklist item, not both.
+      expect(Markdown.toggleChecklist(at('- eggs', 3)).text, '- [ ] eggs');
+      // And the list button makes a checklist item a plain item.
+      expect(Markdown.toggleLines(at('- [x] eggs', 7), '- ').text, '- eggs');
+      expect(Markdown.listAt(at('- [ ] milk', 7)), isFalse);
+      expect(Markdown.checklistAt(at('- [ ] milk', 7)), isTrue);
+    });
+
+    test('a touch on the box ticks it, and again unticks it', () {
+      const text = 'list\n- [ ] milk';
+      final box = text.indexOf('[');
+      final ticked = Markdown.tickAt(text, box + 1)!;
+      expect(ticked, 'list\n- [x] milk');
+      expect(Markdown.tickAt(ticked, box + 1), text);
+      // Not on the words, and not on another line.
+      expect(Markdown.tickAt(text, text.indexOf('milk') + 2), isNull);
+      expect(Markdown.tickAt(text, 1), isNull);
+    });
+
+    test(
+      'Enter carries the checklist on, not done, and ends it when empty',
+      () {
+        TextEditingValue enter(String text) =>
+            const MarkdownContinuation().formatEditUpdate(
+              at(text, text.length),
+              at('$text\n', text.length + 1),
+            );
+        expect(enter('- [x] milk').text, '- [x] milk\n- [ ] ');
+        expect(enter('- [ ] milk\n- [ ] ').text, '- [ ] milk\n');
+      },
+    );
+  });
+
+  test('decorated, the spans still spell the text, and the box is unseen '
+      'for the drawing to stand in', () {
+    const text = '- [x] done\n- [ ] not yet';
+    final span = Markdown.span(
+      text,
+      base,
+      colors: colors.colors,
+      showMarks: true,
+      decorated: true,
+    );
+    expect(span.toPlainText(), text);
+    expect(
+      leaves(span).firstWhere((l) => l.$1 == '[x]').$2.color,
+      const Color(0x00000000),
+    );
+  });
+
+  group('links, highlight, numbers and dividers', () {
+    TextEditingValue at(String text, int caret) => TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: caret),
+    );
+
+    test('a link shows its words in the accent, underlined; reading, the '
+        'address is a mark', () {
+      const text = 'see [the recipe](https://example.com/a_b) now';
+      final span = Markdown.span(
+        text,
+        base,
+        colors: colors.colors,
+        showMarks: false,
+      );
+      expect(span.toPlainText(), text);
+      final words = styleOf(text, 'the recipe', showMarks: false);
+      expect(words.color, colors.colors.accent);
+      expect(words.decoration, TextDecoration.underline);
+      // The address takes no room while reading.
+      expect(
+        styleOf(text, '](https://example.com/a_b)', showMarks: false).fontSize,
+        lessThan(1),
+      );
+    });
+
+    test('an address on its own is a link, and its underscores are not '
+        'italics', () {
+      const text = 'at https://example.com/a_b_c.';
+      expect(
+        styleOf(text, 'https://example.com/a_b_c').decoration,
+        TextDecoration.underline,
+      );
+      // The full stop after it is not part of it.
+      expect(Markdown.linkAt(text, text.length), isNull);
+    });
+
+    test('a touch finds the link and what it goes to', () {
+      const text =
+          'one\n[home](example.org) and [[2026-10-25]] and https://a.b';
+      expect(
+        Markdown.linkAt(text, text.indexOf('home') + 1)?.url,
+        'example.org',
+      );
+      expect(
+        Markdown.linkAt(text, text.indexOf('2026') + 2)?.day,
+        '2026-10-25',
+      );
+      expect(
+        Markdown.linkAt(text, text.indexOf('https') + 3)?.url,
+        'https://a.b',
+      );
+      expect(Markdown.linkAt(text, 1), isNull);
+    });
+
+    test('the link button wraps the selection, or makes an empty link', () {
+      final wrapped = Markdown.toggleLink(
+        const TextEditingValue(
+          text: 'read this',
+          selection: TextSelection(baseOffset: 5, extentOffset: 9),
+        ),
+      );
+      expect(wrapped.text, 'read [this]()');
+      expect(wrapped.selection.start, 'read [this]('.length);
+      final empty = Markdown.toggleLink(at('read ', 5));
+      expect(empty.text, 'read []()');
+      expect(empty.selection.start, 'read ['.length);
+    });
+
+    test('a day\'s link goes in at the caret', () {
+      final put = Markdown.insertDay(at('see ', 4), '2026-10-25');
+      expect(put.text, 'see [[2026-10-25]]');
+      expect(put.selection.start, put.text.length);
+    });
+
+    test('highlight is a marker\'s tint, and its button marks the word', () {
+      expect(
+        styleOf('a ==bright== day', 'bright').backgroundColor,
+        colors.colors.accent.withValues(alpha: 0.3),
+      );
+      expect(
+        Markdown.toggle(at('a bright day', 4), Format.highlight).text,
+        'a ==bright== day',
+      );
+    });
+
+    test('numbered lines count on from a numbered line above, and come '
+        'off again', () {
+      final on = Markdown.toggleNumbered(
+        const TextEditingValue(
+          text: 'rice\neggs',
+          selection: TextSelection(baseOffset: 0, extentOffset: 9),
+        ),
+      );
+      expect(on.text, '1. rice\n2. eggs');
+      expect(
+        Markdown.toggleNumbered(at('1. rice\ntea', 9)).text,
+        '1. rice\n2. tea',
+      );
+      expect(
+        Markdown.toggleNumbered(
+          const TextEditingValue(
+            text: '1. rice\n2. eggs',
+            selection: TextSelection(baseOffset: 0, extentOffset: 15),
+          ),
+        ).text,
+        'rice\neggs',
+      );
+      expect(Markdown.numberedAt(at('3. tea', 4)), isTrue);
+    });
+
+    test('Enter carries the numbering on, and ends it on an empty item', () {
+      TextEditingValue enter(String text) =>
+          const MarkdownContinuation().formatEditUpdate(
+            at(text, text.length),
+            at('$text\n', text.length + 1),
+          );
+      expect(enter('1. rice').text, '1. rice\n2. ');
+      expect(enter('1. rice\n2. ').text, '1. rice\n');
+    });
+
+    test('a divider goes in on a line of its own; decorated, its dashes are '
+        'unseen for the rule to be drawn', () {
+      final put = Markdown.insertDivider(at('morning', 7));
+      expect(put.text, 'morning\n---\n');
+      expect(Markdown.dividers(put.text).single.start, 'morning\n'.length);
+      final span = Markdown.span(
+        put.text,
+        base,
+        colors: colors.colors,
+        showMarks: true,
+        decorated: true,
+      );
+      expect(span.toPlainText(), put.text);
+      expect(
+        leaves(span).firstWhere((l) => l.$1 == '---').$2.color,
+        const Color(0x00000000),
+      );
+    });
+  });
+
+  group('links to entries', () {
+    const address = '/entries/2026/10/11/3fa9c1/193005.md';
+
+    test('the address is read back to the entry\'s day, category and '
+        'moment', () {
+      final at = Markdown.entryAddress(address)!;
+      expect((at.year, at.month, at.day), (2026, 10, 11));
+      expect(at.category, '3fa9c1');
+      expect((at.hour, at.minute, at.second), (19, 30, 5));
+      expect(Markdown.entryAddress('https://example.org'), isNull);
+    });
+
+    test('put in with the entry\'s words, brackets in them made spaces', () {
+      final put = Markdown.insertEntryLink(
+        const TextEditingValue(
+          text: 'see ',
+          selection: TextSelection.collapsed(offset: 4),
+        ),
+        'Evening [offering]',
+        '2026/10/11/3fa9c1/193005.md',
+      );
+      expect(
+        put.text,
+        'see [Evening  offering](/entries/2026/10/11/3fa9c1/193005.md)',
+      );
+    });
+
+    test('one that does not find its entry is faint, its line broken; one '
+        'that does is a link', () {
+      const text = 'see [Evening offering]($address)';
+      TextStyle words(bool found) => leaves(
+        Markdown.span(
+          text,
+          base,
+          colors: colors.colors,
+          showMarks: false,
+          finds: (_) => found,
+        ),
+      ).firstWhere((l) => l.$1 == 'Evening offering').$2;
+      expect(words(true).color, colors.colors.accent);
+      expect(words(false).color, colors.colors.textFaint);
+      expect(words(false).decorationStyle, TextDecorationStyle.dashed);
+    });
+  });
+
+  test('linked with words selected, the words stay as written: a day by '
+      'its folder, an entry by its file', () {
+    const selected = TextEditingValue(
+      text: 'the ==big market== day',
+      selection: TextSelection(baseOffset: 4, extentOffset: 18),
+    );
+    expect(
+      Markdown.insertDay(selected, '2026-10-25').text,
+      'the [==big market==](/entries/2026/10/25) day',
+    );
+    expect(
+      Markdown.insertEntryLink(
+        selected,
+        'Market',
+        '2026/10/28/974d53/012112.md',
+      ).text,
+      'the [==big market==](/entries/2026/10/28/974d53/012112.md) day',
+    );
+    // A touch on such a day's words goes to the day.
+    const text = 'the [big market](/entries/2026/10/25) day';
+    expect(Markdown.linkAt(text, 7)?.day, '2026-10-25');
+  });
 }

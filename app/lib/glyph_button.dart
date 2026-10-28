@@ -26,6 +26,11 @@ enum Glyph {
   code,
   heading,
   list,
+  checklist,
+  numbered,
+  highlight,
+  link,
+  divider,
   quote,
   archive,
   share,
@@ -1165,6 +1170,112 @@ class _GlyphPainter extends CustomPainter {
         for (final y in const [0.22, 0.5, 0.78]) {
           canvas.drawCircle(Offset(0.14, y), 0.055, Paint()..color = color);
           canvas.drawLine(Offset(0.34, y), Offset(0.9, y), line);
+        }
+
+      // Numbered: a 1, 2 and 3 down the side, each with its line.
+      case Glyph.numbered:
+        final digit = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.06
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round;
+        // 1
+        canvas.drawLine(
+          const Offset(0.16, 0.12),
+          const Offset(0.16, 0.32),
+          digit,
+        );
+        // 2
+        canvas.drawPath(
+          Path()
+            ..moveTo(0.1, 0.44)
+            ..quadraticBezierTo(0.16, 0.38, 0.22, 0.44)
+            ..quadraticBezierTo(0.24, 0.5, 0.1, 0.6)
+            ..lineTo(0.24, 0.6),
+          digit,
+        );
+        // 3
+        canvas.drawPath(
+          Path()
+            ..moveTo(0.1, 0.7)
+            ..quadraticBezierTo(0.22, 0.66, 0.22, 0.74)
+            ..quadraticBezierTo(0.22, 0.79, 0.15, 0.79)
+            ..quadraticBezierTo(0.23, 0.8, 0.22, 0.86)
+            ..quadraticBezierTo(0.2, 0.92, 0.1, 0.88),
+          digit,
+        );
+        for (final y in const [0.22, 0.51, 0.79]) {
+          canvas.drawLine(Offset(0.4, y), Offset(0.9, y), line);
+        }
+
+      // Highlight: a marker's tip over the bar it leaves.
+      case Glyph.highlight:
+        canvas.drawRect(
+          const Rect.fromLTRB(0.1, 0.72, 0.9, 0.9),
+          Paint()..color = color.withValues(alpha: color.a * 0.5),
+        );
+        canvas.drawPath(
+          Path()
+            ..moveTo(0.36, 0.62)
+            ..lineTo(0.7, 0.1)
+            ..lineTo(0.86, 0.22)
+            ..lineTo(0.52, 0.72)
+            ..close(),
+          line,
+        );
+        canvas.drawLine(
+          const Offset(0.36, 0.62),
+          const Offset(0.3, 0.72),
+          line,
+        );
+
+      // Link: two links of a chain.
+      case Glyph.link:
+        canvas.save();
+        canvas.translate(0.5, 0.5);
+        canvas.rotate(-0.785);
+        for (final dx in const [-0.17, 0.17]) {
+          canvas.drawRRect(
+            RRect.fromRectAndRadius(
+              Rect.fromCenter(center: Offset(dx, 0), width: 0.44, height: 0.24),
+              const Radius.circular(0.12),
+            ),
+            line,
+          );
+        }
+        canvas.restore();
+
+      // Divider: a rule between two short lines.
+      case Glyph.divider:
+        canvas.drawLine(const Offset(0.3, 0.2), const Offset(0.7, 0.2), line);
+        canvas.drawLine(const Offset(0.08, 0.5), const Offset(0.92, 0.5), line);
+        canvas.drawLine(const Offset(0.3, 0.8), const Offset(0.7, 0.8), line);
+
+      // Checklist: two boxes, the first ticked, each with its line.
+      case Glyph.checklist:
+        for (final (y, ticked) in const [(0.3, true), (0.72, false)]) {
+          canvas.drawRRect(
+            RRect.fromRectAndRadius(
+              Rect.fromCenter(
+                center: Offset(0.2, y),
+                width: 0.26,
+                height: 0.26,
+              ),
+              const Radius.circular(0.05),
+            ),
+            line,
+          );
+          if (ticked) {
+            canvas.drawPath(
+              Path()
+                ..moveTo(0.13, y)
+                ..lineTo(0.19, y + 0.06)
+                ..lineTo(0.29, y - 0.08),
+              line,
+            );
+          }
+          canvas.drawLine(Offset(0.46, y), Offset(0.9, y), line);
         }
 
       // Quote: a bar down the side of two lines.

@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:sacred_time/sacred_time.dart';
 import 'package:sm_design/sm_design.dart';
 
+import 'package:flutter/rendering.dart';
+
 import '../bar_button.dart';
 import '../bazi/bazi_card.dart';
 import '../bazi/bazi_record.dart';
@@ -19,17 +21,22 @@ import '../day_reading.dart';
 import '../dot_picker.dart';
 import '../glyph_button.dart';
 import '../house.dart';
+import '../menu/menu_screen.dart' show AppInfo;
 import '../panel_tabs.dart';
 import '../parts.dart';
+import '../routes.dart';
 import '../scroll_bars.dart';
 import '../sky_place.dart';
 import '../strings.dart';
 import '../time_picker.dart';
 import '../toast.dart';
+import 'card_stack.dart';
 import 'entry.dart';
+import 'entry_file.dart';
 import 'geo.dart';
 import 'journal_store.dart';
 import 'markdown.dart';
+import 'markdown_decorations.dart';
 import '../search/tags_ui.dart';
 
 /// One entry, for reading or for writing.
@@ -167,6 +174,22 @@ class _EntryScreenState extends State<EntryScreen> {
   // True while the tag panel has the lower panel, and while a new tag is
   // being named in the bar.
   bool _tagging = false;
+
+  // A link to a day being put in: the keyboard down, the date wheels in
+  // the lower panel, and where the caret was, to put it there.
+  bool _daying = false;
+  CivilDate? _dayLink;
+
+  // Whether the panel shows the day's entries, to link one, rather than
+  // the date wheels.
+  bool _dayLinkEntries = false;
+  TextSelection? _dayLinkAt;
+
+  // Where a touch on an entry being read went down, and when: a quick
+  // touch that has not moved may tick a checklist's box.
+  Offset? _touchDown;
+  DateTime? _touchAt;
+  final _contentArea = GlobalKey();
   bool _naming = false;
   final _tagName = TextEditingController();
   final _tagFocus = FocusNode();
@@ -216,8 +239,9 @@ class _EntryScreenState extends State<EntryScreen> {
     if (!mounted) return;
     setState(() {
       // Going back to the writing puts away a notice that a search
-      // failed.
+      // failed, and the date wheels of a day's link.
       if (_typing && !_locating && _place == null) _placeNotice = null;
+      if (_contentFocus.hasFocus) _daying = false;
     });
   }
 
@@ -229,6 +253,158 @@ class _EntryScreenState extends State<EntryScreen> {
   void _format(TextEditingValue Function(TextEditingValue) change) {
     HapticFeedback.selectionClick();
     _content.value = change(_content.value);
+  }
+
+  // The day link button: the keyboard goes down and the lower panel
+  // takes the date wheels; a touch back in the writing brings it up again.
+  void _openDayLink() {
+    HapticFeedback.selectionClick();
+    _dayLinkAt = _content.selection;
+    _dayLink ??= _date;
+    FocusManager.instance.primaryFocus?.unfocus();
+    setState(() {
+      _daying = true;
+      _dayLinkEntries = false;
+      _tagging = false;
+      _moving = false;
+      _placing = false;
+    });
+  }
+
+  void _insertDayLink() {
+    HapticFeedback.selectionClick();
+    final day = _dayLink ?? _date;
+    final at = _dayLinkAt;
+    String two(int n) => n.toString().padLeft(2, '0');
+    setState(() {
+      _content.value = Markdown.insertDay(
+        at == null ? _content.value : _content.value.copyWith(selection: at),
+        '${day.year.toString().padLeft(4, '0')}-${two(day.month)}-${two(day.day)}',
+      );
+      _daying = false;
+    });
+  }
+
+  // The entry a link's address points at, if it is there: on its day,
+  // at its file's path (owner, 27 October 2026: a link that cannot find
+  // its entry says so; nothing is rewritten when an entry moves).
+  Entry? _linked(String address) {
+    final at = Markdown.entryAddress(address);
+    if (at == null) return null;
+    final day = CivilDate(at.year, at.month, at.day);
+    final path = address.substring('/entries/'.length);
+    return JournalScope.of(context)
+        .entriesFor(day, utcOffset: widget.utcOffset)
+        .where((e) => EntryFile.pathOf(e) == path)
+        .firstOrNull;
+  }
+
+  // What a link to [entry] says: its title, else its first words, else
+  // its time.
+  static String _linkWords(Entry entry) {
+    if (entry.title.trim().isNotEmpty) return entry.title.trim();
+    final first = entry.content.trim().split('\n').first.trim();
+    if (first.isNotEmpty) {
+      return first.length > 32 ? '${first.substring(0, 32)}…' : first;
+    }
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(entry.minuteOfDay ~/ 60)}:${two(entry.minuteOfDay % 60)}';
+  }
+
+  void _insertEntryLink(Entry target) {
+    HapticFeedback.selectionClick();
+    final at = _dayLinkAt;
+    setState(() {
+      _content.value = Markdown.insertEntryLink(
+        at == null ? _content.value : _content.value.copyWith(selection: at),
+        _linkWords(target),
+        EntryFile.pathOf(target),
+      );
+      _daying = false;
+    });
+  }
+
+  void _closeDayLink() {
+    HapticFeedback.selectionClick();
+    setState(() => _daying = false);
+  }
+
+  // A quick touch on a checklist's box, in an entry being read, ticks it
+  // or unticks it, and the entry is saved so at once.
+  void _onTouchDown(PointerDownEvent event) {
+    _touchDown = event.position;
+    _touchAt = DateTime.now();
+  }
+
+  void _onTouchUp(PointerUpEvent event) {
+    final down = _touchDown;
+    final at = _touchAt;
+    _touchDown = null;
+    final entry = _entry;
+    if (down == null || at == null) return;
+    if (!_editing && entry == null) return;
+    if ((event.position - down).distance > 12 ||
+        DateTime.now().difference(at) > const Duration(milliseconds: 350)) {
+      return;
+    }
+    RenderEditable? editable(RenderObject object) {
+      if (object is RenderEditable) return object;
+      RenderEditable? found;
+      object.visitChildren((child) => found ??= editable(child));
+      return found;
+    }
+
+    final root = _contentArea.currentContext?.findRenderObject();
+    final field = root == null ? null : editable(root);
+    if (field == null) return;
+    final offset = field.getPositionForPoint(event.position).offset;
+    final ticked = Markdown.tickAt(_content.text, offset);
+    if (ticked == null) {
+      // Reading, a link: an address opens; a day's link goes to that day
+      // in the journal.
+      final link = _editing ? null : Markdown.linkAt(_content.text, offset);
+      if (link == null) return;
+      HapticFeedback.selectionClick();
+      if (link.url case final url? when Markdown.entryAddress(url) != null) {
+        // A link to an entry: opened over this one, or said to be gone.
+        final target = _linked(url);
+        if (target == null) {
+          _say(Strings.of(context).entryLinkLost);
+        } else {
+          unawaited(
+            Navigator.of(context).push(
+              fadeRoute<String>(
+                context,
+                (context) => EntryScreen(
+                  date: target.date,
+                  utcOffset: target.utcOffset,
+                  entry: target,
+                ),
+              ),
+            ),
+          );
+        }
+      } else if (link.url case final url?) {
+        unawaited(AppInfo.open(url.contains('://') ? url : 'https://$url'));
+      } else if (link.day case final iso?) {
+        final parts = iso.split('-').map(int.parse).toList();
+        House.maybeOf(context)
+            ?.showDay(CivilDate(parts[0], parts[1], parts[2]));
+      }
+      return;
+    }
+    HapticFeedback.selectionClick();
+    if (_editing) {
+      // Writing, it is ticked in what is being written, saved with it.
+      _content.value = _content.value.copyWith(text: ticked);
+      return;
+    }
+    final saved = JournalScope.of(context)
+        .save(entry!.copyWith(content: ticked), previous: entry);
+    setState(() {
+      _entry = saved;
+      _content.value = TextEditingValue(text: ticked);
+    });
   }
 
   @override
@@ -690,6 +866,7 @@ class _EntryScreenState extends State<EntryScreen> {
         !confirming &&
         (_tagging && !keptTags ||
             _editing && _moving ||
+            _editing && _daying ||
             _editing && (_place == null ? _placeNotice != null : _placing) ||
             copying);
     // Where the panel is tall, an entry being read has its day beside it
@@ -705,7 +882,9 @@ class _EntryScreenState extends State<EntryScreen> {
     final said = confirming ? Strings.of(context).deleteEntryQuestion : _toast;
     _content
       ..colors = colors
-      ..reading = !_editing;
+      ..reading = !_editing
+      ..decorated = true
+      ..finds = ((address) => _linked(address) != null);
 
     // A keyboard put away from outside the app (the system's back button)
     // leaves the field holding the focus. Let go of it, so the bar goes
@@ -755,6 +934,8 @@ class _EntryScreenState extends State<EntryScreen> {
           _cancelNaming();
         } else if (_tagging && !keptTags) {
           _toggleTagging();
+        } else if (_daying) {
+          _closeDayLink();
         } else if (_locating) {
           unawaited(Locator.current.cancel());
         } else if (_editing && (_placing || _placeNotice != null)) {
@@ -1137,30 +1318,39 @@ class _EntryScreenState extends State<EntryScreen> {
                                             ),
                                             SizedBox(height: spacing.md),
                                           ],
-                                          SmTextField(
-                                            key: const ValueKey(
-                                              'entry-content',
-                                            ),
-                                            inputFormatters: const [
-                                              MarkdownContinuation(),
-                                            ],
-                                            controller: _content,
-                                            focusNode: _contentFocus,
-                                            labels: labels,
-                                            readOnly: !_editing,
-                                            toolbar: _editing,
-                                            placeholder:
-                                                strings.contentPlaceholder,
-                                            multiline: true,
-                                            // The selection in the sheet's
-                                            // own colour, and strong enough
-                                            // to see against its tint.
-                                            highlight: category.color,
-                                            selectionStrength: 0.5,
-                                            style: theme.type.body.copyWith(
-                                              color: colors.textPrimary
-                                                  .withValues(alpha: 0.9),
-                                              height: 1.5,
+                                          Listener(
+                                            key: _contentArea,
+                                            onPointerDown: _onTouchDown,
+                                            onPointerUp: _onTouchUp,
+                                            child: MarkdownDecorations(
+                                              text: _content.text,
+                                              colors: colors,
+                                              child: SmTextField(
+                                                key: const ValueKey(
+                                                  'entry-content',
+                                                ),
+                                                inputFormatters: const [
+                                                  MarkdownContinuation(),
+                                                ],
+                                                controller: _content,
+                                                focusNode: _contentFocus,
+                                                labels: labels,
+                                                readOnly: !_editing,
+                                                toolbar: _editing,
+                                                placeholder:
+                                                    strings.contentPlaceholder,
+                                                multiline: true,
+                                                // The selection in the sheet's
+                                                // own colour, and strong enough
+                                                // to see against its tint.
+                                                highlight: category.color,
+                                                selectionStrength: 0.5,
+                                                style: theme.type.body.copyWith(
+                                                  color: colors.textPrimary
+                                                      .withValues(alpha: 0.9),
+                                                  height: 1.5,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -1285,6 +1475,13 @@ class _EntryScreenState extends State<EntryScreen> {
                             padding: EdgeInsets.all(spacing.md),
                             child: _copyBar(strings),
                           )
+                        : _editing && _daying
+                        ? Builder(
+                            builder: (context) => SizedBox(
+                              height: _instrumentHeight(context),
+                              child: _dayLinkPanel(theme, strings),
+                            ),
+                          )
                         : _editing && _moving
                         ? Builder(
                             builder: (context) => SizedBox(
@@ -1346,6 +1543,118 @@ class _EntryScreenState extends State<EntryScreen> {
 
   // The date and the time of the entry, as wheels: changed here, saved
   // with the tick.
+  /// The date wheels for a link to a day, and the way to put it in; the
+  /// keyboard is down meanwhile. Where the day has entries, a button
+  /// beside the day's turns the panel to them, as the journal's cards one
+  /// under another, to link one (owner, 28 October 2026).
+  Widget _dayLinkPanel(SmThemeData theme, Strings strings) {
+    final spacing = theme.spacing;
+    final store = JournalScope.of(context);
+    final day = _dayLink ?? _date;
+    final entries =
+        store
+            .entriesFor(day, utcOffset: widget.utcOffset)
+            .where((e) => e.id != _entry?.id)
+            .toList()
+          ..sort((a, b) => a.secondOfDay.compareTo(b.secondOfDay));
+    final showing = _dayLinkEntries && entries.isNotEmpty;
+
+    final body = showing
+        // The day's entries, as the journal shows them, one under another.
+        ? ListView.separated(
+            key: const ValueKey('entry-day-entries'),
+            itemCount: entries.length,
+            separatorBuilder: (_, _) => SizedBox(height: spacing.sm),
+            itemBuilder: (context, i) {
+              final entry = entries[i];
+              final category = store.categories
+                  .where((c) => c.id == entry.categoryId)
+                  .firstOrNull;
+              return GestureDetector(
+                key: ValueKey('entry-day-entry-${entry.id}'),
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _insertEntryLink(entry),
+                child: EntryTile(
+                  entry: entry,
+                  hue: category?.color ?? theme.colors.accent,
+                ),
+              );
+            },
+          )
+        : Center(
+            child: DatePicker(
+              date: day,
+              strings: strings,
+              onChanged: (chosen) => setState(() => _dayLink = chosen),
+            ),
+          );
+
+    return Padding(
+      key: const ValueKey('entry-day-panel'),
+      padding: EdgeInsets.fromLTRB(spacing.md, spacing.sm, spacing.md, 0),
+      child: Column(
+        children: [
+          Expanded(
+            child: AnimatedSwitcher(
+              duration: theme.motion.medium,
+              child: KeyedSubtree(key: ValueKey(showing), child: body),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: spacing.sm),
+            child: Row(
+              children: [
+                // Closes, or from the entries back to the wheels.
+                GlyphButton(
+                  key: const ValueKey('entry-day-cancel'),
+                  glyph: showing ? Glyph.back : Glyph.close,
+                  square: true,
+                  onTap: showing
+                      ? () {
+                          HapticFeedback.selectionClick();
+                          setState(() => _dayLinkEntries = false);
+                        }
+                      : _closeDayLink,
+                ),
+                SizedBox(width: spacing.md),
+                // The count takes what it needs, the day's button the rest.
+                if (!showing)
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (entries.isNotEmpty) ...[
+                          BarButton(
+                            key: const ValueKey('entry-day-show-entries'),
+                            label: strings.dayLinkEntries(entries.length),
+                            compact: true,
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              setState(() => _dayLinkEntries = true);
+                            },
+                          ),
+                          SizedBox(width: spacing.sm),
+                        ],
+                        Flexible(
+                          child: BarButton(
+                            key: const ValueKey('entry-day-insert'),
+                            label: strings.dayLinkInsert,
+                            primary: true,
+                            compact: true,
+                            onTap: _insertDayLink,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _whenPanel(SmThemeData theme, Strings strings) {
     return Column(
       key: const ValueKey('entry-when-panel'),
@@ -1758,11 +2067,40 @@ class _EntryScreenState extends State<EntryScreen> {
                       inline('italic', Glyph.italic, Format.italic),
                       inline('underline', Glyph.underline, Format.underline),
                       inline('strike', Glyph.strike, Format.strike),
+                      inline('highlight', Glyph.highlight, Format.highlight),
+                      button('link', Glyph.link, false, Markdown.toggleLink),
+                      Padding(
+                        padding: EdgeInsets.only(right: spacing.sm),
+                        child: GlyphButton(
+                          key: const ValueKey('format-day'),
+                          glyph: Glyph.calendar,
+                          square: true,
+                          onTap: _openDayLink,
+                        ),
+                      ),
                       button(
                         'list',
                         Glyph.list,
                         inContent && Markdown.listAt(value),
                         (v) => Markdown.toggleLines(v, '- '),
+                      ),
+                      button(
+                        'numbered',
+                        Glyph.numbered,
+                        inContent && Markdown.numberedAt(value),
+                        Markdown.toggleNumbered,
+                      ),
+                      button(
+                        'checklist',
+                        Glyph.checklist,
+                        inContent && Markdown.checklistAt(value),
+                        Markdown.toggleChecklist,
+                      ),
+                      button(
+                        'divider',
+                        Glyph.divider,
+                        false,
+                        Markdown.insertDivider,
                       ),
                       button(
                         'footnote',

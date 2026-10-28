@@ -10,6 +10,7 @@ import '../strings.dart';
 import '../swipe_to_delete.dart';
 import 'entry.dart';
 import 'markdown.dart';
+import 'markdown_decorations.dart';
 
 /// A day's journal as a stack of folders, one per category, the way they
 /// stand in a filing drawer: every folder the same size and in the same
@@ -545,109 +546,9 @@ class _Folder extends StatelessWidget {
                                               onTap: onOpenEntry == null
                                                   ? null
                                                   : () => onOpenEntry!(entry),
-                                              child: Container(
-                                                padding: EdgeInsets.all(
-                                                  spacing.md - spacing.xs,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: hue.withValues(
-                                                    alpha: 0.08,
-                                                  ),
-                                                  border: Border.all(
-                                                    color: hue.withValues(
-                                                      alpha: 0.28,
-                                                    ),
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        theme.radii.sm + 2,
-                                                      ),
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .baseline,
-                                                      textBaseline: TextBaseline
-                                                          .alphabetic,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Text(
-                                                            entry.title,
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: theme
-                                                                .type
-                                                                .body
-                                                                .copyWith(
-                                                                  color: colors
-                                                                      .textPrimary,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: spacing.sm,
-                                                        ),
-                                                        Text(
-                                                          entry.duration == null
-                                                              ? entry.time
-                                                              : '${entry.time} · '
-                                                                    '${Strings.of(context).practiceLength(entry.duration!)}',
-                                                          style: theme
-                                                              .type
-                                                              .caption
-                                                              .copyWith(
-                                                                color: colors
-                                                                    .textSecondary,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    ?_placeLine(
-                                                      theme,
-                                                      hue,
-                                                      entry,
-                                                    ),
-                                                    if (entry
-                                                        .content
-                                                        .isNotEmpty) ...[
-                                                      SizedBox(
-                                                        height: spacing.xs,
-                                                      ),
-                                                      // The content as Markdown, its marks
-                                                      // hidden.
-                                                      Text.rich(
-                                                        Markdown.span(
-                                                          entry.content,
-                                                          theme.type.label
-                                                              .copyWith(
-                                                                color: colors
-                                                                    .textPrimary
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          0.8,
-                                                                    ),
-                                                                height: 1.45,
-                                                              ),
-                                                          colors: colors,
-                                                          showMarks: false,
-                                                          flat: true,
-                                                        ),
-                                                        maxLines: 3,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ],
-                                                  ],
-                                                ),
+                                              child: EntryTile(
+                                                entry: entry,
+                                                hue: hue,
                                               ),
                                             ),
                                           ),
@@ -902,4 +803,86 @@ class _FolderPainter extends CustomPainter {
       old.radius != radius ||
       old.fill != fill ||
       old.edge != edge;
+}
+
+/// An entry as the journal's cards show it, briefly: its title and time,
+/// its place, and the first lines of its words. Also what the day's
+/// entries are chosen from for a link (`EntryScreen`).
+class EntryTile extends StatelessWidget {
+  final Entry entry;
+
+  /// Its category's colour.
+  final Color hue;
+
+  const EntryTile({super.key, required this.entry, required this.hue});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = SmTheme.of(context);
+    final colors = theme.colors;
+    final spacing = theme.spacing;
+    return Container(
+      padding: EdgeInsets.all(spacing.md - spacing.xs),
+      decoration: BoxDecoration(
+        color: hue.withValues(alpha: 0.08),
+        border: Border.all(color: hue.withValues(alpha: 0.28)),
+        borderRadius: BorderRadius.circular(theme.radii.sm + 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Expanded(
+                child: Text(
+                  entry.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.type.body.copyWith(
+                    color: colors.textPrimary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              SizedBox(width: spacing.sm),
+              Text(
+                entry.duration == null
+                    ? entry.time
+                    : '${entry.time} · '
+                          '${Strings.of(context).practiceLength(entry.duration!)}',
+                style: theme.type.caption.copyWith(color: colors.textSecondary),
+              ),
+            ],
+          ),
+          ?_Folder._placeLine(theme, hue, entry),
+          if (entry.content.isNotEmpty) ...[
+            SizedBox(height: spacing.xs),
+            // The content as Markdown, its marks
+            // hidden.
+            MarkdownDecorations(
+              text: entry.content,
+              colors: colors,
+              child: Text.rich(
+                Markdown.span(
+                  entry.content,
+                  theme.type.label.copyWith(
+                    color: colors.textPrimary.withValues(alpha: 0.8),
+                    height: 1.45,
+                  ),
+                  colors: colors,
+                  showMarks: false,
+                  decorated: true,
+                  flat: true,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }
